@@ -5,8 +5,6 @@ import '../../data/model/ordermodel.dart';
 import '../../data/model/orderdetailmodel.dart';
 import '../../data/model/productmodel.dart';
 import '../../page/order/orderdetail.dart';
-// Import your OrderDetail page when available
-// import '../../page/detail/orderdetail.dart';
 
 Widget itemOrderView(
   OrderModel orderModel,
@@ -14,13 +12,11 @@ Widget itemOrderView(
   List<ProductModel> products,
   WidgetRef ref,
 ) {
-  // Format số tiền
   String formatCurrency(int? price) {
     if (price == null) return '0 đ';
     return NumberFormat('#,###').format(price) + ' đ';
   }
 
-  // Format ngày tháng
   String formatDate(String? dateString) {
     if (dateString == null) return '';
     try {
@@ -31,7 +27,6 @@ Widget itemOrderView(
     }
   }
 
-  // Lấy trạng thái đơn hàng
   String getOrderStatus(int? status) {
     switch (status) {
       case 0:
@@ -47,7 +42,6 @@ Widget itemOrderView(
     }
   }
 
-  // Lấy màu sắc cho trạng thái
   Color getStatusColor(int? status) {
     switch (status) {
       case 0:
@@ -63,7 +57,6 @@ Widget itemOrderView(
     }
   }
 
-  // Lấy icon cho trạng thái
   IconData getStatusIcon(int? status) {
     switch (status) {
       case 0:
@@ -79,12 +72,10 @@ Widget itemOrderView(
     }
   }
 
-  // Lấy danh sách sản phẩm của đơn hàng (từ Firestore, đã có đủ info)
   List<OrderDetailModelWithName> getOrderDetailItems() {
     return orderDetails;
   }
 
-  // Đếm tổng số sản phẩm (bao gồm cả trùng lặp)
   int getTotalProductCount() {
     return orderDetails.fold(0, (sum, detail) => sum + (detail.quantity ?? 0));
   }
@@ -93,9 +84,6 @@ Widget itemOrderView(
 
   return GestureDetector(
     onTap: () {
-      // Navigate to OrderDetail page when order is tapped
-      // Uncomment when OrderDetail page is available
-
       Navigator.push(
         ref.context,
         MaterialPageRoute(
@@ -122,7 +110,6 @@ Widget itemOrderView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header với mã đơn hàng và icon
             Row(
               children: [
                 Expanded(
@@ -145,7 +132,6 @@ Widget itemOrderView(
 
             const SizedBox(height: 8),
 
-            // Ngày đặt hàng
             Text(
               formatDate(orderModel.orderDate),
               style: TextStyle(fontSize: 14, color: Colors.grey[600]),
@@ -153,10 +139,8 @@ Widget itemOrderView(
 
             const SizedBox(height: 16),
 
-            // Thông tin đơn hàng (Trạng thái, Sản phẩm, Tổng tiền)
             Row(
               children: [
-                // Trạng thái
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,7 +174,6 @@ Widget itemOrderView(
                   ),
                 ),
 
-                // Sản phẩm
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -212,7 +195,6 @@ Widget itemOrderView(
                   ),
                 ),
 
-                // Tổng tiền
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,

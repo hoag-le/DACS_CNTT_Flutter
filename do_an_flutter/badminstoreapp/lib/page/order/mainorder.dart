@@ -26,7 +26,6 @@ class _MainOrderState extends ConsumerState<MainOrder>
   String selectedFilter = 'all';
   String? errorMessage;
 
-  // Cache chi tiết đơn hàng
   final Map<String, List<OrderDetailModelWithName>> _orderDetailsCache = {};
 
   @override
@@ -178,41 +177,50 @@ class _MainOrderState extends ConsumerState<MainOrder>
           ],
         ),
       ),
-      body: isLoading
-          ? const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 20),
-                  Text(
-                    'Đang tải đơn hàng...',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                ],
-              ),
-            )
-          : errorMessage != null
-          ? _buildErrorState()
-          : RefreshIndicator(
-              onRefresh: loadData,
-              child: filteredOrders.isEmpty
-                  ? _buildEmptyState()
-                  : ListView.builder(
-                      padding: const EdgeInsets.all(8),
-                      itemCount: filteredOrders.length,
-                      itemBuilder: (context, index) {
-                        final order = filteredOrders[index];
-                        return FutureBuilder<List<OrderDetailModelWithName>>(
-                          future: getOrderDetails(order.id ?? ''),
-                          builder: (context, snapshot) {
-                            final details = snapshot.data ?? [];
-                            return itemOrderView(order, details, products, ref);
-                          },
-                        );
-                      },
+      body:
+          isLoading
+              ? const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 20),
+                    Text(
+                      'Đang tải đơn hàng...',
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
-            ),
+                  ],
+                ),
+              )
+              : errorMessage != null
+              ? _buildErrorState()
+              : RefreshIndicator(
+                onRefresh: loadData,
+                child:
+                    filteredOrders.isEmpty
+                        ? _buildEmptyState()
+                        : ListView.builder(
+                          padding: const EdgeInsets.all(8),
+                          itemCount: filteredOrders.length,
+                          itemBuilder: (context, index) {
+                            final order = filteredOrders[index];
+                            return FutureBuilder<
+                              List<OrderDetailModelWithName>
+                            >(
+                              future: getOrderDetails(order.id ?? ''),
+                              builder: (context, snapshot) {
+                                final details = snapshot.data ?? [];
+                                return itemOrderView(
+                                  order,
+                                  details,
+                                  products,
+                                  ref,
+                                );
+                              },
+                            );
+                          },
+                        ),
+              ),
     );
   }
 

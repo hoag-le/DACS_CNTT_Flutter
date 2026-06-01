@@ -1,80 +1,30 @@
-import 'package:badminstoreapp/data/model/usermodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/model/provincemodel.dart';
 import '../../data/model/wardmodel.dart';
-import '../../data/data/tinhthanhdata.dart';
-import '../../data/data/phuongxadata.dart';
 import '../../data/model/usermodel.dart';
+import '../../providers/address_providers.dart';
 import 'payment.dart';
 
-class ShippingAddressScreen extends StatefulWidget {
-  final double subtotal; // Thêm parameter để nhận subtotal
+class ShippingAddressScreen extends ConsumerStatefulWidget {
+  final double subtotal;
   final UserModel? user;
 
   const ShippingAddressScreen({Key? key, required this.subtotal, this.user})
     : super(key: key);
 
   @override
-  State<ShippingAddressScreen> createState() => _ShippingAddressScreenState();
+  ConsumerState<ShippingAddressScreen> createState() =>
+      _ShippingAddressScreenState();
 }
 
-class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
+class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
 
   ProvinceModel? _selectedProvince;
   WardModel? _selectedWard;
-
-  // Danh sách tỉnh/thành phố và phường/xã
-  List<ProvinceModel> _provinces = [];
-  List<WardModel> _allWards = [];
-
-  // Data loaders
-  final TinhThanhData _tinhThanhData = TinhThanhData();
-  final PhuongXaData _phuongXaData = PhuongXaData();
-
-  // Loading states
-  bool _isLoadingProvinces = true;
-  bool _isLoadingWards = true;
-
-  // Lấy danh sách phường/xã theo id tỉnh thành
-  List<WardModel> get _filteredWards {
-    if (_selectedProvince == null) return [];
-    return _allWards
-        .where((ward) => ward.idTinhThanh == _selectedProvince!.id)
-        .toList();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    try {
-      // Load provinces
-      final provinces = await _tinhThanhData.loadData();
-      setState(() {
-        _provinces = provinces;
-        _isLoadingProvinces = false;
-      });
-
-      // Load wards
-      final wards = await _phuongXaData.loadData();
-      setState(() {
-        _allWards = wards;
-        _isLoadingWards = false;
-      });
-    } catch (e) {
-      print('Error loading data: $e');
-      setState(() {
-        _isLoadingProvinces = false;
-        _isLoadingWards = false;
-      });
-    }
-  }
 
   @override
   void dispose() {
@@ -86,6 +36,12 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provincesAsync = ref.watch(provincesProvider);
+    final wardsAsync =
+        _selectedProvince != null
+            ? ref.watch(wardsByProvinceProvider(_selectedProvince!.id!))
+            : null;
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -94,16 +50,12 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFFFB382), // Màu cam nhạt
-              Color(0xFFFF8C42), // Màu cam đậm
-            ],
+            colors: [Color(0xFFFFB382), Color(0xFFFF8C42)],
           ),
         ),
         child: SafeArea(
           child: Column(
             children: [
-              // Header
               Container(
                 padding: const EdgeInsets.all(16),
                 child: Row(
@@ -128,12 +80,11 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 48), // Balance the back button
+                    const SizedBox(width: 48),
                   ],
                 ),
               ),
 
-              // Progress indicator
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Row(
@@ -150,7 +101,6 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
 
               const SizedBox(height: 30),
 
-              // Form content
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -158,7 +108,6 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Title
                         const Text(
                           'Thông tin giao hàng',
                           style: TextStyle(
@@ -170,7 +119,6 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
 
                         const SizedBox(height: 20),
 
-                        // Họ và tên người nhận
                         const Text(
                           'Họ và tên người nhận',
                           style: TextStyle(
@@ -187,7 +135,6 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
 
                         const SizedBox(height: 20),
 
-                        // Số điện thoại
                         const Text(
                           'Số điện thoại',
                           style: TextStyle(
@@ -205,7 +152,6 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
 
                         const SizedBox(height: 20),
 
-                        // Tỉnh/Thành phố
                         const Text(
                           'Tỉnh/ thành phố',
                           style: TextStyle(
@@ -215,26 +161,33 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        _isLoadingProvinces
-                            ? _buildLoadingDropdown('Đang tải dữ liệu...')
-                            : _buildDropdown<ProvinceModel>(
+                        provincesAsync.when(
+                          data:
+                              (provinces) => _buildDropdown<ProvinceModel>(
                                 value: _selectedProvince,
                                 hint: 'Chọn tỉnh / thành phố',
-                                items: _provinces,
-                                displayText: (province) =>
-                                    province.tenTinhThanh ?? '',
+                                items: provinces,
+                                displayText:
+                                    (province) => province.tenTinhThanh ?? '',
                                 onChanged: (value) {
                                   setState(() {
                                     _selectedProvince = value;
-                                    _selectedWard =
-                                        null; // Reset ward khi đổi tỉnh
+                                    _selectedWard = null;
                                   });
                                 },
                               ),
+                          loading:
+                              () =>
+                                  _buildLoadingDropdown('Đang tải dữ liệu...'),
+                          error:
+                              (e, s) => Text(
+                                'Lỗi: $e',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                        ),
 
                         const SizedBox(height: 20),
 
-                        // Phường/Xã
                         const Text(
                           'Phường/Xã',
                           style: TextStyle(
@@ -244,27 +197,42 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        _isLoadingWards
-                            ? _buildLoadingDropdown('Đang tải dữ liệu...')
-                            : _buildDropdown<WardModel>(
-                                value: _selectedWard,
-                                hint: _selectedProvince == null
-                                    ? 'Vui lòng chọn tỉnh/thành phố trước'
-                                    : 'Chọn phường/xã',
-                                items: _filteredWards,
-                                displayText: (ward) => ward.tenPhuongXa ?? '',
-                                onChanged: _selectedProvince == null
-                                    ? null
-                                    : (value) {
-                                        setState(() {
-                                          _selectedWard = value;
-                                        });
-                                      },
-                              ),
+                        _selectedProvince == null
+                            ? _buildDropdown<WardModel>(
+                              value: null,
+                              hint: 'Vui lòng chọn tỉnh/thành phố trước',
+                              items: [],
+                              displayText: (_) => '',
+                              onChanged: null,
+                            )
+                            : wardsAsync?.when(
+                                  data:
+                                      (wards) => _buildDropdown<WardModel>(
+                                        value: _selectedWard,
+                                        hint: 'Chọn phường/xã',
+                                        items: wards,
+                                        displayText:
+                                            (ward) => ward.tenPhuongXa ?? '',
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _selectedWard = value;
+                                          });
+                                        },
+                                      ),
+                                  loading:
+                                      () => _buildLoadingDropdown(
+                                        'Đang tải dữ liệu...',
+                                      ),
+                                  error:
+                                      (e, s) => Text(
+                                        'Lỗi: $e',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                ) ??
+                                Container(),
 
                         const SizedBox(height: 20),
 
-                        // Số nhà/Tên đường
                         const Text(
                           'Số nhà/Tên đường',
                           style: TextStyle(
@@ -281,7 +249,6 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
 
                         const SizedBox(height: 20),
 
-                        // Xác nhận địa chỉ button
                         Container(
                           width: double.infinity,
                           height: 56,
@@ -300,7 +267,6 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                           ),
                           child: ElevatedButton(
                             onPressed: () {
-                              // Truyền subtotal tới PaymentScreen
                               _validateAndConfirm();
                             },
                             style: ElevatedButton.styleFrom(
@@ -360,23 +326,22 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
       return;
     }
 
-    // Validation passed - handle address confirmation
     _showSuccessSnackBar('Địa chỉ đã được xác nhận thành công!');
 
     String fullAddress =
         '${_addressController.text}, ${_selectedWard!.tenPhuongXa}, ${_selectedProvince!.tenTinhThanh}';
 
-    // Here you can navigate to the next screen or save the address
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PaymentScreen(
-          subtotal: widget.subtotal,
-          user: widget.user,
-          receiverName: _nameController.text,
-          receiverPhone: _phoneController.text,
-          shippingAddress: fullAddress,
-        ),
+        builder:
+            (context) => PaymentScreen(
+              subtotal: widget.subtotal,
+              user: widget.user,
+              receiverName: _nameController.text,
+              receiverPhone: _phoneController.text,
+              shippingAddress: fullAddress,
+            ),
       ),
     );
   }
@@ -535,15 +500,16 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
           ),
         ),
         dropdownColor: const Color(0xFFFFB382),
-        items: items.map((T item) {
-          return DropdownMenuItem<T>(
-            value: item,
-            child: Text(
-              displayText(item),
-              style: const TextStyle(color: Color(0xFF8B4513)),
-            ),
-          );
-        }).toList(),
+        items:
+            items.map((T item) {
+              return DropdownMenuItem<T>(
+                value: item,
+                child: Text(
+                  displayText(item),
+                  style: const TextStyle(color: Color(0xFF8B4513)),
+                ),
+              );
+            }).toList(),
         onChanged: onChanged,
       ),
     );

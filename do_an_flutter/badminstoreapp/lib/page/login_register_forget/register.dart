@@ -52,7 +52,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final password = _passwordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
 
-    // Validate
     if (email.isEmpty || username.isEmpty || password.isEmpty) {
       setState(() {
         _errorMessage = 'Vui lòng điền đầy đủ thông tin bắt buộc';
@@ -110,7 +109,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         return;
       }
 
-      // Lưu user vào provider và chuyển sang trang chính
       ref.read(userProvider.notifier).state = userModel;
       setState(() => _isLoading = false);
 
@@ -194,7 +192,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // Error message
                 if (_errorMessage.isNotEmpty)
                   Container(
                     width: double.infinity,
@@ -227,7 +224,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                   ),
 
-                // Email *
                 _buildTextField(
                   controller: _emailController,
                   hintText: 'Email *',
@@ -237,7 +233,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Username *
                 _buildTextField(
                   controller: _usernameController,
                   hintText: 'Tên đăng nhập *',
@@ -246,7 +241,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Fullname
                 _buildTextField(
                   controller: _fullnameController,
                   hintText: 'Họ và tên',
@@ -255,7 +249,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Phone
                 _buildTextField(
                   controller: _phoneController,
                   hintText: 'Số điện thoại',
@@ -265,29 +258,31 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // Password *
                 _buildTextField(
                   controller: _passwordController,
                   hintText: 'Mật khẩu * (ít nhất 6 ký tự)',
                   icon: Icons.lock_outline,
                   obscureText: !_isPasswordVisible,
                   isPassword: true,
-                  onSuffixTap: () =>
-                      setState(() => _isPasswordVisible = !_isPasswordVisible),
+                  onSuffixTap:
+                      () => setState(
+                        () => _isPasswordVisible = !_isPasswordVisible,
+                      ),
                 ),
                 const SizedBox(height: 16),
 
-                // Confirm password *
                 _buildTextField(
                   controller: _confirmPasswordController,
                   hintText: 'Nhập lại mật khẩu *',
                   icon: Icons.lock_outline,
                   obscureText: !_isConfirmPasswordVisible,
                   isPassword: true,
-                  onSuffixTap: () => setState(
-                    () =>
-                        _isConfirmPasswordVisible = !_isConfirmPasswordVisible,
-                  ),
+                  onSuffixTap:
+                      () => setState(
+                        () =>
+                            _isConfirmPasswordVisible =
+                                !_isConfirmPasswordVisible,
+                      ),
                 ),
                 const SizedBox(height: 16),
 
@@ -298,8 +293,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                   value: _agreeToTruth,
                   activeColor: const Color(0xFFFF8C42),
-                  onChanged: (bool? value) =>
-                      setState(() => _agreeToTruth = value ?? false),
+                  onChanged:
+                      (bool? value) =>
+                          setState(() => _agreeToTruth = value ?? false),
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
 
@@ -310,22 +306,26 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                   value: _agreeToPolicy,
                   activeColor: const Color(0xFFFF8C42),
-                  onChanged: (bool? value) =>
-                      setState(() => _agreeToPolicy = value ?? false),
+                  onChanged:
+                      (bool? value) =>
+                          setState(() => _agreeToPolicy = value ?? false),
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
 
                 const SizedBox(height: 16),
 
-                // Nút đăng ký
                 Container(
                   width: double.infinity,
                   height: 56,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: _isLoading
-                          ? [Colors.grey[400]!, Colors.grey[500]!]
-                          : [const Color(0xFFFF8C42), const Color(0xFFFF6B1A)],
+                      colors:
+                          _isLoading
+                              ? [Colors.grey[400]!, Colors.grey[500]!]
+                              : [
+                                const Color(0xFFFF8C42),
+                                const Color(0xFFFF6B1A),
+                              ],
                     ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
@@ -345,25 +345,26 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: _isLoading
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
+                    child:
+                        _isLoading
+                            ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                            )
+                            : const Text(
+                              'Đăng ký',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
                             ),
-                          )
-                        : const Text(
-                            'Đăng ký',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
                   ),
                 ),
 
@@ -377,10 +378,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       style: TextStyle(color: Color(0xFF8B4513), fontSize: 14),
                     ),
                     TextButton(
-                      onPressed: () => Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => const LoginScreen()),
-                      ),
+                      onPressed:
+                          () => Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const LoginScreen(),
+                            ),
+                          ),
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
                         minimumSize: Size.zero,
@@ -431,15 +435,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           hintText: hintText,
           hintStyle: TextStyle(color: const Color(0xFF8B4513).withOpacity(0.7)),
           prefixIcon: Icon(icon, color: const Color(0xFF8B4513)),
-          suffixIcon: isPassword
-              ? IconButton(
-                  icon: Icon(
-                    obscureText ? Icons.visibility : Icons.visibility_off,
-                    color: const Color(0xFF8B4513),
-                  ),
-                  onPressed: onSuffixTap,
-                )
-              : null,
+          suffixIcon:
+              isPassword
+                  ? IconButton(
+                    icon: Icon(
+                      obscureText ? Icons.visibility : Icons.visibility_off,
+                      color: const Color(0xFF8B4513),
+                    ),
+                    onPressed: onSuffixTap,
+                  )
+                  : null,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,

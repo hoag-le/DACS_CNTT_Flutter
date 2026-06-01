@@ -16,7 +16,6 @@ class ProductCart extends ConsumerStatefulWidget {
 }
 
 class _ProductCartState extends ConsumerState<ProductCart> {
-  // State để quản lý trạng thái loading cho tổng giá
   bool _isLoadingTotal = false;
 
   @override
@@ -24,7 +23,7 @@ class _ProductCartState extends ConsumerState<ProductCart> {
     final cartItems = ref.watch(cartItemsProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFE8A87C), // Màu nền cam nhạt
+      backgroundColor: const Color(0xFFE8A87C),
       appBar: AppBar(
         backgroundColor: const Color(0xFFE8A87C),
         elevation: 0,
@@ -44,11 +43,11 @@ class _ProductCartState extends ConsumerState<ProductCart> {
         ),
         centerTitle: true,
       ),
-      // Thêm resizeToAvoidBottomInset: false để ngăn bàn phím đẩy nội dung lên
       resizeToAvoidBottomInset: false,
-      body: cartItems.isEmpty
-          ? _buildEmptyCart(context)
-          : _buildCartWithItems(context, ref, cartItems),
+      body:
+          cartItems.isEmpty
+              ? _buildEmptyCart(context)
+              : _buildCartWithItems(context, ref, cartItems),
     );
   }
 
@@ -60,7 +59,6 @@ class _ProductCartState extends ConsumerState<ProductCart> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Icon giỏ hàng rỗng
                 Container(
                   width: 120,
                   height: 120,
@@ -75,7 +73,6 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                   ),
                 ),
                 const SizedBox(height: 30),
-                // Text thông báo
                 const Text(
                   'Chưa thấy sản phẩm trong giỏ hàng của bạn',
                   style: TextStyle(
@@ -86,8 +83,6 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 50),
-
-                // Nút mua sắm ngay
               ],
             ),
           ),
@@ -115,7 +110,6 @@ class _ProductCartState extends ConsumerState<ProductCart> {
             ),
           ),
         ),
-        // Thêm animation load ở đây (đặt bên ngoài Expanded để nó luôn ở dưới)
         if (_isLoadingTotal)
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0),
@@ -138,13 +132,11 @@ class _ProductCartState extends ConsumerState<ProductCart> {
       text: cartItem.quantity.toString(),
     );
 
-    // Thêm listener để cập nhật số lượng khi TextField thay đổi
     quantityController.addListener(() {
       int? newQuantity = int.tryParse(quantityController.text);
       if (newQuantity != null &&
           newQuantity > 0 &&
           newQuantity != cartItem.quantity) {
-        // Debounce the update to avoid frequent rebuilds
         Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted && newQuantity == int.tryParse(quantityController.text)) {
             _updateQuantity(ref, index, newQuantity);
@@ -166,7 +158,6 @@ class _ProductCartState extends ConsumerState<ProductCart> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Product Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.asset(
@@ -174,21 +165,21 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                   height: 80,
                   width: 80,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: 80,
-                    width: 80,
-                    color: Colors.grey[200],
-                    child: const Icon(
-                      Icons.image,
-                      size: 40,
-                      color: Colors.grey,
-                    ),
-                  ),
+                  errorBuilder:
+                      (context, error, stackTrace) => Container(
+                        height: 80,
+                        width: 80,
+                        color: Colors.grey[200],
+                        child: const Icon(
+                          Icons.image,
+                          size: 40,
+                          color: Colors.grey,
+                        ),
+                      ),
                 ),
               ),
               const SizedBox(width: 16),
 
-              // Product Info
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,7 +196,6 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                     ),
                     const SizedBox(height: 4),
 
-                    // Original price (crossed out)
                     if (cartItem.product.cost != null)
                       Text(
                         '${NumberFormat('###,###').format(cartItem.product.cost)} đ',
@@ -216,7 +206,6 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                         ),
                       ),
 
-                    // Sale price
                     Text(
                       '${NumberFormat('###,###').format(cartItem.product.priceSale)} đ',
                       style: const TextStyle(
@@ -226,7 +215,6 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                       ),
                     ),
 
-                    // Size (if available)
                     if (cartItem.size != null)
                       Container(
                         margin: const EdgeInsets.only(top: 8),
@@ -254,7 +242,6 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                 ),
               ),
 
-              // Delete button
               IconButton(
                 icon: const Icon(Icons.delete_outline, color: Colors.red),
                 onPressed: () {
@@ -266,11 +253,9 @@ class _ProductCartState extends ConsumerState<ProductCart> {
 
           const SizedBox(height: 16),
 
-          // Quantity controls and total
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Quantity controls
               Row(
                 children: [
                   Container(
@@ -286,9 +271,8 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                       onPressed: () {
                         if (cartItem.quantity > 1) {
                           _updateQuantity(ref, index, cartItem.quantity - 1);
-                          // Cập nhật text của TextField khi nhấn nút
-                          quantityController.text = (cartItem.quantity - 1)
-                              .toString();
+                          quantityController.text =
+                              (cartItem.quantity - 1).toString();
                         }
                       },
                     ),
@@ -314,9 +298,7 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                         fontWeight: FontWeight.bold,
                       ),
                       onTapOutside: (event) {
-                        FocusScope.of(
-                          context,
-                        ).unfocus(); // Đóng bàn phím khi chạm ra ngoài
+                        FocusScope.of(context).unfocus();
                       },
                     ),
                   ),
@@ -332,16 +314,14 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                       icon: const Icon(Icons.add, size: 16),
                       onPressed: () {
                         _updateQuantity(ref, index, cartItem.quantity + 1);
-                        // Cập nhật text của TextField khi nhấn nút
-                        quantityController.text = (cartItem.quantity + 1)
-                            .toString();
+                        quantityController.text =
+                            (cartItem.quantity + 1).toString();
                       },
                     ),
                   ),
                 ],
               ),
 
-              // Item total
               Text(
                 '${NumberFormat('###,###').format(cartItem.totalPrice)} đ',
                 style: const TextStyle(
@@ -375,7 +355,6 @@ class _ProductCartState extends ConsumerState<ProductCart> {
       ),
       child: Column(
         children: [
-          // Subtotal
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -396,7 +375,6 @@ class _ProductCartState extends ConsumerState<ProductCart> {
 
           const SizedBox(height: 12),
 
-          // Shipping
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -415,7 +393,6 @@ class _ProductCartState extends ConsumerState<ProductCart> {
           const Divider(),
           const SizedBox(height: 16),
 
-          // Total
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -440,7 +417,6 @@ class _ProductCartState extends ConsumerState<ProductCart> {
 
           const SizedBox(height: 20),
 
-          // Checkout Button
           SizedBox(
             width: double.infinity,
             height: 50,
@@ -467,12 +443,10 @@ class _ProductCartState extends ConsumerState<ProductCart> {
     );
   }
 
-  // Hàm cập nhật số lượng và hiển thị animation
   void _updateQuantity(WidgetRef ref, int index, int newQuantity) async {
     setState(() {
-      _isLoadingTotal = true; // Bắt đầu animation loading
+      _isLoadingTotal = true;
     });
-    // Giả lập một độ trễ để thấy animation loading
     await Future.delayed(const Duration(milliseconds: 300));
 
     ref
@@ -480,7 +454,7 @@ class _ProductCartState extends ConsumerState<ProductCart> {
         .updateCartItemQuantity(index, newQuantity);
 
     setState(() {
-      _isLoadingTotal = false; // Kết thúc animation loading
+      _isLoadingTotal = false;
     });
   }
 
@@ -534,24 +508,23 @@ class _ProductCartState extends ConsumerState<ProductCart> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(dialogContext).pop(); // Đóng dialog
+                Navigator.of(dialogContext).pop();
               },
               child: const Text('Hủy'),
             ),
             TextButton(
               onPressed: () {
-                final subtotal = ref
-                    .watch(productsProvider.notifier)
-                    .cartTotal
-                    .toDouble();
-                Navigator.of(dialogContext).pop(); // Đóng dialog trước
+                final subtotal =
+                    ref.watch(productsProvider.notifier).cartTotal.toDouble();
+                Navigator.of(dialogContext).pop();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => ShippingAddressScreen(
-                      subtotal: subtotal,
-                      user: widget.user,
-                    ),
+                    builder:
+                        (_) => ShippingAddressScreen(
+                          subtotal: subtotal,
+                          user: widget.user,
+                        ),
                   ),
                 );
               },
@@ -564,7 +537,6 @@ class _ProductCartState extends ConsumerState<ProductCart> {
   }
 }
 
-// Tạo alias cho EmptyCartPage để tương thích ngược
 class EmptyCartPage extends ProductCart {
   const EmptyCartPage({Key? key, UserModel? user}) : super(key: key);
 }

@@ -83,11 +83,9 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               children: [
                 const SizedBox(height: 20),
 
-                // Logo
                 Image.asset('assets/images/logo.png', width: 100, height: 100),
                 const SizedBox(height: 12),
 
-                // Shopname
                 Image.asset(
                   'assets/images/shopname.png',
                   width: 220,
@@ -95,7 +93,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 ),
                 const SizedBox(height: 30),
 
-                // Title
                 const Text(
                   'Khôi phục mật khẩu',
                   style: TextStyle(
@@ -106,7 +103,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 ),
                 const SizedBox(height: 30),
 
-                // Email field
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.3),
@@ -119,7 +115,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       fontSize: 16,
                     ),
                     decoration: InputDecoration(
-                      hintText: 'phucfullstack@gmail.com',
+                      hintText: 'Nhập email',
                       hintStyle: TextStyle(
                         color: Color(0xFF8B4513).withOpacity(0.7),
                       ),
@@ -141,7 +137,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 
                 const SizedBox(height: 20),
 
-                // Instruction text
                 const Text(
                   'Kiểm tra email sau khi ấn Khôi phục',
                   style: TextStyle(
@@ -153,7 +148,6 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 
                 const SizedBox(height: 30),
 
-                // Recover Button
                 Container(
                   width: double.infinity,
                   height: 56,
@@ -179,22 +173,23 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: _isLoading
-                        ? const SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
+                    child:
+                        _isLoading
+                            ? const SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            )
+                            : const Text(
+                              'Khôi phục',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
-                          )
-                        : const Text(
-                            'Khôi phục',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
                   ),
                 ),
                 const SizedBox(height: 50),

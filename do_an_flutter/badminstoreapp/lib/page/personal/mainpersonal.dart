@@ -36,7 +36,6 @@ class MainPersonalPage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Profile Section
             Container(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -48,22 +47,23 @@ class MainPersonalPage extends ConsumerWidget {
                       color: Color(0xFFD2691E),
                       shape: BoxShape.circle,
                     ),
-                    child: user?.fullname != null && user!.fullname!.isNotEmpty
-                        ? Center(
-                            child: Text(
-                              _getInitials(user!.fullname!),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                    child:
+                        user?.fullname != null && user!.fullname!.isNotEmpty
+                            ? Center(
+                              child: Text(
+                                _getInitials(user!.fullname!),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
+                            )
+                            : const Icon(
+                              Icons.person,
+                              color: Colors.white,
+                              size: 30,
                             ),
-                          )
-                        : const Icon(
-                            Icons.person,
-                            color: Colors.white,
-                            size: 30,
-                          ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -106,7 +106,6 @@ class MainPersonalPage extends ConsumerWidget {
               ),
             ),
 
-            // User Info Card (if user is logged in)
             if (user != null)
               Container(
                 width: double.infinity,
@@ -141,15 +140,12 @@ class MainPersonalPage extends ConsumerWidget {
                 ),
               ),
 
-            // Order Button
             if (user != null)
               Container(
                 width: double.infinity,
                 margin: const EdgeInsets.symmetric(vertical: 20),
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Navigate to orders page
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFD2691E),
                     foregroundColor: Colors.white,
@@ -165,12 +161,10 @@ class MainPersonalPage extends ConsumerWidget {
                 ),
               ),
 
-            // Menu Items
             _buildMenuItem(
               icon: Icons.person_outline,
               title: 'Thông tin cá nhân',
               onTap: () {
-                // Navigate to personal info page
                 _showUserInfoDialog(context);
               },
             ),
@@ -180,7 +174,6 @@ class MainPersonalPage extends ConsumerWidget {
               icon: Icons.info_outline,
               title: 'Giới thiệu',
               onTap: () {
-                // Navigate to about page
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const AboutPage()),
@@ -193,7 +186,6 @@ class MainPersonalPage extends ConsumerWidget {
               icon: Icons.help_outline,
               title: 'Trung tâm trợ giúp',
               onTap: () {
-                // Navigate to help center
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SupportPage()),
@@ -206,7 +198,6 @@ class MainPersonalPage extends ConsumerWidget {
               icon: Icons.settings_outlined,
               title: 'Cài đặt',
               onTap: () {
-                // Navigate to settings page
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SettingPage()),
@@ -216,7 +207,6 @@ class MainPersonalPage extends ConsumerWidget {
 
             const SizedBox(height: 32),
 
-            // Logout Button
             if (user != null)
               Container(
                 width: double.infinity,
@@ -245,7 +235,6 @@ class MainPersonalPage extends ConsumerWidget {
     );
   }
 
-  // Helper methods
   String _getDisplayName() {
     if (user == null) return 'Khách';
 
@@ -448,13 +437,10 @@ class MainPersonalPage extends ConsumerWidget {
               onPressed: () async {
                 Navigator.of(context).pop();
 
-                // Thực hiện đăng xuất thực tế qua Firebase Auth
                 await AuthService.signOut();
 
-                // Xóa trạng thái người dùng trong Riverpod
                 ref.read(userProvider.notifier).state = null;
 
-                // Quay về màn hình Start
                 if (!context.mounted) return;
                 Navigator.pushAndRemoveUntil(
                   context,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../home/categorylist.dart'; // Import CategoryList
-import 'categoryproduct.dart'; // Import CategoryProductWidget
+import '../home/categorylist.dart';
+import 'categoryproduct.dart';
 
 class MainCategoryPage extends ConsumerStatefulWidget {
-  final int initialCategoryId; // ID danh mục ban đầu để hiển thị
+  final int initialCategoryId;
 
   const MainCategoryPage({Key? key, required this.initialCategoryId})
     : super(key: key);
@@ -14,7 +14,7 @@ class MainCategoryPage extends ConsumerStatefulWidget {
 }
 
 class _MainCategoryPageState extends ConsumerState<MainCategoryPage> {
-  late int _selectedCategoryId; // Biến để lưu trữ ID danh mục hiện tại
+  late int _selectedCategoryId;
 
   @override
   void initState() {
@@ -22,7 +22,6 @@ class _MainCategoryPageState extends ConsumerState<MainCategoryPage> {
     _selectedCategoryId = widget.initialCategoryId;
   }
 
-  // Hàm để cập nhật categoryId khi người dùng chọn danh mục khác
   void _onCategorySelected(int categoryId) {
     setState(() {
       _selectedCategoryId = categoryId;
@@ -34,7 +33,7 @@ class _MainCategoryPageState extends ConsumerState<MainCategoryPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white, // Màu nền AppBar
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -43,7 +42,7 @@ class _MainCategoryPageState extends ConsumerState<MainCategoryPage> {
           },
         ),
         title: const Text(
-          'Danh mục sản phẩm', // Tiêu đề trang
+          'Danh mục sản phẩm',
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
@@ -51,11 +50,8 @@ class _MainCategoryPageState extends ConsumerState<MainCategoryPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Hiển thị CategoryList
-            // Truyền một callback để MainCategoryPage có thể nhận biết khi danh mục được chọn
             CategoryList(onCategorySelected: _onCategorySelected),
 
-            // Hiển thị CategoryProductWidget dựa trên danh mục đã chọn
             CategoryProductWidget(categoryId: _selectedCategoryId),
           ],
         ),

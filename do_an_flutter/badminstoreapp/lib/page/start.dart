@@ -20,13 +20,11 @@ class _StartScreenState extends State<StartScreen>
   void initState() {
     super.initState();
 
-    // Animation cho logo (di chuyển từ giữa lên trên)
     _logoController = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
 
-    // Animation cho nội dung (fade in)
     _contentController = AnimationController(
       duration: const Duration(milliseconds: 800),
       vsync: this,
@@ -40,16 +38,13 @@ class _StartScreenState extends State<StartScreen>
       CurvedAnimation(parent: _contentController, curve: Curves.easeInOut),
     );
 
-    // Bắt đầu animation
     _startAnimation();
-
-    // Chuyển sang LoginScreen sau 4 giây
 
     Future.delayed(const Duration(seconds: 4), () {
       Navigator.of(context).pushReplacement(
         PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              IntroScreen(),
+          pageBuilder:
+              (context, animation, secondaryAnimation) => IntroScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(opacity: animation, child: child);
           },
@@ -60,11 +55,9 @@ class _StartScreenState extends State<StartScreen>
   }
 
   void _startAnimation() async {
-    // Đợi 500ms rồi bắt đầu đẩy logo lên
     await Future.delayed(const Duration(milliseconds: 1000));
     _logoController.forward();
 
-    // Đợi logo animation hoàn thành một phần rồi hiển thị nội dung
     await Future.delayed(const Duration(milliseconds: 600));
     _contentController.forward();
   }
@@ -88,10 +81,7 @@ class _StartScreenState extends State<StartScreen>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFFFB382), // Màu cam nhạt
-              Color(0xFFFF8C42), // Màu cam đậm
-            ],
+            colors: [Color(0xFFFFB382), Color(0xFFFF8C42)],
           ),
         ),
         child: AnimatedBuilder(
@@ -99,14 +89,11 @@ class _StartScreenState extends State<StartScreen>
           builder: (context, child) {
             return Column(
               children: [
-                // Spacer để đẩy content xuống giữa
                 Expanded(flex: 1, child: Container()),
 
-                // Logo và shopname group
                 AnimatedBuilder(
                   animation: _logoAnimation,
                   builder: (context, child) {
-                    // Animation di chuyển toàn bộ group lên trên
                     double translateY = -(_logoAnimation.value * 50);
 
                     return Transform.translate(
@@ -114,7 +101,6 @@ class _StartScreenState extends State<StartScreen>
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Logo
                           Image.asset(
                             'assets/images/logo.png',
                             width: 120,
@@ -122,10 +108,7 @@ class _StartScreenState extends State<StartScreen>
                             fit: BoxFit.contain,
                           ),
 
-                          const SizedBox(
-                            height: 20,
-                          ), // Khoảng cách giữa logo và shopname
-                          // Shopname với fade in animation
+                          const SizedBox(height: 20),
                           AnimatedBuilder(
                             animation: _contentAnimation,
                             builder: (context, child) {
@@ -146,7 +129,6 @@ class _StartScreenState extends State<StartScreen>
                   },
                 ),
 
-                // Loading section
                 AnimatedBuilder(
                   animation: _contentAnimation,
                   builder: (context, child) {
@@ -157,7 +139,6 @@ class _StartScreenState extends State<StartScreen>
                         children: [
                           const SizedBox(height: 30),
 
-                          // Loading indicator
                           const CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation<Color>(
                               Color(0xFF8B4513),
@@ -167,7 +148,6 @@ class _StartScreenState extends State<StartScreen>
 
                           const SizedBox(height: 20),
 
-                          // Text "Đang tải..."
                           const Text(
                             'Đang tải...',
                             style: TextStyle(
@@ -182,7 +162,6 @@ class _StartScreenState extends State<StartScreen>
                   },
                 ),
 
-                // Spacer để cân bằng layout
                 Expanded(flex: 1, child: Container()),
               ],
             );

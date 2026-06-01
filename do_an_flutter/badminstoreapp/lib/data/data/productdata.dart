@@ -4,14 +4,12 @@ import '../model/productmodel.dart';
 import '../../services/firestore_service.dart';
 
 class ReadData {
-  /// Đọc sản phẩm từ Firestore. Nếu Firestore rỗng/lỗi → fallback về JSON local.
   Future<List<ProductModel>> loadData() async {
     try {
       final firestoreProducts = await FirestoreService.getProducts();
       if (firestoreProducts.isNotEmpty) {
         return firestoreProducts;
       }
-      // Fallback về JSON local nếu Firestore chưa có dữ liệu
       return await _loadFromJson();
     } catch (e) {
       return await _loadFromJson();

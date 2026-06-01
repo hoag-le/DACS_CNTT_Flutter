@@ -20,18 +20,17 @@ class _MainPageState extends ConsumerState<MainPage> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
-    // Danh sách các trang với user data
     List<Widget> pages = [
-      HomeWidget(user: user), // Trang chủ
-      ProductFavorite(), // Trang yêu thích
-      MainOrder(user: user), // Trang đơn hàng
-      ProfilePage(user: user), // Trang cá nhân với user data
+      HomeWidget(user: user),
+      ProductFavorite(),
+      MainOrder(user: user),
+      ProfilePage(user: user),
     ];
     return Scaffold(
       body: pages[currentIndex],
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
-          color: Color(0xFFE8D5C4), // Màu nền bottom bar giống hình
+          color: Color(0xFFE8D5C4),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
@@ -47,7 +46,7 @@ class _MainPageState extends ConsumerState<MainPage> {
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.transparent,
           elevation: 0,
-          selectedItemColor: const Color(0xFF8B4513), // Màu nâu đậm khi chọn
+          selectedItemColor: const Color(0xFF8B4513),
           unselectedItemColor: const Color(0xFF8B4513).withOpacity(0.6),
           selectedLabelStyle: const TextStyle(
             fontWeight: FontWeight.bold,
@@ -82,12 +81,10 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Trực tiếp hiển thị MainPersonalPage với user data
     return MainPersonalPage(user: user);
   }
 }
 
-// Các trang placeholder
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 

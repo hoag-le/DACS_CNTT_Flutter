@@ -1,6 +1,3 @@
-// File được tạo tự động từ google-services.json
-// Project: badmin-store-app
-
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
@@ -42,8 +39,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDkd80GsSISxomiBvdfL4aAyO3HausPpOA',
-    appId:
-        '1:964437620250:web:1234567890abcdef', // Temporary placeholder for web
+    appId: '1:964437620250:web:1234567890abcdef',
     messagingSenderId: '964437620250',
     projectId: 'badmin-store-app',
     authDomain: 'badmin-store-app.firebaseapp.com',

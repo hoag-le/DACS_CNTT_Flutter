@@ -1,6 +1,6 @@
 class UserModel {
-  String? uid; // Firebase Auth UID (thay thế int id)
-  int? id; // Giữ lại để tương thích với dữ liệu cũ
+  String? uid;
+  int? id;
   String? username;
   String? email;
   String? fullname;

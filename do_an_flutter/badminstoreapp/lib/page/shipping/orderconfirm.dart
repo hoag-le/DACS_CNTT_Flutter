@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'thank.dart';
 import '../../data/model/product_viewmodel.dart';
 import '../../data/model/usermodel.dart';
-import '../../services/firestore_service.dart';
+import '../../providers/checkout_provider.dart';
 
 class OrderConfirmScreen extends ConsumerStatefulWidget {
   final UserModel? user;
@@ -12,7 +11,7 @@ class OrderConfirmScreen extends ConsumerStatefulWidget {
   final String? receiverPhone;
   final String? shippingAddress;
   final int? totalAmount;
-  final int? isPayment; // 0=COD, 1=Momo, 2=VNPay
+  final int? isPayment;
 
   const OrderConfirmScreen({
     Key? key,
@@ -29,63 +28,64 @@ class OrderConfirmScreen extends ConsumerStatefulWidget {
 }
 
 class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
-  bool _isConfirming = false;
-
   Future<void> _confirmOrder() async {
-    setState(() => _isConfirming = true);
-
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? widget.user?.uid;
     final cartItems = ref.read(productsProvider.notifier).cartItems;
+    final totalAmount =
+        widget.totalAmount ?? ref.read(productsProvider.notifier).cartTotal;
 
-    if (uid != null && cartItems.isNotEmpty) {
-      try {
-        await FirestoreService.addOrder(
-          uid: uid,
+    final success = await ref
+        .read(checkoutProvider.notifier)
+        .placeOrder(
+          user: widget.user,
           receiverName: widget.receiverName ?? widget.user?.fullname ?? '',
           receiverPhone: widget.receiverPhone ?? widget.user?.phonenumber ?? '',
           shippingAddress: widget.shippingAddress ?? '',
-          totalAmount:
-              widget.totalAmount ??
-              ref.read(productsProvider.notifier).cartTotal,
+          totalAmount: totalAmount,
           isPayment: widget.isPayment ?? 0,
           cartItems: cartItems,
         );
-        // Clear remote cart as well
-        await FirestoreService.clearCart(uid);
-      } catch (e) {
-        // Ghi log lỗi nhưng vẫn tiếp tục — tránh block UX
-        debugPrint('Error saving order: $e');
-      }
-    }
-
-    // Xóa giỏ hàng
-    ref.read(productsProvider.notifier).clearCart();
-
-    setState(() => _isConfirming = false);
 
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text(
-          'Xác nhận thành công! Đơn hàng đã được tạo.',
-          style: TextStyle(color: Colors.white),
+    if (success) {
+      ref.read(productsProvider.notifier).clearCart();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+            'Xác nhận thành công! Đơn hàng đã được tạo.',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      ),
-    );
+      );
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => ThankYouScreen(user: widget.user)),
-    );
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => ThankYouScreen(user: widget.user)),
+      );
+    } else {
+      final errorState = ref.read(checkoutProvider);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Lỗi khi đặt hàng. Vui lòng thử lại.',
+            style: const TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final checkoutState = ref.watch(checkoutProvider);
+    final isConfirming = checkoutState.isLoading;
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -100,7 +100,6 @@ class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              // Header
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: Center(
@@ -111,8 +110,6 @@ class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
                   ),
                 ),
               ),
-
-              // Progress indicator
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Row(
@@ -155,19 +152,18 @@ class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
                         ),
                       ),
                       const SizedBox(height: 40),
-
-                      // Confirmation Button
                       Container(
                         width: double.infinity,
                         height: 56,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: _isConfirming
-                                ? [Colors.grey[400]!, Colors.grey[500]!]
-                                : [
-                                    const Color(0xFFFF8C42),
-                                    const Color(0xFFFF6B1A),
-                                  ],
+                            colors:
+                                isConfirming
+                                    ? [Colors.grey[400]!, Colors.grey[500]!]
+                                    : [
+                                      const Color(0xFFFF8C42),
+                                      const Color(0xFFFF6B1A),
+                                    ],
                           ),
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
@@ -179,7 +175,7 @@ class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
                           ],
                         ),
                         child: ElevatedButton(
-                          onPressed: _isConfirming ? null : _confirmOrder,
+                          onPressed: isConfirming ? null : _confirmOrder,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent,
@@ -187,25 +183,26 @@ class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          child: _isConfirming
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
+                          child:
+                              isConfirming
+                                  ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                  : const Text(
+                                    'Xác nhận',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
                                     ),
                                   ),
-                                )
-                              : const Text(
-                                  'Xác nhận',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
                         ),
                       ),
                     ],

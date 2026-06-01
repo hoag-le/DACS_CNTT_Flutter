@@ -15,7 +15,6 @@ class CartItemModel {
     );
   }
 
-  // Tính tổng giá cho item này
   int get totalPrice => (product.priceSale ?? 0) * quantity;
 
   Map<String, dynamic> toJson() {

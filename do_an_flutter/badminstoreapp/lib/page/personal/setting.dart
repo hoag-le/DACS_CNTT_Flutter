@@ -14,7 +14,6 @@ class SettingPage extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color(0xFF8B4513)),
-          //onPressed: () => Navigator.pop(context),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -34,13 +33,10 @@ class SettingPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Menu Items
             _buildMenuItem(
               icon: Icons.person_outline,
               title: 'Sửa thông tin cá nhân',
-              onTap: () {
-                // Navigate to personal info page
-              },
+              onTap: () {},
             ),
             const SizedBox(height: 16),
 
@@ -48,7 +44,6 @@ class SettingPage extends StatelessWidget {
               icon: Icons.password,
               title: 'Thay đổi mật khẩu',
               onTap: () {
-                // Navigate to about page
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -60,7 +55,6 @@ class SettingPage extends StatelessWidget {
 
             const SizedBox(height: 32),
 
-            // Đây là nút đăng xuất thêm vào cuối Column
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,

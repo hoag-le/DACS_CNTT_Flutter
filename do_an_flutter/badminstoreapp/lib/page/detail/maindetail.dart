@@ -40,7 +40,6 @@ class _MainDetailState extends ConsumerState<MainDetail> {
   bool isLoading = true;
   String? selectedSize;
 
-  // State variable for quantity
   int _quantity = 1;
 
   @override
@@ -75,14 +74,11 @@ class _MainDetailState extends ConsumerState<MainDetail> {
 
     final newQuantity = await showModalBottomSheet<int>(
       context: context,
-      isScrollControlled:
-          true, // Allows the bottom sheet to take full height if needed
+      isScrollControlled: true,
       builder: (BuildContext context) {
         return Padding(
           padding: EdgeInsets.only(
-            bottom: MediaQuery.of(
-              context,
-            ).viewInsets.bottom, // Adjust padding when keyboard is open
+            bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
           child: Container(
             padding: const EdgeInsets.all(20.0),
@@ -110,10 +106,7 @@ class _MainDetailState extends ConsumerState<MainDetail> {
                     if (parsed != null && parsed > 0) {
                       Navigator.pop(context, parsed);
                     } else {
-                      Navigator.pop(
-                        context,
-                        _quantity,
-                      ); // Revert to current quantity if invalid
+                      Navigator.pop(context, _quantity);
                     }
                   },
                 ),
@@ -123,9 +116,7 @@ class _MainDetailState extends ConsumerState<MainDetail> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(
-                          context,
-                        ); // Dismiss without changing quantity
+                        Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey,
@@ -144,10 +135,7 @@ class _MainDetailState extends ConsumerState<MainDetail> {
                         if (parsed != null && parsed > 0) {
                           Navigator.pop(context, parsed);
                         } else {
-                          Navigator.pop(
-                            context,
-                            _quantity,
-                          ); // Revert to current quantity if invalid
+                          Navigator.pop(context, _quantity);
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -177,7 +165,6 @@ class _MainDetailState extends ConsumerState<MainDetail> {
 
   Future<void> loadProductData() async {
     try {
-      // Load all data
       final products = await ReadData().loadData();
       final sizes = await ProductSizeData().loadData();
       final rackets = await RacketData().loadData();
@@ -188,21 +175,16 @@ class _MainDetailState extends ConsumerState<MainDetail> {
       setState(() {
         allProducts = products;
         product = products.firstWhere((p) => p.id == widget.productId);
-        productSizes = sizes
-            .where((s) => s.productId == widget.productId)
-            .toList();
-        racketInfos = rackets
-            .where((r) => r.productId == widget.productId)
-            .toList();
-        shoeInfos = shoes
-            .where((s) => s.productId == widget.productId)
-            .toList();
-        clothingInfos = clothing
-            .where((c) => c.productId == widget.productId)
-            .toList();
-        bagAccessoryInfos = bagAccessory
-            .where((b) => b.productId == widget.productId)
-            .toList();
+        productSizes =
+            sizes.where((s) => s.productId == widget.productId).toList();
+        racketInfos =
+            rackets.where((r) => r.productId == widget.productId).toList();
+        shoeInfos =
+            shoes.where((s) => s.productId == widget.productId).toList();
+        clothingInfos =
+            clothing.where((c) => c.productId == widget.productId).toList();
+        bagAccessoryInfos =
+            bagAccessory.where((b) => b.productId == widget.productId).toList();
         isLoading = false;
       });
     } catch (e) {
@@ -215,26 +197,22 @@ class _MainDetailState extends ConsumerState<MainDetail> {
   int getProductType() {
     if (product?.categoryId == null) return 0;
 
-    // Determine product type based on category
-    // 1: Racket, 2: Shoes, 3: Clothing, 4: Bag/Accessory
     int categoryId = product!.categoryId!;
 
-    if (categoryId == 1) return 2; // Racket
-    if (categoryId == 2) return 1; // Shoes
-    if (categoryId >= 3 && categoryId <= 5) return 3; // Clothing
-    if (categoryId >= 6 && categoryId <= 8) return 4; // Bag/Accessory
+    if (categoryId == 1) return 2;
+    if (categoryId == 2) return 1;
+    if (categoryId >= 3 && categoryId <= 5) return 3;
+    if (categoryId >= 6 && categoryId <= 8) return 4;
 
-    return 0; // Unknown category
+    return 0;
   }
 
   bool isProductInFavorites() {
-    final favorites = ref.watch(productsProvider)['favorite']!;
+    final favorites = ref.watch(productsProvider).favorites;
     return favorites.any((p) => p.id == product?.id);
   }
 
-  // Thêm các method này vào class _MainDetailState:
   void _addToCart() {
-    // Kiểm tra nếu sản phẩm có size nhưng chưa chọn
     if (productSizes.isNotEmpty && selectedSize == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -261,7 +239,6 @@ class _MainDetailState extends ConsumerState<MainDetail> {
   }
 
   void _buyNow() {
-    // Kiểm tra nếu sản phẩm có size nhưng chưa chọn
     if (productSizes.isNotEmpty && selectedSize == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -273,12 +250,10 @@ class _MainDetailState extends ConsumerState<MainDetail> {
     }
 
     if (product != null) {
-      // Thêm vào giỏ hàng trước
       ref
           .read(productsProvider.notifier)
           .addToCart(product!, _quantity, selectedSize);
 
-      // Chuyển đến trang giỏ hàng
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const ProductCart()),
@@ -311,7 +286,6 @@ class _MainDetailState extends ConsumerState<MainDetail> {
           IconButton(
             icon: Icon(Icons.shopping_cart, color: Colors.brown),
             onPressed: () {
-              // Handle cart action
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const EmptyCartPage()),
@@ -339,18 +313,16 @@ class _MainDetailState extends ConsumerState<MainDetail> {
               productType: getProductType(),
               racketInfo: racketInfos.isNotEmpty ? racketInfos.first : null,
               shoeInfo: shoeInfos.isNotEmpty ? shoeInfos.first : null,
-              clothingInfo: clothingInfos.isNotEmpty
-                  ? clothingInfos.first
-                  : null,
-              bagAccessoryInfo: bagAccessoryInfos.isNotEmpty
-                  ? bagAccessoryInfos.first
-                  : null,
+              clothingInfo:
+                  clothingInfos.isNotEmpty ? clothingInfos.first : null,
+              bagAccessoryInfo:
+                  bagAccessoryInfos.isNotEmpty ? bagAccessoryInfos.first : null,
             ),
             RecommendedProducts(
               currentProductId: widget.productId,
               allProducts: allProducts,
             ),
-            SizedBox(height: 100), // Space for bottom bar
+            SizedBox(height: 100),
           ],
         ),
       ),
@@ -378,23 +350,21 @@ class _MainDetailState extends ConsumerState<MainDetail> {
               ),
               child: IconButton(
                 icon: Icon(Icons.remove, size: 20),
-                onPressed: _decrementQuantity, // Call decrement function
+                onPressed: _decrementQuantity,
               ),
             ),
             GestureDetector(
-              // Wrap with GestureDetector to open input dialog
               onTap: _showQuantityInputDialog,
               child: Container(
                 width: 60,
                 height: 40,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  // Add decoration to make it look like an input field
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  _quantity.toString(), // Display current quantity
+                  _quantity.toString(),
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -408,7 +378,7 @@ class _MainDetailState extends ConsumerState<MainDetail> {
               ),
               child: IconButton(
                 icon: Icon(Icons.add, size: 20),
-                onPressed: _incrementQuantity, // Call increment function
+                onPressed: _incrementQuantity,
               ),
             ),
             SizedBox(width: 16),
@@ -462,7 +432,6 @@ class _MainDetailState extends ConsumerState<MainDetail> {
   }
 }
 
-// headerproduct.dart
 class HeaderProduct extends ConsumerWidget {
   final ProductModel product;
 
@@ -470,7 +439,7 @@ class HeaderProduct extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final favorites = ref.watch(productsProvider)['favorite']!;
+    final favorites = ref.watch(productsProvider).favorites;
     final isInFavorites = favorites.any((p) => p.id == product.id);
 
     return Container(
@@ -491,7 +460,6 @@ class HeaderProduct extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Product Image
           Container(
             width: double.infinity,
             height: 200,
@@ -512,7 +480,6 @@ class HeaderProduct extends ConsumerWidget {
           ),
           SizedBox(height: 16),
 
-          // Product Name
           Text(
             product.productName ?? '',
             style: TextStyle(
@@ -523,7 +490,6 @@ class HeaderProduct extends ConsumerWidget {
           ),
           SizedBox(height: 8),
 
-          // Product Code and Heart Icon
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -538,7 +504,6 @@ class HeaderProduct extends ConsumerWidget {
                 ),
                 onPressed: () {
                   if (isInFavorites) {
-                    // Remove from favorites
                     final index = favorites.indexWhere(
                       (p) => p.id == product.id,
                     );
@@ -548,7 +513,6 @@ class HeaderProduct extends ConsumerWidget {
                           .removeFromFavorite(index);
                     }
                   } else {
-                    // Add to favorites
                     ref.read(productsProvider.notifier).addToFavorite(product);
                   }
                 },
@@ -556,7 +520,6 @@ class HeaderProduct extends ConsumerWidget {
             ],
           ),
 
-          // Brand and Status
           Row(
             children: [
               Text(
@@ -605,7 +568,6 @@ class HeaderProduct extends ConsumerWidget {
             ],
           ),
 
-          // Giá gốc gạch ngang
           Text(
             '${product.cost?.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')} đ',
             style: TextStyle(
@@ -614,7 +576,6 @@ class HeaderProduct extends ConsumerWidget {
               decoration: TextDecoration.lineThrough,
             ),
           ),
-          // Price
           Text(
             '${product.priceSale?.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')} đ',
             style: TextStyle(
@@ -623,15 +584,12 @@ class HeaderProduct extends ConsumerWidget {
               color: Colors.orange,
             ),
           ),
-
-          // Rating and Reviews
         ],
       ),
     );
   }
 }
 
-// size.dart
 class SizeSelector extends StatelessWidget {
   final List<ProductSizeModel> sizes;
   final String? selectedSize;
@@ -678,40 +636,45 @@ class SizeSelector extends StatelessWidget {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: sizes.map((size) {
-              bool isAvailable = size.status == 1;
-              bool isSelected = selectedSize == size.size;
+            children:
+                sizes.map((size) {
+                  bool isAvailable = size.status == 1;
+                  bool isSelected = selectedSize == size.size;
 
-              return GestureDetector(
-                onTap: isAvailable ? () => onSizeSelected(size.size!) : null,
-                child: Container(
-                  width: 50,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: isAvailable
-                        ? (isSelected ? Colors.orange : Colors.white)
-                        : Colors.grey[300],
-                    border: Border.all(
-                      color: isAvailable
-                          ? (isSelected ? Colors.orange : Colors.grey)
-                          : Colors.grey[400]!,
+                  return GestureDetector(
+                    onTap:
+                        isAvailable ? () => onSizeSelected(size.size!) : null,
+                    child: Container(
+                      width: 50,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color:
+                            isAvailable
+                                ? (isSelected ? Colors.orange : Colors.white)
+                                : Colors.grey[300],
+                        border: Border.all(
+                          color:
+                              isAvailable
+                                  ? (isSelected ? Colors.orange : Colors.grey)
+                                  : Colors.grey[400]!,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        size.size ?? '',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color:
+                              isAvailable
+                                  ? (isSelected ? Colors.white : Colors.black)
+                                  : Colors.grey[600],
+                        ),
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    size.size ?? '',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: isAvailable
-                          ? (isSelected ? Colors.white : Colors.black)
-                          : Colors.grey[600],
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
+                  );
+                }).toList(),
           ),
         ],
       ),
@@ -719,7 +682,6 @@ class SizeSelector extends StatelessWidget {
   }
 }
 
-// info.dart
 class ProductInfo extends StatelessWidget {
   final ProductModel product;
   final int productType;
@@ -758,7 +720,6 @@ class ProductInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Product Information
           Text(
             'Thông tin sản phẩm',
             style: TextStyle(
@@ -769,15 +730,10 @@ class ProductInfo extends StatelessWidget {
           ),
           SizedBox(height: 12),
 
-          // Different info based on product type
-          if (productType == 1) // Shoes
-            _buildShoeInfo(),
-          if (productType == 2) // Racket
-            _buildRacketInfo(),
-          if (productType == 3) // Clothing
-            _buildClothingInfo(),
-          if (productType == 4) // Bag/Accessory
-            _buildBagAccessoryInfo(),
+          if (productType == 1) _buildShoeInfo(),
+          if (productType == 2) _buildRacketInfo(),
+          if (productType == 3) _buildClothingInfo(),
+          if (productType == 4) _buildBagAccessoryInfo(),
         ],
       ),
     );
@@ -875,9 +831,7 @@ class ProductInfo extends StatelessWidget {
   }
 }
 
-// recommend.dart
 class RecommendedProducts extends ConsumerStatefulWidget {
-  // Changed to ConsumerStatefulWidget
   final int currentProductId;
   final List<ProductModel> allProducts;
 
@@ -889,28 +843,26 @@ class RecommendedProducts extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<RecommendedProducts> createState() =>
-      _RecommendedProductsState(); // Changed to ConsumerState
+      _RecommendedProductsState();
 }
 
 class _RecommendedProductsState extends ConsumerState<RecommendedProducts> {
-  // Changed to ConsumerState
   List<ProductModel> _displayedRecommendedProducts = [];
 
   @override
   void initState() {
     super.initState();
-    _refreshProducts(); // Initial load of recommended products
+    _refreshProducts();
   }
 
   void _refreshProducts() {
-    final eligibleProducts = widget.allProducts
-        .where((product) => product.id != widget.currentProductId)
-        .toList();
+    final eligibleProducts =
+        widget.allProducts
+            .where((product) => product.id != widget.currentProductId)
+            .toList();
 
-    // Shuffle the list to get random products
     eligibleProducts.shuffle(Random());
 
-    // Take up to 6 products
     setState(() {
       _displayedRecommendedProducts = eligibleProducts.take(6).toList();
     });
@@ -941,9 +893,7 @@ class _RecommendedProductsState extends ConsumerState<RecommendedProducts> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            // Use Row to place text and icon on the same line
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween, // Distribute space
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Gợi ý cho bạn',
@@ -954,29 +904,24 @@ class _RecommendedProductsState extends ConsumerState<RecommendedProducts> {
                 ),
               ),
               IconButton(
-                // Refresh Icon Button
                 icon: Icon(Icons.refresh, color: Colors.orange),
                 onPressed: _refreshProducts,
               ),
             ],
           ),
-          SizedBox(height: 16), // Space between button and grid
+          SizedBox(height: 16),
           GridView.builder(
-            shrinkWrap: true, // Important for nested scrollables
-            physics:
-                NeverScrollableScrollPhysics(), // Disable internal scrolling
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // 2 products per row
+              crossAxisCount: 2,
               crossAxisSpacing: 8.0,
               mainAxisSpacing: 8.0,
-              childAspectRatio: 0.56, // Adjust as needed to fit content
+              childAspectRatio: 0.56,
             ),
             itemCount: _displayedRecommendedProducts.length,
             itemBuilder: (context, index) {
-              return itemGridView(
-                _displayedRecommendedProducts[index],
-                ref,
-              ); // Use itemGridView here
+              return itemGridView(_displayedRecommendedProducts[index], ref);
             },
           ),
         ],

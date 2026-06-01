@@ -145,20 +145,21 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 ),
               ),
               onPressed: _isLoading ? null : _handleChangePassword,
-              child: _isLoading
-                  ? const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(color: Colors.white),
-                    )
-                  : const Text(
-                      'Xác nhận thay đổi',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+              child:
+                  _isLoading
+                      ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(color: Colors.white),
+                      )
+                      : const Text(
+                        'Xác nhận thay đổi',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
             ),
           ],
         ),

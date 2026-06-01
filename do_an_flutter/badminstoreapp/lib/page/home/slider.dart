@@ -1,50 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
-import '../../data/data/sliderdata.dart';
+import '../../providers/home_providers.dart';
 import '../../data/model/slidermodel.dart';
 import '../../conf/const.dart';
 
-class SliderWidget extends StatefulWidget {
+class SliderWidget extends ConsumerStatefulWidget {
   @override
   _SliderWidgetState createState() => _SliderWidgetState();
 }
 
-class _SliderWidgetState extends State<SliderWidget> {
+class _SliderWidgetState extends ConsumerState<SliderWidget> {
   PageController _pageController = PageController();
   Timer? _timer;
-  List<SliderModel> sliders = [];
-  bool isLoading = true;
   int currentPage = 0;
+  bool _timerStarted = false;
 
-  @override
-  void initState() {
-    super.initState();
-    loadSliders();
-  }
-
-  Future<void> loadSliders() async {
-    try {
-      SliderData sliderData = SliderData();
-      sliders = await sliderData.loadData();
-      setState(() {
-        isLoading = false;
-      });
-      startAutoScroll();
-    } catch (e) {
-      print('Error loading sliders: $e');
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  void startAutoScroll() {
-    if (sliders.isEmpty) return;
+  void startAutoScroll(int length) {
+    if (length == 0 || _timerStarted) return;
+    _timerStarted = true;
 
     _timer = Timer.periodic(Duration(seconds: 4), (Timer timer) {
       if (_pageController.hasClients) {
         setState(() {
-          currentPage = (currentPage + 1) % sliders.length;
+          currentPage = (currentPage + 1) % length;
         });
 
         _pageController.animateToPage(
@@ -96,11 +75,11 @@ class _SliderWidgetState extends State<SliderWidget> {
     );
   }
 
-  Widget buildPageIndicator() {
+  Widget buildPageIndicator(int length) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
-        sliders.length,
+        length,
         (index) => Container(
           width: currentPage == index ? 12 : 8,
           height: 8,
@@ -116,45 +95,54 @@ class _SliderWidgetState extends State<SliderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return Container(
-        height: 200,
-        child: Center(child: CircularProgressIndicator()),
-      );
-    }
+    final sliderAsyncValue = ref.watch(sliderProvider);
 
-    if (sliders.isEmpty) {
-      return Container(
-        height: 200,
-        child: Center(child: Text('Không có slider nào')),
-      );
-    }
-
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 16),
-      child: Column(
-        children: [
-          // Slider chính
-          Container(
+    return sliderAsyncValue.when(
+      data: (sliders) {
+        if (sliders.isEmpty) {
+          return Container(
             height: 200,
-            child: PageView.builder(
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  currentPage = index;
-                });
-              },
-              itemCount: sliders.length,
-              itemBuilder: (context, index) {
-                return buildSliderItem(sliders[index]);
-              },
-            ),
+            child: Center(child: Text('Không có slider nào')),
+          );
+        }
+
+        startAutoScroll(sliders.length);
+
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            children: [
+              Container(
+                height: 200,
+                child: PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    setState(() {
+                      currentPage = index;
+                    });
+                  },
+                  itemCount: sliders.length,
+                  itemBuilder: (context, index) {
+                    return buildSliderItem(sliders[index]);
+                  },
+                ),
+              ),
+              SizedBox(height: 16),
+              buildPageIndicator(sliders.length),
+            ],
           ),
-          SizedBox(height: 16),
-          // Chỉ báo trang (dots)
-          buildPageIndicator(),
-        ],
-      ),
+        );
+      },
+      loading:
+          () => Container(
+            height: 200,
+            child: Center(child: CircularProgressIndicator()),
+          ),
+      error:
+          (error, stack) => Container(
+            height: 200,
+            child: Center(child: Text('Lỗi tải dữ liệu')),
+          ),
     );
   }
 }

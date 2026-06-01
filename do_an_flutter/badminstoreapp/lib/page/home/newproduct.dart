@@ -1,100 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/data/productdata.dart';
+import '../../providers/home_providers.dart';
 import '../../data/model/productmodel.dart';
 import '../product/productbody.dart';
 
-class NewProductWidget extends ConsumerStatefulWidget {
+class NewProductWidget extends ConsumerWidget {
   @override
-  _NewProductWidgetState createState() => _NewProductWidgetState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final productsAsyncValue = ref.watch(productsProviderData);
 
-class _NewProductWidgetState extends ConsumerState<NewProductWidget> {
-  List<ProductModel> newProducts = [];
-  bool isLoading = true;
+    return productsAsyncValue.when(
+      data: (allProducts) {
+        List<ProductModel> newProducts =
+            allProducts
+                .where(
+                  (product) =>
+                      product.id != null &&
+                      product.id! >= 1 &&
+                      product.id! <= 12,
+                )
+                .toList();
 
-  @override
-  void initState() {
-    super.initState();
-    loadNewProducts();
-  }
+        newProducts.sort((a, b) => a.id!.compareTo(b.id!));
 
-  Future<void> loadNewProducts() async {
-    try {
-      ReadData readData = ReadData();
-      List<ProductModel> allProducts = await readData.loadData();
+        if (newProducts.isEmpty) {
+          return Container(
+            height: 200,
+            child: Center(child: Text('Không có sản phẩm mới')),
+          );
+        }
 
-      // Lọc sản phẩm từ id 69 đến id 80
-      newProducts = allProducts
-          .where(
-            (product) =>
-                product.id != null && product.id! >= 1 && product.id! <= 12,
-          )
-          .toList();
+        return Container(
+          margin: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Sản phẩm mới',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              SizedBox(height: 5),
 
-      // Sắp xếp theo id để đảm bảo thứ tự
-      newProducts.sort((a, b) => a.id!.compareTo(b.id!));
-
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {
-      print('Error loading new products: $e');
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (isLoading) {
-      return Container(
-        height: 200,
-        child: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    if (newProducts.isEmpty) {
-      return Container(
-        height: 200,
-        child: Center(child: Text('Không có sản phẩm mới')),
-      );
-    }
-
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Tiêu đề
-          Text(
-            'Sản phẩm mới',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  childAspectRatio: 0.62,
+                ),
+                itemCount: newProducts.length,
+                itemBuilder: (context, index) {
+                  return itemGridView(newProducts[index], ref);
+                },
+              ),
+            ],
           ),
-          SizedBox(height: 5),
-
-          // Grid hiển thị sản phẩm (2 cột)
-          GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-              childAspectRatio: 0.62, // Điều chỉnh tỷ lệ chiều cao/rộng
-            ),
-            itemCount: newProducts.length,
-            itemBuilder: (context, index) {
-              return itemGridView(newProducts[index], ref);
-            },
+        );
+      },
+      loading:
+          () => Container(
+            height: 200,
+            child: Center(child: CircularProgressIndicator()),
           ),
-        ],
-      ),
+      error:
+          (error, stack) => Container(
+            height: 200,
+            child: Center(child: Text('Lỗi tải dữ liệu')),
+          ),
     );
   }
 }

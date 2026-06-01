@@ -6,13 +6,10 @@ class AuthService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  // Stream trạng thái đăng nhập
   static Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  // Lấy user hiện tại từ Firebase Auth
   static User? get currentUser => _auth.currentUser;
 
-  // Đăng nhập bằng email/password
   static Future<UserModel?> signIn(String email, String password) async {
     try {
       final credential = await _auth.signInWithEmailAndPassword(
@@ -26,7 +23,6 @@ class AuthService {
     }
   }
 
-  // Đăng ký tài khoản mới
   static Future<UserModel?> register({
     required String email,
     required String password,
@@ -35,14 +31,12 @@ class AuthService {
     String? phonenumber,
   }) async {
     try {
-      // Tạo tài khoản trong Firebase Auth
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       final uid = credential.user!.uid;
 
-      // Tạo profile trong Firestore
       final userModel = UserModel(
         uid: uid,
         username: username,
@@ -61,12 +55,10 @@ class AuthService {
     }
   }
 
-  // Đăng xuất
   static Future<void> signOut() async {
     await _auth.signOut();
   }
 
-  // Lấy thông tin profile từ Firestore
   static Future<UserModel?> getUserProfile(String uid) async {
     try {
       final doc = await _db.collection('users').doc(uid).get();
@@ -75,7 +67,6 @@ class AuthService {
         data['uid'] = uid;
         return UserModel.fromJson(data);
       }
-      // Nếu chưa có profile → tạo mới từ FirebaseAuth user
       final authUser = _auth.currentUser;
       if (authUser != null) {
         final userModel = UserModel(
@@ -96,7 +87,6 @@ class AuthService {
     }
   }
 
-  // Cập nhật profile user
   static Future<void> updateProfile(
     String uid,
     Map<String, dynamic> data,
@@ -104,7 +94,6 @@ class AuthService {
     await _db.collection('users').doc(uid).update(data);
   }
 
-  // Gửi email khôi phục mật khẩu
   static Future<void> sendPasswordResetEmail(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
@@ -115,7 +104,6 @@ class AuthService {
     }
   }
 
-  // Thay đổi mật khẩu
   static Future<void> changePassword(
     String currentPassword,
     String newPassword,
@@ -124,14 +112,12 @@ class AuthService {
       final user = _auth.currentUser;
       if (user == null) throw 'Người dùng chưa đăng nhập';
 
-      // Re-authenticate trước khi đổi mật khẩu
       AuthCredential credential = EmailAuthProvider.credential(
         email: user.email!,
         password: currentPassword,
       );
       await user.reauthenticateWithCredential(credential);
 
-      // Cập nhật mật khẩu mới
       await user.updatePassword(newPassword);
     } on FirebaseAuthException catch (e) {
       throw _mapAuthError(e);
@@ -141,7 +127,6 @@ class AuthService {
     }
   }
 
-  // Map Firebase error sang tiếng Việt
   static String _mapAuthError(FirebaseAuthException e) {
     switch (e.code) {
       case 'user-not-found':

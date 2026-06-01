@@ -7,18 +7,14 @@ import '../data/model/cartitemmodel.dart';
 class FirestoreService {
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  // ==============================
-  // PRODUCTS
-  // ==============================
-
-  /// Lấy tất cả sản phẩm (status=1, visible=1)
   static Future<List<ProductModel>> getProducts() async {
     try {
-      final snapshot = await _db
-          .collection('products')
-          .where('status', isEqualTo: 1)
-          .where('visible', isEqualTo: 1)
-          .get();
+      final snapshot =
+          await _db
+              .collection('products')
+              .where('status', isEqualTo: 1)
+              .where('visible', isEqualTo: 1)
+              .get();
       return snapshot.docs
           .map((doc) => ProductModel.fromJson({...doc.data(), 'id': doc.id}))
           .toList();
@@ -27,7 +23,6 @@ class FirestoreService {
     }
   }
 
-  /// Stream sản phẩm (real-time)
   static Stream<List<ProductModel>> productsStream() {
     return _db
         .collection('products')
@@ -35,26 +30,24 @@ class FirestoreService {
         .where('visible', isEqualTo: 1)
         .snapshots()
         .map(
-          (snap) => snap.docs
-              .map(
-                (doc) => ProductModel.fromJson({...doc.data(), 'id': doc.id}),
-              )
-              .toList(),
+          (snap) =>
+              snap.docs
+                  .map(
+                    (doc) =>
+                        ProductModel.fromJson({...doc.data(), 'id': doc.id}),
+                  )
+                  .toList(),
         );
   }
 
-  // ==============================
-  // ORDERS
-  // ==============================
-
-  /// Lấy đơn hàng của một user
   static Future<List<OrderModel>> getOrdersByUser(String uid) async {
     try {
-      final snapshot = await _db
-          .collection('orders')
-          .where('userId', isEqualTo: uid)
-          .orderBy('orderDate', descending: true)
-          .get();
+      final snapshot =
+          await _db
+              .collection('orders')
+              .where('userId', isEqualTo: uid)
+              .orderBy('orderDate', descending: true)
+              .get();
       return snapshot.docs
           .map((doc) => OrderModel.fromJson({...doc.data(), 'id': doc.id}))
           .toList();
@@ -63,7 +56,6 @@ class FirestoreService {
     }
   }
 
-  /// Stream đơn hàng của user (real-time)
   static Stream<List<OrderModel>> ordersStream(String uid) {
     return _db
         .collection('orders')
@@ -71,22 +63,25 @@ class FirestoreService {
         .orderBy('orderDate', descending: true)
         .snapshots()
         .map(
-          (snap) => snap.docs
-              .map((doc) => OrderModel.fromJson({...doc.data(), 'id': doc.id}))
-              .toList(),
+          (snap) =>
+              snap.docs
+                  .map(
+                    (doc) => OrderModel.fromJson({...doc.data(), 'id': doc.id}),
+                  )
+                  .toList(),
         );
   }
 
-  /// Lấy chi tiết đơn hàng
   static Future<List<OrderDetailModelWithName>> getOrderDetails(
     String orderId,
   ) async {
     try {
-      final snapshot = await _db
-          .collection('orders')
-          .doc(orderId)
-          .collection('order_details')
-          .get();
+      final snapshot =
+          await _db
+              .collection('orders')
+              .doc(orderId)
+              .collection('order_details')
+              .get();
       return snapshot.docs
           .map(
             (doc) => OrderDetailModelWithName.fromFirestore({
@@ -100,7 +95,6 @@ class FirestoreService {
     }
   }
 
-  /// Tạo đơn hàng mới (transaction)
   static Future<String?> addOrder({
     required String uid,
     required String receiverName,
@@ -122,7 +116,7 @@ class FirestoreService {
         'shippingAddress': shippingAddress,
         'totalAmount': totalAmount,
         'isPayment': isPayment,
-        'orderStatus': 1, // Đang xử lý
+        'orderStatus': 1,
       };
 
       final batch = _db.batch();
@@ -148,25 +142,16 @@ class FirestoreService {
     }
   }
 
-  // ==============================
-  // CART (Firestore persistence)
-  // ==============================
-
-  /// Lấy giỏ hàng của user từ Firestore
   static Future<List<Map<String, dynamic>>> getCart(String uid) async {
     try {
-      final snapshot = await _db
-          .collection('users')
-          .doc(uid)
-          .collection('cart')
-          .get();
+      final snapshot =
+          await _db.collection('users').doc(uid).collection('cart').get();
       return snapshot.docs.map((doc) => doc.data()).toList();
     } catch (e) {
       return [];
     }
   }
 
-  /// Lưu toàn bộ giỏ hàng lên Firestore
   static Future<void> saveCart(
     String uid,
     List<CartItemModel> cartItems,
@@ -174,14 +159,12 @@ class FirestoreService {
     try {
       final cartRef = _db.collection('users').doc(uid).collection('cart');
 
-      // Xóa giỏ hàng cũ
       final existing = await cartRef.get();
       final batch = _db.batch();
       for (final doc in existing.docs) {
         batch.delete(doc.reference);
       }
 
-      // Thêm cart items mới
       for (final item in cartItems) {
         final key = '${item.product.id}_${item.size ?? 'nosize'}';
         batch.set(cartRef.doc(key), {
@@ -199,12 +182,9 @@ class FirestoreService {
       }
 
       await batch.commit();
-    } catch (e) {
-      // Bỏ qua lỗi cart sync — không block UX
-    }
+    } catch (e) {}
   }
 
-  /// Xóa toàn bộ giỏ hàng trên Firestore
   static Future<void> clearCart(String uid) async {
     try {
       final cartRef = _db.collection('users').doc(uid).collection('cart');
@@ -214,8 +194,6 @@ class FirestoreService {
         batch.delete(doc.reference);
       }
       await batch.commit();
-    } catch (e) {
-      // Ignore
-    }
+    } catch (e) {}
   }
 }

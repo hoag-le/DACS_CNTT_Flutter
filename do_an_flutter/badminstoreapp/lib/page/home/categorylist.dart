@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
-import '../../data/data/categorydata.dart';
+import '../../providers/home_providers.dart';
 import '../../data/model/categorymodel.dart';
 import '../../conf/const.dart';
-import '../../page/category/maincategory.dart'; // Import MainCategoryPage
+import '../../page/category/maincategory.dart';
 
-class CategoryList extends StatefulWidget {
-  final Function(int)?
-  onCategorySelected; // Thêm callback để thông báo danh mục được chọn
+class CategoryList extends ConsumerStatefulWidget {
+  final Function(int)? onCategorySelected;
 
   const CategoryList({Key? key, this.onCategorySelected}) : super(key: key);
 
@@ -15,54 +15,27 @@ class CategoryList extends StatefulWidget {
   _CategoryListState createState() => _CategoryListState();
 }
 
-class _CategoryListState extends State<CategoryList> {
+class _CategoryListState extends ConsumerState<CategoryList> {
   PageController _pageController = PageController();
   Timer? _timer;
-  List<CategoryModel> categories = [];
-  bool isLoading = true;
+  bool _timerStarted = false;
 
-  @override
-  void initState() {
-    super.initState();
-    loadCategories();
-  }
-
-  Future<void> loadCategories() async {
-    try {
-      CategoryData categoryData = CategoryData();
-      categories = await categoryData.loadData();
-      setState(() {
-        isLoading = false;
-      });
-      startAutoScroll();
-    } catch (e) {
-      print('Error loading categories: $e');
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  void startAutoScroll() {
-    if (categories.length <= 4)
-      return; // Không cần cuộn nếu ít hơn hoặc bằng 4 danh mục
+  void startAutoScroll(int length) {
+    if (length <= 4 || _timerStarted) return;
+    _timerStarted = true;
 
     _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       if (_pageController.hasClients) {
         int nextPage = (_pageController.page?.round() ?? 0) + 1;
-
-        // Tính toán số trang tối đa (8 danh mục, hiển thị 4 mỗi trang)
-        int maxPages = (categories.length / 4).ceil();
+        int maxPages = (length / 4).ceil();
 
         if (nextPage >= maxPages) {
-          // Quay lại trang đầu tiên
           _pageController.animateToPage(
             0,
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
           );
         } else {
-          // Chuyển sang trang tiếp theo
           _pageController.animateToPage(
             nextPage,
             duration: const Duration(milliseconds: 300),
@@ -82,18 +55,16 @@ class _CategoryListState extends State<CategoryList> {
 
   Widget buildCategoryItem(CategoryModel category) {
     return GestureDetector(
-      // Bọc bằng GestureDetector để xử lý sự kiện click
       onTap: () {
         if (widget.onCategorySelected != null) {
-          widget.onCategorySelected!(category.id!); // Gọi callback nếu có
+          widget.onCategorySelected!(category.id!);
         } else {
-          // Nếu không có callback (ví dụ: khi CategoryList được dùng độc lập),
-          // thì điều hướng đến MainCategoryPage
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  MainCategoryPage(initialCategoryId: category.id!),
+              builder:
+                  (context) =>
+                      MainCategoryPage(initialCategoryId: category.id!),
             ),
           );
         }
@@ -103,12 +74,11 @@ class _CategoryListState extends State<CategoryList> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Container cho hình tròn
             Container(
               width: 70,
               height: 70,
               decoration: BoxDecoration(
-                color: const Color(0xFFE8D5C0), // Màu nền beige như trong hình
+                color: const Color(0xFFE8D5C0),
                 shape: BoxShape.circle,
               ),
               child: ClipOval(
@@ -128,7 +98,6 @@ class _CategoryListState extends State<CategoryList> {
               ),
             ),
             const SizedBox(height: 8),
-            // Tên danh mục
             Text(
               category.categoryName ?? '',
               style: TextStyle(
@@ -149,49 +118,58 @@ class _CategoryListState extends State<CategoryList> {
   Widget buildCategoryPage(List<CategoryModel> pageCategories) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: pageCategories
-          .map((category) => Expanded(child: buildCategoryItem(category)))
-          .toList(),
+      children:
+          pageCategories
+              .map((category) => Expanded(child: buildCategoryItem(category)))
+              .toList(),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return Container(
-        height: 120,
-        child: const Center(child: CircularProgressIndicator()),
-      );
-    }
+    final categoriesAsync = ref.watch(categoryProvider);
 
-    if (categories.isEmpty) {
-      return Container(
-        height: 120,
-        child: const Center(child: Text('Không có danh mục nào')),
-      );
-    }
+    return categoriesAsync.when(
+      data: (categories) {
+        if (categories.isEmpty) {
+          return Container(
+            height: 120,
+            child: const Center(child: Text('Không có danh mục nào')),
+          );
+        }
 
-    // Chia danh mục thành các trang (mỗi trang 4 danh mục)
-    List<List<CategoryModel>> pages = [];
-    for (int i = 0; i < categories.length; i += 4) {
-      pages.add(
-        categories.sublist(
-          i,
-          i + 4 > categories.length ? categories.length : i + 4,
-        ),
-      );
-    }
+        startAutoScroll(categories.length);
 
-    return Container(
-      height: 120,
-      margin: const EdgeInsets.symmetric(vertical: 16),
-      child: PageView.builder(
-        controller: _pageController,
-        itemCount: pages.length,
-        itemBuilder: (context, index) {
-          return buildCategoryPage(pages[index]);
-        },
-      ),
+        List<List<CategoryModel>> pages = [];
+        for (int i = 0; i < categories.length; i += 4) {
+          pages.add(
+            categories.sublist(
+              i,
+              i + 4 > categories.length ? categories.length : i + 4,
+            ),
+          );
+        }
+
+        return Container(
+          height: 120,
+          margin: const EdgeInsets.symmetric(vertical: 16),
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: pages.length,
+            itemBuilder: (context, index) {
+              return buildCategoryPage(pages[index]);
+            },
+          ),
+        );
+      },
+      loading:
+          () => Container(
+            height: 120,
+            child: const Center(child: CircularProgressIndicator()),
+          ),
+      error:
+          (e, s) =>
+              Container(height: 120, child: Center(child: Text('Lỗi: $e'))),
     );
   }
 }

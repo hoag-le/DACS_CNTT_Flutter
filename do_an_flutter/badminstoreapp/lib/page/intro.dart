@@ -37,7 +37,6 @@ class _IntroScreenState extends State<IntroScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      // TODO: Điều hướng sang trang đăng nhập hoặc trang chính
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const LoginScreen()),
@@ -46,7 +45,6 @@ class _IntroScreenState extends State<IntroScreen> {
   }
 
   void _skipIntro() {
-    // TODO: Điều hướng sang trang chính nếu nhấn bỏ qua
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const LoginScreen()),
@@ -98,7 +96,6 @@ class _IntroScreenState extends State<IntroScreen> {
               },
             ),
 
-            // 🔘 Dot indicator
             Positioned(
               bottom: 80,
               left: 0,
@@ -113,9 +110,8 @@ class _IntroScreenState extends State<IntroScreen> {
                     width: _currentIndex == index ? 16 : 8,
                     height: 8,
                     decoration: BoxDecoration(
-                      color: _currentIndex == index
-                          ? Colors.orange
-                          : Colors.grey,
+                      color:
+                          _currentIndex == index ? Colors.orange : Colors.grey,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -123,7 +119,6 @@ class _IntroScreenState extends State<IntroScreen> {
               ),
             ),
 
-            // ⬅️ Skip & Next Buttons
             Positioned(
               bottom: 20,
               left: 24,

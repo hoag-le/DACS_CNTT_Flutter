@@ -7,7 +7,6 @@ import '../../data/model/orderdetailmodel.dart';
 import '../../services/firestore_service.dart';
 
 class OrderDetail extends ConsumerStatefulWidget {
-  // orderId là String (Firestore document ID)
   final String orderId;
 
   const OrderDetail({Key? key, required this.orderId}) : super(key: key);
@@ -35,7 +34,6 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
     });
 
     try {
-      // Load order details từ Firestore sub-collection
       final details = await FirestoreService.getOrderDetails(widget.orderId);
 
       setState(() {
@@ -135,23 +133,24 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
           IconButton(icon: const Icon(Icons.refresh), onPressed: loadOrderData),
         ],
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : errorMessage != null
-          ? _buildErrorWidget()
-          : orderDetails.isEmpty
-          ? _buildNoDataWidget()
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildSummarySection(),
-                  const SizedBox(height: 16),
-                  _buildProductListSection(),
-                ],
+      body:
+          isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : errorMessage != null
+              ? _buildErrorWidget()
+              : orderDetails.isEmpty
+              ? _buildNoDataWidget()
+              : SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildSummarySection(),
+                    const SizedBox(height: 16),
+                    _buildProductListSection(),
+                  ],
+                ),
               ),
-            ),
     );
   }
 
@@ -346,8 +345,8 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: orderDetails.length,
             separatorBuilder: (context, index) => const Divider(height: 20),
-            itemBuilder: (context, index) =>
-                _buildProductItem(orderDetails[index]),
+            itemBuilder:
+                (context, index) => _buildProductItem(orderDetails[index]),
           ),
         ],
       ),
@@ -358,7 +357,6 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Hình ảnh sản phẩm
         Container(
           width: 60,
           height: 60,
@@ -368,32 +366,32 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: (orderDetail.image != null && orderDetail.image!.isNotEmpty)
-                ? Image.asset(
-                    uri_product_img + orderDetail.image!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => const Icon(
-                      Icons.image_not_supported,
+            child:
+                (orderDetail.image != null && orderDetail.image!.isNotEmpty)
+                    ? Image.asset(
+                      uri_product_img + orderDetail.image!,
+                      fit: BoxFit.cover,
+                      errorBuilder:
+                          (_, __, ___) => const Icon(
+                            Icons.image_not_supported,
+                            size: 30,
+                            color: Colors.grey,
+                          ),
+                    )
+                    : const Icon(
+                      Icons.shopping_bag_outlined,
                       size: 30,
                       color: Colors.grey,
                     ),
-                  )
-                : const Icon(
-                    Icons.shopping_bag_outlined,
-                    size: 30,
-                    color: Colors.grey,
-                  ),
           ),
         ),
 
         const SizedBox(width: 12),
 
-        // Thông tin sản phẩm
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Tên sản phẩm
               Text(
                 orderDetail.productName ?? 'Sản phẩm không xác định',
                 style: const TextStyle(
@@ -407,7 +405,6 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
 
               const SizedBox(height: 4),
 
-              // Size (nếu có)
               if (orderDetail.size != null && orderDetail.size!.isNotEmpty)
                 Text(
                   'Size: ${orderDetail.size}',
@@ -416,7 +413,6 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
 
               const SizedBox(height: 8),
 
-              // Giá và số lượng
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

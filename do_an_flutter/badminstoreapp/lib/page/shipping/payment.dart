@@ -4,7 +4,7 @@ import '../shipping/orderconfirm.dart';
 import '../../data/model/usermodel.dart';
 
 class PaymentScreen extends StatefulWidget {
-  final double subtotal; // Thêm parameter để nhận subtotal
+  final double subtotal;
   final UserModel? user;
   final String receiverName;
   final String receiverPhone;
@@ -24,12 +24,10 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  String _selectedPaymentMethod = 'momo'; // Default selected payment method
+  String _selectedPaymentMethod = 'momo';
 
-  // Constants
-  static const double shippingFee = 20000; // Phí vận chuyển cố định
+  static const double shippingFee = 20000;
 
-  // Calculated values
   double get total => widget.subtotal + shippingFee;
 
   @override
@@ -42,16 +40,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFFFB382), // Màu cam nhạt
-              Color(0xFFFF8C42), // Màu cam đậm
-            ],
+            colors: [Color(0xFFFFB382), Color(0xFFFF8C42)],
           ),
         ),
         child: SafeArea(
           child: Column(
             children: [
-              // Header
               Container(
                 padding: const EdgeInsets.all(16),
                 child: Row(
@@ -76,12 +70,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 48), // Balance the back button
+                    const SizedBox(width: 48),
                   ],
                 ),
               ),
 
-              // Progress indicator
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Row(
@@ -98,7 +91,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
               const SizedBox(height: 30),
 
-              // Content
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -106,7 +98,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Phương thức vận chuyển
                         const Text(
                           'PHƯƠNG THỨC VẬN CHUYỂN',
                           style: TextStyle(
@@ -148,7 +139,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                         const SizedBox(height: 30),
 
-                        // Phương thức thanh toán
                         const Text(
                           'PHƯƠNG THỨC THANH TOÁN',
                           style: TextStyle(
@@ -160,7 +150,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                         const SizedBox(height: 16),
 
-                        // Ví Momo
                         _buildPaymentOption(
                           'momo',
                           'assets/images/momo_icon_square_pinkbg_RGB.png',
@@ -169,7 +158,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                         const SizedBox(height: 12),
 
-                        // VNPAY
                         _buildPaymentOption(
                           'vnpay',
                           'assets/images/vnpay_icon.png',
@@ -178,7 +166,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                         const SizedBox(height: 12),
 
-                        // Thanh toán bằng tiền mặt
                         _buildPaymentOption(
                           'cash',
                           'assets/images/cost_icon.png',
@@ -187,7 +174,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                         const SizedBox(height: 30),
 
-                        // Giá trị đơn hàng
                         const Text(
                           'GIÁ TRỊ ĐƠN HÀNG',
                           style: TextStyle(
@@ -284,7 +270,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                         const SizedBox(height: 40),
 
-                        // Thanh toán button
                         Container(
                           width: double.infinity,
                           height: 56,
@@ -317,7 +302,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 return;
                               }
 
-                              int paymentType = 0; // cash
+                              int paymentType = 0;
                               if (_selectedPaymentMethod == 'momo')
                                 paymentType = 1;
                               if (_selectedPaymentMethod == 'vnpay')
@@ -326,14 +311,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => OrderConfirmScreen(
-                                    user: widget.user,
-                                    receiverName: widget.receiverName,
-                                    receiverPhone: widget.receiverPhone,
-                                    shippingAddress: widget.shippingAddress,
-                                    totalAmount: total.toInt(),
-                                    isPayment: paymentType,
-                                  ),
+                                  builder:
+                                      (_) => OrderConfirmScreen(
+                                        user: widget.user,
+                                        receiverName: widget.receiverName,
+                                        receiverPhone: widget.receiverPhone,
+                                        shippingAddress: widget.shippingAddress,
+                                        totalAmount: total.toInt(),
+                                        isPayment: paymentType,
+                                      ),
                                 ),
                               );
                             },
@@ -464,7 +450,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   void _processPayment() {
-    // Xử lý thanh toán dựa trên phương thức đã chọn
     String paymentMethodText = '';
     switch (_selectedPaymentMethod) {
       case 'momo':
@@ -480,7 +465,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     _showSuccessSnackBar('Đã chọn phương thức thanh toán: $paymentMethodText');
 
-    // Ở đây có thể navigate tới trang kiểm tra đơn hàng
     print('Selected payment method: $_selectedPaymentMethod');
     print('Processing payment...');
     print('Subtotal: ${widget.subtotal}');

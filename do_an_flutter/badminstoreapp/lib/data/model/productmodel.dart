@@ -1,6 +1,4 @@
 class ProductModel {
-  // id có thể là int (JSON cũ) hoặc String (Firestore doc ID)
-  // Dùng dynamic để tương thích cả hai
   dynamic id;
   String? code;
   String? productName;
@@ -53,7 +51,6 @@ class ProductModel {
     };
   }
 
-  /// Chuyển sang Firestore format (camelCase)
   Map<String, dynamic> toFirestore() {
     return {
       'code': code,

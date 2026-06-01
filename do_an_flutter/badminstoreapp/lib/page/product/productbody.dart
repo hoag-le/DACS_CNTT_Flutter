@@ -3,10 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../conf/const.dart';
 import '../../data/model/productmodel.dart';
-import '../../page/detail/maindetail.dart'; // Import your MainDetail page
+import '../../page/detail/maindetail.dart';
 
 Widget itemGridView(ProductModel productModel, WidgetRef ref) {
-  // Format số tiền
   String formatCurrency(int? price) {
     if (price == null) return '0 đ';
     return NumberFormat('#,###').format(price) + ' đ';
@@ -14,7 +13,6 @@ Widget itemGridView(ProductModel productModel, WidgetRef ref) {
 
   return GestureDetector(
     onTap: () {
-      // Navigate to MainDetail page when product is tapped
       Navigator.push(
         ref.context,
         MaterialPageRoute(
@@ -41,7 +39,6 @@ Widget itemGridView(ProductModel productModel, WidgetRef ref) {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Hình ảnh sản phẩm
             Center(
               child: Container(
                 height: 120,
@@ -55,8 +52,12 @@ Widget itemGridView(ProductModel productModel, WidgetRef ref) {
                   child: Image.asset(
                     uri_product_img + productModel.image!,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        const Icon(Icons.image, size: 50, color: Colors.grey),
+                    errorBuilder:
+                        (context, error, stackTrace) => const Icon(
+                          Icons.image,
+                          size: 50,
+                          color: Colors.grey,
+                        ),
                   ),
                 ),
               ),
@@ -64,7 +65,6 @@ Widget itemGridView(ProductModel productModel, WidgetRef ref) {
 
             const SizedBox(height: 12),
 
-            // Tên sản phẩm
             Text(
               productModel.productName ?? '',
               style: const TextStyle(
@@ -78,7 +78,6 @@ Widget itemGridView(ProductModel productModel, WidgetRef ref) {
 
             const SizedBox(height: 8),
 
-            // Giá bán và nhãn Sale
             Row(
               children: [
                 Container(
@@ -115,7 +114,6 @@ Widget itemGridView(ProductModel productModel, WidgetRef ref) {
 
             const SizedBox(height: 4),
 
-            // Giá gốc gạch ngang
             if (productModel.cost != null && productModel.cost! > 0)
               Text(
                 formatCurrency(productModel.cost),

@@ -52,7 +52,6 @@ class OrderDetailModelWithName extends OrderDetailModel {
     this.image,
   });
 
-  /// Từ Firestore document
   factory OrderDetailModelWithName.fromFirestore(Map<String, dynamic> json) {
     return OrderDetailModelWithName(
       id: json['id']?.toString(),
@@ -68,7 +67,6 @@ class OrderDetailModelWithName extends OrderDetailModel {
     );
   }
 
-  /// Từ JSON cũ (assets/files/orderdetaillist.json)
   factory OrderDetailModelWithName.fromJson(Map<String, dynamic> json) {
     return OrderDetailModelWithName(
       id: json['id']?.toString(),

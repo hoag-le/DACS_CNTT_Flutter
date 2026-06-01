@@ -1,6 +1,6 @@
 class OrderModel {
-  String? id; // Firestore document ID
-  String? userId; // Firebase Auth UID
+  String? id;
+  String? userId;
   String? orderDate;
   String? receiverName;
   String? receiverPhone;
@@ -22,7 +22,6 @@ class OrderModel {
   });
 
   OrderModel.fromJson(Map<String, dynamic> json) {
-    // Hỗ trợ cả id dạng String (Firestore) và int (JSON cũ)
     id = json['id']?.toString();
     userId = json['userId'] ?? json['user_id']?.toString();
     orderDate = json['orderDate'] ?? json['order_date'];

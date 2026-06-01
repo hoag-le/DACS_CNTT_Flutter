@@ -2,60 +2,46 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'productmodel.dart';
 import 'cartitemmodel.dart';
+import 'products_state.dart';
 import '../../services/firestore_service.dart';
 
-class ProductsNotifier extends Notifier<Map<String, dynamic>> {
+class ProductsNotifier extends Notifier<ProductsState> {
   @override
-  Map<String, dynamic> build() => {
-    'favorite': <ProductModel>[],
-    'cart': <CartItemModel>[],
-  };
+  ProductsState build() => const ProductsState();
 
-  // Lấy uid hiện tại (null nếu chưa đăng nhập)
   String? get _uid => FirebaseAuth.instance.currentUser?.uid;
 
-  // ==============================
-  // FAVORITES
-  // ==============================
   void addToFavorite(ProductModel mo) {
-    final favorites = List<ProductModel>.from(state['favorite']);
+    final favorites = List<ProductModel>.from(state.favorites);
     if (!favorites.any((p) => p.id == mo.id)) {
-      state = {
-        ...state,
-        'favorite': [...favorites, mo],
-      };
+      state = state.copyWith(favorites: [...favorites, mo]);
     }
   }
 
   void removeFromFavorite(int index) {
-    final favorites = List<ProductModel>.from(state['favorite']);
+    final favorites = List<ProductModel>.from(state.favorites);
     if (index >= 0 && index < favorites.length) {
       favorites.removeAt(index);
-      state = {...state, 'favorite': favorites};
+      state = state.copyWith(favorites: favorites);
     }
   }
 
   void removeFromFavoriteByProduct(ProductModel product) {
-    final favorites = List<ProductModel>.from(state['favorite']);
+    final favorites = List<ProductModel>.from(state.favorites);
     favorites.removeWhere((p) => p.id == product.id);
-    state = {...state, 'favorite': favorites};
+    state = state.copyWith(favorites: favorites);
   }
 
   bool isInFavorites(dynamic productId) {
-    final favorites = List<ProductModel>.from(state['favorite']);
-    return favorites.any((p) => p.id == productId);
+    return state.favorites.any((p) => p.id == productId);
   }
 
   int get favoritesCount {
-    final favorites = List<ProductModel>.from(state['favorite']);
-    return favorites.length;
+    return state.favorites.length;
   }
 
-  // ==============================
-  // CART
-  // ==============================
   void addToCart(ProductModel product, int quantity, String? size) {
-    final cart = List<CartItemModel>.from(state['cart']);
+    final cart = List<CartItemModel>.from(state.cartItems);
 
     final existingIndex = cart.indexWhere(
       (item) => item.product.id == product.id && item.size == size,
@@ -69,58 +55,55 @@ class ProductsNotifier extends Notifier<Map<String, dynamic>> {
       cart.add(CartItemModel(product: product, quantity: quantity, size: size));
     }
 
-    state = {...state, 'cart': cart};
+    state = state.copyWith(cartItems: cart);
 
-    // Sync lên Firestore nếu đã đăng nhập
     _syncCart(cart);
   }
 
   void removeFromCart(int index) {
-    final cart = List<CartItemModel>.from(state['cart']);
+    final cart = List<CartItemModel>.from(state.cartItems);
     if (index >= 0 && index < cart.length) {
       cart.removeAt(index);
-      state = {...state, 'cart': cart};
+      state = state.copyWith(cartItems: cart);
       _syncCart(cart);
     }
   }
 
   void updateCartItemQuantity(int index, int newQuantity) {
-    final cart = List<CartItemModel>.from(state['cart']);
+    final cart = List<CartItemModel>.from(state.cartItems);
     if (index >= 0 && index < cart.length && newQuantity > 0) {
       cart[index] = cart[index].copyWith(quantity: newQuantity);
-      state = {...state, 'cart': cart};
+      state = state.copyWith(cartItems: cart);
       _syncCart(cart);
     }
   }
 
   void clearCart() {
-    state = {...state, 'cart': <CartItemModel>[]};
-    // Xóa giỏ hàng trên Firestore
+    state = state.copyWith(cartItems: const []);
+
     if (_uid != null) {
       FirestoreService.clearCart(_uid!);
     }
   }
 
-  // Khởi tạo cart từ danh sách
   void setCart(List<CartItemModel> items) {
-    state = {...state, 'cart': items};
+    state = state.copyWith(cartItems: items);
   }
 
   List<CartItemModel> get cartItems {
-    return List<CartItemModel>.from(state['cart']);
+    return state.cartItems;
   }
 
   int get cartItemsCount {
-    return cartItems.fold(0, (sum, item) => sum + item.quantity);
+    return state.cartItems.fold(0, (sum, item) => sum + item.quantity);
   }
 
   int get cartTotal {
-    return cartItems.fold(0, (sum, item) => sum + item.totalPrice);
+    return state.cartItems.fold(0, (sum, item) => sum + item.totalPrice);
   }
 
-  bool get isCartEmpty => cartItems.isEmpty;
+  bool get isCartEmpty => state.cartItems.isEmpty;
 
-  // Sync cart lên Firestore (non-blocking)
   void _syncCart(List<CartItemModel> cart) {
     final uid = _uid;
     if (uid != null) {
@@ -129,11 +112,10 @@ class ProductsNotifier extends Notifier<Map<String, dynamic>> {
   }
 }
 
-final productsProvider =
-    NotifierProvider<ProductsNotifier, Map<String, dynamic>>(
-      () => ProductsNotifier(),
-    );
+final productsProvider = NotifierProvider<ProductsNotifier, ProductsState>(
+  () => ProductsNotifier(),
+);
 
 final cartItemsProvider = Provider<List<CartItemModel>>((ref) {
-  return List<CartItemModel>.from(ref.watch(productsProvider)['cart']);
+  return ref.watch(productsProvider).cartItems;
 });
