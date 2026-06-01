@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "964437620250",
+    "project_id": "badmin-store-app",
+    "storage_bucket": "badmin-store-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:964437620250:android:31a9365343bdab8fbe03a3",
+        "android_client_info": {
+          "package_name": "com.example.badminstoreapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkd80GsSISxomiBvdfL4aAyO3HausPpOA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
