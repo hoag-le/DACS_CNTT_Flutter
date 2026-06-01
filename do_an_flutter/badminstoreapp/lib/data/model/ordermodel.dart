@@ -1,6 +1,6 @@
 class OrderModel {
-  String? id;         // Firestore document ID
-  String? userId;     // Firebase Auth UID
+  String? id; // Firestore document ID
+  String? userId; // Firebase Auth UID
   String? orderDate;
   String? receiverName;
   String? receiverPhone;

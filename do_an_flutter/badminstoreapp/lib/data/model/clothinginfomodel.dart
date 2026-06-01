@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ClothingInfoModel {
   int? id;
   int? productId;
@@ -9,7 +7,15 @@ class ClothingInfoModel {
   String? kieuLoai;
   String? tinhNang;
 
-  ClothingInfoModel({this.id, this.productId, this.size, this.chatLieu, this.thietKe, this.kieuLoai, this.tinhNang});
+  ClothingInfoModel({
+    this.id,
+    this.productId,
+    this.size,
+    this.chatLieu,
+    this.thietKe,
+    this.kieuLoai,
+    this.tinhNang,
+  });
 
   ClothingInfoModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];

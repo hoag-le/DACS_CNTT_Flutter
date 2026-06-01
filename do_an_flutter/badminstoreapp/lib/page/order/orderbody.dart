@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-//import '../../conf/const.dart';
 import '../../data/model/ordermodel.dart';
 import '../../data/model/orderdetailmodel.dart';
 import '../../data/model/productmodel.dart';
@@ -10,10 +9,10 @@ import '../../page/order/orderdetail.dart';
 // import '../../page/detail/orderdetail.dart';
 
 Widget itemOrderView(
-  OrderModel orderModel, 
+  OrderModel orderModel,
   List<OrderDetailModelWithName> orderDetails,
   List<ProductModel> products,
-  WidgetRef ref
+  WidgetRef ref,
 ) {
   // Format số tiền
   String formatCurrency(int? price) {
@@ -96,14 +95,7 @@ Widget itemOrderView(
     onTap: () {
       // Navigate to OrderDetail page when order is tapped
       // Uncomment when OrderDetail page is available
-      /*
-      Navigator.push(
-        ref.context,
-        MaterialPageRoute(
-          builder: (context) => OrderDetail(orderId: orderModel.id!),
-        ),
-      );
-      */
+
       Navigator.push(
         ref.context,
         MaterialPageRoute(
@@ -150,72 +142,17 @@ Widget itemOrderView(
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Ngày đặt hàng
             Text(
               formatDate(orderModel.orderDate),
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
-            
-            /*
-            // Hình ảnh sản phẩm (tối đa 6 hình)
-            SizedBox(
-              height: 60,
-              child: Row(
-                children: [
-                  // Hiển thị tối đa 6 hình sản phẩm
-                  ...orderProducts.take(6).map((product) {
-                    return Container(
-                      width: 50,
-                      height: 50,
-                      margin: const EdgeInsets.only(right: 8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.grey[100],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(
-                          uri_product_img + product.image!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => 
-                            const Icon(Icons.image, size: 25, color: Colors.grey),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                  
-                  // Hiển thị số sản phẩm còn lại nếu > 6
-                  if (orderProducts.length > 6)
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.grey[300],
-                      ),
-                      child: Center(
-                        child: Text(
-                          '+${orderProducts.length - 6}',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black54,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ), */
-            
+
             const SizedBox(height: 16),
-            
+
             // Thông tin đơn hàng (Trạng thái, Sản phẩm, Tổng tiền)
             Row(
               children: [
@@ -226,10 +163,7 @@ Widget itemOrderView(
                     children: [
                       Text(
                         'Trạng thái',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                       ),
                       const SizedBox(height: 4),
                       Row(
@@ -255,7 +189,7 @@ Widget itemOrderView(
                     ],
                   ),
                 ),
-                
+
                 // Sản phẩm
                 Expanded(
                   child: Column(
@@ -263,10 +197,7 @@ Widget itemOrderView(
                     children: [
                       Text(
                         'Sản phẩm',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -280,7 +211,7 @@ Widget itemOrderView(
                     ],
                   ),
                 ),
-                
+
                 // Tổng tiền
                 Expanded(
                   child: Column(
@@ -288,10 +219,7 @@ Widget itemOrderView(
                     children: [
                       Text(
                         'Tổng tiền',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                       ),
                       const SizedBox(height: 4),
                       Text(

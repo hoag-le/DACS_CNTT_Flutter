@@ -32,10 +32,12 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     try {
       await AuthService.sendPasswordResetEmail(email);
       if (!mounted) return;
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Email khôi phục đã được gửi. Vui lòng kiểm tra hộp thư của bạn!'),
+          content: Text(
+            'Email khôi phục đã được gửi. Vui lòng kiểm tra hộp thư của bạn!',
+          ),
           backgroundColor: Colors.green,
         ),
       );
@@ -43,10 +45,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -74,10 +73,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFFFB382),
-              Color(0xFFFF8C42),
-            ],
+            colors: [Color(0xFFFFB382), Color(0xFFFF8C42)],
           ),
         ),
         child: SafeArea(
@@ -88,11 +84,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 const SizedBox(height: 20),
 
                 // Logo
-                Image.asset(
-                  'assets/images/logo.png',
-                  width: 100,
-                  height: 100,
-                ),
+                Image.asset('assets/images/logo.png', width: 100, height: 100),
                 const SizedBox(height: 12),
 
                 // Shopname
@@ -167,10 +159,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   height: 56,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [
-                        Color(0xFFFF8C42),
-                        Color(0xFFFF6B1A),
-                      ],
+                      colors: [Color(0xFFFF8C42), Color(0xFFFF6B1A)],
                     ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
@@ -190,20 +179,22 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: _isLoading 
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(color: Colors.white),
-                        )
-                      : const Text(
-                          'Khôi phục',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                    child: _isLoading
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Text(
+                            'Khôi phục',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
                   ),
                 ),
                 const SizedBox(height: 50),

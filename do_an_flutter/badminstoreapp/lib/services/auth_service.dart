@@ -97,7 +97,10 @@ class AuthService {
   }
 
   // Cập nhật profile user
-  static Future<void> updateProfile(String uid, Map<String, dynamic> data) async {
+  static Future<void> updateProfile(
+    String uid,
+    Map<String, dynamic> data,
+  ) async {
     await _db.collection('users').doc(uid).update(data);
   }
 
@@ -113,7 +116,10 @@ class AuthService {
   }
 
   // Thay đổi mật khẩu
-  static Future<void> changePassword(String currentPassword, String newPassword) async {
+  static Future<void> changePassword(
+    String currentPassword,
+    String newPassword,
+  ) async {
     try {
       final user = _auth.currentUser;
       if (user == null) throw 'Người dùng chưa đăng nhập';

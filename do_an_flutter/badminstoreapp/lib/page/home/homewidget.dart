@@ -31,13 +31,18 @@ class HomeWidget extends StatelessWidget {
         centerTitle: true, // Căn giữa logo
         actions: [
           IconButton(
-            icon: Icon(Icons.shopping_cart, color: Colors.black), // Icon giỏ hàng
+            icon: Icon(
+              Icons.shopping_cart,
+              color: Colors.black,
+            ), // Icon giỏ hàng
             onPressed: () {
               // Xử lý khi nhấn icon giỏ hàng
               Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => EmptyCartPage(user: user)),
-                      );
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EmptyCartPage(user: user),
+                ),
+              );
             },
           ),
         ],

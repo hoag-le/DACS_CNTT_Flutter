@@ -8,8 +8,6 @@ import '../data/model/usermodel.dart';
 import '../data/model/user_provider.dart';
 
 class MainPage extends ConsumerStatefulWidget {
-  //final UserModel? user;
-  
   const MainPage({Key? key}) : super(key: key);
 
   @override
@@ -60,10 +58,7 @@ class _MainPageState extends ConsumerState<MainPage> {
             fontSize: 12,
           ),
           items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Trang chủ',
-            ),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Trang chủ'),
             BottomNavigationBarItem(
               icon: Icon(Icons.favorite),
               label: 'Yêu thích',
@@ -72,10 +67,7 @@ class _MainPageState extends ConsumerState<MainPage> {
               icon: Icon(Icons.receipt_long),
               label: 'Đơn hàng',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Cá nhân',
-            ),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Cá nhân'),
           ],
         ),
       ),
@@ -85,7 +77,7 @@ class _MainPageState extends ConsumerState<MainPage> {
 
 class ProfilePage extends StatelessWidget {
   final UserModel? user;
-  
+
   const ProfilePage({Key? key, this.user}) : super(key: key);
 
   @override

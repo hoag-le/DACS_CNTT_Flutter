@@ -42,7 +42,8 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDkd80GsSISxomiBvdfL4aAyO3HausPpOA',
-    appId: '1:964437620250:web:1234567890abcdef', // Temporary placeholder for web
+    appId:
+        '1:964437620250:web:1234567890abcdef', // Temporary placeholder for web
     messagingSenderId: '964437620250',
     projectId: 'badmin-store-app',
     authDomain: 'badmin-store-app.firebaseapp.com',

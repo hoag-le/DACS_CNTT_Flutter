@@ -57,7 +57,8 @@ class OrderDetailModelWithName extends OrderDetailModel {
     return OrderDetailModelWithName(
       id: json['id']?.toString(),
       orderId: json['orderId']?.toString() ?? json['order_id']?.toString(),
-      productId: json['productId']?.toString() ?? json['product_id']?.toString(),
+      productId:
+          json['productId']?.toString() ?? json['product_id']?.toString(),
       size: json['size'],
       quantity: json['quantity'],
       price: json['unitPrice'] ?? json['unit_price'],

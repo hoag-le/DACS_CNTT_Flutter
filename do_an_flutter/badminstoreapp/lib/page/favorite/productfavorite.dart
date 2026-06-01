@@ -41,10 +41,7 @@ class ProductFavorite extends ConsumerWidget {
                   SizedBox(height: 16),
                   Text(
                     'Chưa có sản phẩm yêu thích nào',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -60,14 +57,21 @@ class ProductFavorite extends ConsumerWidget {
     );
   }
 
-  Widget itemListView(BuildContext context,ProductModel productModel, WidgetRef ref, int index) {
-    return InkWell( // Wrap with InkWell for tap functionality and visual feedback
+  Widget itemListView(
+    BuildContext context,
+    ProductModel productModel,
+    WidgetRef ref,
+    int index,
+  ) {
+    return InkWell(
+      // Wrap with InkWell for tap functionality and visual feedback
       onTap: () {
         // Navigate to MainDetail when the item is tapped
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => MainDetail(productId: productModel.id!), // Pass product ID
+            builder: (context) =>
+                MainDetail(productId: productModel.id!), // Pass product ID
           ),
         );
       },
@@ -100,7 +104,11 @@ class ProductFavorite extends ConsumerWidget {
                   height: 80,
                   width: 80,
                   color: Colors.grey[200],
-                  child: Icon(Icons.image_not_supported, size: 40, color: Colors.grey),
+                  child: Icon(
+                    Icons.image_not_supported,
+                    size: 40,
+                    color: Colors.grey,
+                  ),
                 ),
               ),
             ),

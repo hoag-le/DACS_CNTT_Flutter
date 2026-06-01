@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class RacketInfoModel {
   int? id;
   int? productId;
@@ -9,7 +7,15 @@ class RacketInfoModel {
   String? chieuDaiVot;
   String? chieuDaiCan;
 
-  RacketInfoModel({this.id, this.productId, this.chatLieu, this.trongLuong, this.chuViCan, this.chieuDaiVot, this.chieuDaiCan});
+  RacketInfoModel({
+    this.id,
+    this.productId,
+    this.chatLieu,
+    this.trongLuong,
+    this.chuViCan,
+    this.chieuDaiVot,
+    this.chieuDaiCan,
+  });
 
   RacketInfoModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];

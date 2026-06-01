@@ -69,10 +69,7 @@ class ThankYouScreen extends StatelessWidget {
                 child: Text(
                   'Chúng tôi rất trân trọng sự tin tưởng của bạn.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Color(0xFF8B4513),
-                  ),
+                  style: TextStyle(fontSize: 16, color: Color(0xFF8B4513)),
                 ),
               ),
 
@@ -86,10 +83,7 @@ class ThankYouScreen extends StatelessWidget {
                   height: 56,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [
-                        Color(0xFFFF8C42),
-                        Color(0xFFFF6B1A),
-                      ],
+                      colors: [Color(0xFFFF8C42), Color(0xFFFF6B1A)],
                     ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
@@ -103,20 +97,11 @@ class ThankYouScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       // TODO: Navigate to home screen
-                      /*
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MainPage(user: user)),
-                      ); */
-                      /*
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => MainPage(user: user)),
-                        (route) => false,
-                      );*/
 
                       Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => MainPage()), // bạn cần truyền lại user
+                        MaterialPageRoute(
+                          builder: (context) => MainPage(),
+                        ), // bạn cần truyền lại user
                         (Route<dynamic> route) => false,
                       );
                     },

@@ -5,17 +5,9 @@ class CartItemModel {
   final int quantity;
   final String? size;
 
-  CartItemModel({
-    required this.product,
-    required this.quantity,
-    this.size,
-  });
+  CartItemModel({required this.product, required this.quantity, this.size});
 
-  CartItemModel copyWith({
-    ProductModel? product,
-    int? quantity,
-    String? size,
-  }) {
+  CartItemModel copyWith({ProductModel? product, int? quantity, String? size}) {
     return CartItemModel(
       product: product ?? this.product,
       quantity: quantity ?? this.quantity,
@@ -27,11 +19,7 @@ class CartItemModel {
   int get totalPrice => (product.priceSale ?? 0) * quantity;
 
   Map<String, dynamic> toJson() {
-    return {
-      'product': product.toJson(),
-      'quantity': quantity,
-      'size': size,
-    };
+    return {'product': product.toJson(), 'quantity': quantity, 'size': size};
   }
 
   factory CartItemModel.fromJson(Map<String, dynamic> json) {

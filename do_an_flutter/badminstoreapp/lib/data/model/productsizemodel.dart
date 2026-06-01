@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ProductSizeModel {
   int? id;
   int? productId;

@@ -46,7 +46,11 @@ class AboutPage extends StatelessWidget {
               SizedBox(height: 20),
               Text(
                 '🎯 Sản phẩm nổi bật:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF8B4513)),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF8B4513),
+                ),
               ),
               SizedBox(height: 8),
               Text(
@@ -60,7 +64,11 @@ class AboutPage extends StatelessWidget {
               SizedBox(height: 20),
               Text(
                 '🛠 Dịch vụ tại cửa hàng:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF8B4513)),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF8B4513),
+                ),
               ),
               SizedBox(height: 8),
               Text(
@@ -73,17 +81,29 @@ class AboutPage extends StatelessWidget {
               SizedBox(height: 20),
               Text(
                 '💡 Sứ mệnh của chúng tôi:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF8B4513)),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF8B4513),
+                ),
               ),
               SizedBox(height: 8),
               Text(
                 'Mang đến sản phẩm tốt nhất, dịch vụ chuyên nghiệp và tạo dựng cộng đồng đam mê thể thao là mục tiêu của chúng tôi. Chúng tôi tin rằng cầu lông không chỉ là môn thể thao mà còn là phong cách sống.',
-                style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic, color: Colors.brown),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.brown,
+                ),
               ),
               SizedBox(height: 20),
               Text(
                 '📍 Thông tin liên hệ:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF8B4513)),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF8B4513),
+                ),
               ),
               SizedBox(height: 8),
               Text(

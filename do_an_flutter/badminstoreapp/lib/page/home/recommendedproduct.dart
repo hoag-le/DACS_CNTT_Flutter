@@ -8,10 +8,12 @@ import '../product/productbody.dart';
 
 class RecommendedProductWidget extends ConsumerStatefulWidget {
   @override
-  _RecommendedProductWidgetState createState() => _RecommendedProductWidgetState();
+  _RecommendedProductWidgetState createState() =>
+      _RecommendedProductWidgetState();
 }
 
-class _RecommendedProductWidgetState extends ConsumerState<RecommendedProductWidget> {
+class _RecommendedProductWidgetState
+    extends ConsumerState<RecommendedProductWidget> {
   PageController _pageController = PageController();
   Timer? _timer;
   List<ProductModel> recommendedProducts = [];
@@ -28,21 +30,24 @@ class _RecommendedProductWidgetState extends ConsumerState<RecommendedProductWid
     try {
       ReadData readData = ReadData();
       List<ProductModel> allProducts = await readData.loadData();
-      
+
       // Lọc sản phẩm từ id 1 đến id 80
       List<ProductModel> filteredProducts = allProducts
-          .where((product) => product.id != null && product.id! >= 1 && product.id! <= 80)
+          .where(
+            (product) =>
+                product.id != null && product.id! >= 1 && product.id! <= 80,
+          )
           .toList();
-      
+
       // Random chọn 8 sản phẩm
       Random random = Random();
       filteredProducts.shuffle(random);
       recommendedProducts = filteredProducts.take(8).toList();
-      
+
       setState(() {
         isLoading = false;
       });
-      
+
       startAutoScroll();
     } catch (e) {
       print('Error loading recommended products: $e');
@@ -54,16 +59,16 @@ class _RecommendedProductWidgetState extends ConsumerState<RecommendedProductWid
 
   void startAutoScroll() {
     if (recommendedProducts.length <= 2) return;
-    
+
     _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
       if (_pageController.hasClients) {
         // Tính toán số trang (mỗi trang 2 sản phẩm)
         int maxPages = (recommendedProducts.length / 2).ceil();
-        
+
         setState(() {
           currentPage = (currentPage + 1) % maxPages;
         });
-        
+
         _pageController.animateToPage(
           currentPage,
           duration: Duration(milliseconds: 400),
@@ -82,11 +87,9 @@ class _RecommendedProductWidgetState extends ConsumerState<RecommendedProductWid
 
   Widget buildProductPair(List<ProductModel> products) {
     return Row(
-      children: products.map((product) => 
-        Expanded(
-          child: itemGridView(product, ref),
-        )
-      ).toList(),
+      children: products
+          .map((product) => Expanded(child: itemGridView(product, ref)))
+          .toList(),
     );
   }
 
@@ -95,18 +98,14 @@ class _RecommendedProductWidgetState extends ConsumerState<RecommendedProductWid
     if (isLoading) {
       return Container(
         height: 300,
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: Center(child: CircularProgressIndicator()),
       );
     }
 
     if (recommendedProducts.isEmpty) {
       return Container(
         height: 300,
-        child: Center(
-          child: Text('Không có sản phẩm được đề xuất'),
-        ),
+        child: Center(child: Text('Không có sản phẩm được đề xuất')),
       );
     }
 
@@ -152,17 +151,13 @@ class _RecommendedProductWidgetState extends ConsumerState<RecommendedProductWid
                     color: Colors.orange.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Icon(
-                    Icons.refresh,
-                    color: Colors.orange,
-                    size: 20,
-                  ),
+                  child: Icon(Icons.refresh, color: Colors.orange, size: 20),
                 ),
               ),
             ],
           ),
           SizedBox(height: 16),
-          
+
           // PageView hiển thị các cặp sản phẩm
           Container(
             height: 300,
@@ -179,9 +174,9 @@ class _RecommendedProductWidgetState extends ConsumerState<RecommendedProductWid
               },
             ),
           ),
-          
+
           SizedBox(height: 12),
-          
+
           // Chỉ báo trang (dots)
           Center(
             child: Row(
@@ -193,8 +188,8 @@ class _RecommendedProductWidgetState extends ConsumerState<RecommendedProductWid
                   height: 8,
                   margin: EdgeInsets.symmetric(horizontal: 4),
                   decoration: BoxDecoration(
-                    color: currentPage == index 
-                        ? Colors.orange 
+                    color: currentPage == index
+                        ? Colors.orange
                         : Colors.grey[400],
                     borderRadius: BorderRadius.circular(4),
                   ),

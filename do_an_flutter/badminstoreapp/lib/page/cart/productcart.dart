@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../conf/const.dart';
 import '../../data/model/product_viewmodel.dart';
-//import '../../data/model/productmodel.dart';
 import '../../data/model/cartitemmodel.dart';
 import '../../page/mainpage.dart';
 import '../shipping/shippingaddress.dart';
@@ -22,7 +21,6 @@ class _ProductCartState extends ConsumerState<ProductCart> {
 
   @override
   Widget build(BuildContext context) {
-    //final cartItems = ref.watch(productsProvider.notifier).cartItems;
     final cartItems = ref.watch(cartItemsProvider);
 
     return Scaffold(
@@ -31,10 +29,7 @@ class _ProductCartState extends ConsumerState<ProductCart> {
         backgroundColor: const Color(0xFFE8A87C),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -50,7 +45,7 @@ class _ProductCartState extends ConsumerState<ProductCart> {
         centerTitle: true,
       ),
       // Thêm resizeToAvoidBottomInset: false để ngăn bàn phím đẩy nội dung lên
-      resizeToAvoidBottomInset: false, 
+      resizeToAvoidBottomInset: false,
       body: cartItems.isEmpty
           ? _buildEmptyCart(context)
           : _buildCartWithItems(context, ref, cartItems),
@@ -91,38 +86,8 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 50),
+
                 // Nút mua sắm ngay
-                /*
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => MainPage(user: widget.user,)),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFD2691E), // Màu cam đậm
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: const Text(
-                        'Mua sắm ngay',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),*/
               ],
             ),
           ),
@@ -131,7 +96,11 @@ class _ProductCartState extends ConsumerState<ProductCart> {
     );
   }
 
-  Widget _buildCartWithItems(BuildContext context, WidgetRef ref, List<CartItemModel> cartItems) {
+  Widget _buildCartWithItems(
+    BuildContext context,
+    WidgetRef ref,
+    List<CartItemModel> cartItems,
+  ) {
     return Column(
       children: [
         Expanded(
@@ -159,14 +128,22 @@ class _ProductCartState extends ConsumerState<ProductCart> {
     );
   }
 
-  Widget _buildCartItem(BuildContext context, WidgetRef ref, CartItemModel cartItem, int index) {
-    final TextEditingController quantityController =
-        TextEditingController(text: cartItem.quantity.toString());
+  Widget _buildCartItem(
+    BuildContext context,
+    WidgetRef ref,
+    CartItemModel cartItem,
+    int index,
+  ) {
+    final TextEditingController quantityController = TextEditingController(
+      text: cartItem.quantity.toString(),
+    );
 
     // Thêm listener để cập nhật số lượng khi TextField thay đổi
     quantityController.addListener(() {
       int? newQuantity = int.tryParse(quantityController.text);
-      if (newQuantity != null && newQuantity > 0 && newQuantity != cartItem.quantity) {
+      if (newQuantity != null &&
+          newQuantity > 0 &&
+          newQuantity != cartItem.quantity) {
         // Debounce the update to avoid frequent rebuilds
         Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted && newQuantity == int.tryParse(quantityController.text)) {
@@ -201,7 +178,11 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                     height: 80,
                     width: 80,
                     color: Colors.grey[200],
-                    child: const Icon(Icons.image, size: 40, color: Colors.grey),
+                    child: const Icon(
+                      Icons.image,
+                      size: 40,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
               ),
@@ -249,11 +230,16 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                     if (cartItem.size != null)
                       Container(
                         margin: const EdgeInsets.only(top: 8),
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.orange.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                          border: Border.all(
+                            color: Colors.orange.withOpacity(0.3),
+                          ),
                         ),
                         child: Text(
                           'Size: ${cartItem.size}',
@@ -301,7 +287,8 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                         if (cartItem.quantity > 1) {
                           _updateQuantity(ref, index, cartItem.quantity - 1);
                           // Cập nhật text của TextField khi nhấn nút
-                          quantityController.text = (cartItem.quantity - 1).toString();
+                          quantityController.text = (cartItem.quantity - 1)
+                              .toString();
                         }
                       },
                     ),
@@ -327,7 +314,9 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                         fontWeight: FontWeight.bold,
                       ),
                       onTapOutside: (event) {
-                        FocusScope.of(context).unfocus(); // Đóng bàn phím khi chạm ra ngoài
+                        FocusScope.of(
+                          context,
+                        ).unfocus(); // Đóng bàn phím khi chạm ra ngoài
                       },
                     ),
                   ),
@@ -344,7 +333,8 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                       onPressed: () {
                         _updateQuantity(ref, index, cartItem.quantity + 1);
                         // Cập nhật text của TextField khi nhấn nút
-                        quantityController.text = (cartItem.quantity + 1).toString();
+                        quantityController.text = (cartItem.quantity + 1)
+                            .toString();
                       },
                     ),
                   ),
@@ -367,7 +357,11 @@ class _ProductCartState extends ConsumerState<ProductCart> {
     );
   }
 
-  Widget _buildCartSummary(BuildContext context, WidgetRef ref, List<CartItemModel> cartItems) {
+  Widget _buildCartSummary(
+    BuildContext context,
+    WidgetRef ref,
+    List<CartItemModel> cartItems,
+  ) {
     final subtotal = ref.watch(productsProvider.notifier).cartTotal;
 
     return Container(
@@ -387,10 +381,7 @@ class _ProductCartState extends ConsumerState<ProductCart> {
             children: [
               const Text(
                 'Tổng phụ:',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
+                style: TextStyle(fontSize: 16, color: Colors.black87),
               ),
               Text(
                 '${NumberFormat('###,###').format(subtotal)} đ',
@@ -411,17 +402,11 @@ class _ProductCartState extends ConsumerState<ProductCart> {
             children: [
               Text(
                 'Phí shipping:',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
+                style: TextStyle(fontSize: 16, color: Colors.black87),
               ),
               Text(
                 'Tính sau khi thanh toán',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
             ],
           ),
@@ -473,10 +458,7 @@ class _ProductCartState extends ConsumerState<ProductCart> {
               ),
               child: const Text(
                 'Thanh toán',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
           ),
@@ -493,20 +475,29 @@ class _ProductCartState extends ConsumerState<ProductCart> {
     // Giả lập một độ trễ để thấy animation loading
     await Future.delayed(const Duration(milliseconds: 300));
 
-    ref.read(productsProvider.notifier).updateCartItemQuantity(index, newQuantity);
+    ref
+        .read(productsProvider.notifier)
+        .updateCartItemQuantity(index, newQuantity);
 
     setState(() {
       _isLoadingTotal = false; // Kết thúc animation loading
     });
   }
 
-  void _showDeleteConfirmDialog(BuildContext context, WidgetRef ref, int index, CartItemModel cartItem) {
+  void _showDeleteConfirmDialog(
+    BuildContext context,
+    WidgetRef ref,
+    int index,
+    CartItemModel cartItem,
+  ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Xóa sản phẩm'),
-          content: Text('Bạn có chắc chắn muốn xóa "${cartItem.product.productName}" khỏi giỏ hàng?'),
+          content: Text(
+            'Bạn có chắc chắn muốn xóa "${cartItem.product.productName}" khỏi giỏ hàng?',
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -532,13 +523,14 @@ class _ProductCartState extends ConsumerState<ProductCart> {
   }
 
   void _showCheckoutDialog(BuildContext context, WidgetRef ref) {
-    //final double subtotal = ref.watch(productsProvider.notifier).cartTotal;
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: const Text('Kiểm tra giỏ hàng trước khi thanh toán'),
-          content: const Text('Bạn có chắc chắn muốn tiếp tục thanh toán không?'),
+          content: const Text(
+            'Bạn có chắc chắn muốn tiếp tục thanh toán không?',
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -548,12 +540,18 @@ class _ProductCartState extends ConsumerState<ProductCart> {
             ),
             TextButton(
               onPressed: () {
-                final subtotal = ref.watch(productsProvider.notifier).cartTotal.toDouble();
+                final subtotal = ref
+                    .watch(productsProvider.notifier)
+                    .cartTotal
+                    .toDouble();
                 Navigator.of(dialogContext).pop(); // Đóng dialog trước
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => ShippingAddressScreen(subtotal: subtotal, user: widget.user),
+                    builder: (_) => ShippingAddressScreen(
+                      subtotal: subtotal,
+                      user: widget.user,
+                    ),
                   ),
                 );
               },
@@ -568,6 +566,5 @@ class _ProductCartState extends ConsumerState<ProductCart> {
 
 // Tạo alias cho EmptyCartPage để tương thích ngược
 class EmptyCartPage extends ProductCart {
-
   const EmptyCartPage({Key? key, UserModel? user}) : super(key: key);
 }

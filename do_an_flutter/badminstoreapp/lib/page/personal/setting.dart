@@ -13,10 +13,7 @@ class SettingPage extends StatelessWidget {
         backgroundColor: const Color(0xFFF5E6D3),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Color(0xFF8B4513),
-          ),
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF8B4513)),
           //onPressed: () => Navigator.pop(context),
           onPressed: () {
             Navigator.of(context).pop();
@@ -46,7 +43,7 @@ class SettingPage extends StatelessWidget {
               },
             ),
             const SizedBox(height: 16),
-            
+
             _buildMenuItem(
               icon: Icons.password,
               title: 'Thay đổi mật khẩu',
@@ -54,7 +51,9 @@ class SettingPage extends StatelessWidget {
                 // Navigate to about page
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ChangePasswordPage()),
+                  MaterialPageRoute(
+                    builder: (context) => const ChangePasswordPage(),
+                  ),
                 );
               },
             ),
@@ -65,7 +64,9 @@ class SettingPage extends StatelessWidget {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
               onPressed: () {
@@ -86,7 +87,9 @@ class SettingPage extends StatelessWidget {
                             Navigator.of(context).pop();
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (context) => LoginScreen()),
+                              MaterialPageRoute(
+                                builder: (context) => LoginScreen(),
+                              ),
                             );
                           },
                         ),
@@ -98,7 +101,11 @@ class SettingPage extends StatelessWidget {
               child: const Center(
                 child: Text(
                   'Đăng xuất',
-                  style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
@@ -129,11 +136,7 @@ class SettingPage extends StatelessWidget {
                 color: const Color(0xFFD2691E).withOpacity(0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
-                icon,
-                color: const Color(0xFF8B4513),
-                size: 20,
-              ),
+              child: Icon(icon, color: const Color(0xFF8B4513), size: 20),
             ),
             const SizedBox(width: 16),
             Expanded(

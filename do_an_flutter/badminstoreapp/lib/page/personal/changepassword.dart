@@ -46,9 +46,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     }
 
     if (newPassword != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Mật khẩu mới không khớp')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Mật khẩu mới không khớp')));
       return;
     }
 
@@ -57,7 +57,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     try {
       await AuthService.changePassword(oldPassword, newPassword);
       if (!mounted) return;
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Đổi mật khẩu thành công!'),
@@ -68,10 +68,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -139,26 +136,29 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFD2691E),
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16,
+                  horizontal: 32,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
               onPressed: _isLoading ? null : _handleChangePassword,
-              child: _isLoading 
-                ? const SizedBox(
-                    width: 24, 
-                    height: 24, 
-                    child: CircularProgressIndicator(color: Colors.white)
-                  )
-                : const Text(
-                    'Xác nhận thay đổi',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+              child: _isLoading
+                  ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(color: Colors.white),
+                    )
+                  : const Text(
+                      'Xác nhận thay đổi',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
             ),
           ],
         ),

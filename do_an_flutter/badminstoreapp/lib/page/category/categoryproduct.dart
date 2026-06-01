@@ -7,7 +7,8 @@ import '../product/productbody.dart'; // Giả định itemGridView được cun
 class CategoryProductWidget extends ConsumerStatefulWidget {
   final int categoryId; // Thêm tham số categoryId
 
-  const CategoryProductWidget({Key? key, required this.categoryId}) : super(key: key);
+  const CategoryProductWidget({Key? key, required this.categoryId})
+    : super(key: key);
 
   @override
   _CategoryProductWidgetState createState() => _CategoryProductWidgetState();
@@ -41,15 +42,15 @@ class _CategoryProductWidgetState extends ConsumerState<CategoryProductWidget> {
     try {
       ReadData readData = ReadData();
       List<ProductModel> allProducts = await readData.loadData();
-      
+
       // Lọc sản phẩm theo categoryId
       categoryProducts = allProducts
           .where((product) => product.categoryId == widget.categoryId)
           .toList();
-      
+
       // Sắp xếp theo id hoặc một tiêu chí nào đó nếu cần
       // categoryProducts.sort((a, b) => a.id!.compareTo(b.id!));
-      
+
       setState(() {
         isLoading = false;
       });
@@ -70,9 +71,7 @@ class _CategoryProductWidgetState extends ConsumerState<CategoryProductWidget> {
     if (isLoading) {
       return Container(
         height: 200,
-        child: const Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: const Center(child: CircularProgressIndicator()),
       );
     }
 
@@ -100,7 +99,7 @@ class _CategoryProductWidgetState extends ConsumerState<CategoryProductWidget> {
             ),
           ),
           const SizedBox(height: 5),
-          
+
           // Grid hiển thị sản phẩm (2 cột)
           GridView.builder(
             shrinkWrap: true,
@@ -109,7 +108,8 @@ class _CategoryProductWidgetState extends ConsumerState<CategoryProductWidget> {
               crossAxisCount: 2,
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
-              childAspectRatio: 0.62, // Sử dụng lại tỷ lệ từ newproduct.dart của bạn
+              childAspectRatio:
+                  0.62, // Sử dụng lại tỷ lệ từ newproduct.dart của bạn
             ),
             itemCount: categoryProducts.length,
             itemBuilder: (context, index) {

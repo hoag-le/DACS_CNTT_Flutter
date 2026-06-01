@@ -40,13 +40,13 @@ class _SliderWidgetState extends State<SliderWidget> {
 
   void startAutoScroll() {
     if (sliders.isEmpty) return;
-    
+
     _timer = Timer.periodic(Duration(seconds: 4), (Timer timer) {
       if (_pageController.hasClients) {
         setState(() {
           currentPage = (currentPage + 1) % sliders.length;
         });
-        
+
         _pageController.animateToPage(
           currentPage,
           duration: Duration(milliseconds: 400),
@@ -88,11 +88,7 @@ class _SliderWidgetState extends State<SliderWidget> {
               width: double.infinity,
               height: double.infinity,
               color: Colors.grey[300],
-              child: Icon(
-                Icons.image,
-                size: 60,
-                color: Colors.grey[600],
-              ),
+              child: Icon(Icons.image, size: 60, color: Colors.grey[600]),
             );
           },
         ),
@@ -110,9 +106,7 @@ class _SliderWidgetState extends State<SliderWidget> {
           height: 8,
           margin: EdgeInsets.symmetric(horizontal: 4),
           decoration: BoxDecoration(
-            color: currentPage == index 
-                ? Colors.brown[600] 
-                : Colors.grey[400],
+            color: currentPage == index ? Colors.brown[600] : Colors.grey[400],
             borderRadius: BorderRadius.circular(4),
           ),
         ),
@@ -125,18 +119,14 @@ class _SliderWidgetState extends State<SliderWidget> {
     if (isLoading) {
       return Container(
         height: 200,
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: Center(child: CircularProgressIndicator()),
       );
     }
 
     if (sliders.isEmpty) {
       return Container(
         height: 200,
-        child: Center(
-          child: Text('Không có slider nào'),
-        ),
+        child: Center(child: Text('Không có slider nào')),
       );
     }
 

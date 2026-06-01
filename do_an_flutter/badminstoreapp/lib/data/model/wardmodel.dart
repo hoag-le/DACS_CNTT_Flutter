@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class WardModel {
   int? id;
   int? idTinhThanh;

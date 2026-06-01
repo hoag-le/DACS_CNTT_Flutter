@@ -23,15 +23,18 @@ class _NewProductWidgetState extends ConsumerState<NewProductWidget> {
     try {
       ReadData readData = ReadData();
       List<ProductModel> allProducts = await readData.loadData();
-      
+
       // Lọc sản phẩm từ id 69 đến id 80
       newProducts = allProducts
-          .where((product) => product.id != null && product.id! >= 1 && product.id! <= 12)
+          .where(
+            (product) =>
+                product.id != null && product.id! >= 1 && product.id! <= 12,
+          )
           .toList();
-      
+
       // Sắp xếp theo id để đảm bảo thứ tự
       newProducts.sort((a, b) => a.id!.compareTo(b.id!));
-      
+
       setState(() {
         isLoading = false;
       });
@@ -48,18 +51,14 @@ class _NewProductWidgetState extends ConsumerState<NewProductWidget> {
     if (isLoading) {
       return Container(
         height: 200,
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: Center(child: CircularProgressIndicator()),
       );
     }
 
     if (newProducts.isEmpty) {
       return Container(
         height: 200,
-        child: Center(
-          child: Text('Không có sản phẩm mới'),
-        ),
+        child: Center(child: Text('Không có sản phẩm mới')),
       );
     }
 
@@ -78,7 +77,7 @@ class _NewProductWidgetState extends ConsumerState<NewProductWidget> {
             ),
           ),
           SizedBox(height: 5),
-          
+
           // Grid hiển thị sản phẩm (2 cột)
           GridView.builder(
             shrinkWrap: true,

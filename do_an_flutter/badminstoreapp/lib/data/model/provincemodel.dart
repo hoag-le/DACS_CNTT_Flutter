@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ProvinceModel {
   int? id;
   String? tenTinhThanh;

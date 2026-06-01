@@ -10,7 +10,7 @@ class MainHome extends StatelessWidget {
   Widget build(BuildContext context) {
     // Sử dụng Scaffold để đặt màu nền cho toàn bộ trang
     return Scaffold(
-      backgroundColor: Colors.white, 
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [

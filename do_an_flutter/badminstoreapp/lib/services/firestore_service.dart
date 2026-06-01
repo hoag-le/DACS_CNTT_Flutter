@@ -34,9 +34,13 @@ class FirestoreService {
         .where('status', isEqualTo: 1)
         .where('visible', isEqualTo: 1)
         .snapshots()
-        .map((snap) => snap.docs
-            .map((doc) => ProductModel.fromJson({...doc.data(), 'id': doc.id}))
-            .toList());
+        .map(
+          (snap) => snap.docs
+              .map(
+                (doc) => ProductModel.fromJson({...doc.data(), 'id': doc.id}),
+              )
+              .toList(),
+        );
   }
 
   // ==============================
@@ -66,13 +70,17 @@ class FirestoreService {
         .where('userId', isEqualTo: uid)
         .orderBy('orderDate', descending: true)
         .snapshots()
-        .map((snap) => snap.docs
-            .map((doc) => OrderModel.fromJson({...doc.data(), 'id': doc.id}))
-            .toList());
+        .map(
+          (snap) => snap.docs
+              .map((doc) => OrderModel.fromJson({...doc.data(), 'id': doc.id}))
+              .toList(),
+        );
   }
 
   /// Lấy chi tiết đơn hàng
-  static Future<List<OrderDetailModelWithName>> getOrderDetails(String orderId) async {
+  static Future<List<OrderDetailModelWithName>> getOrderDetails(
+    String orderId,
+  ) async {
     try {
       final snapshot = await _db
           .collection('orders')
@@ -80,7 +88,12 @@ class FirestoreService {
           .collection('order_details')
           .get();
       return snapshot.docs
-          .map((doc) => OrderDetailModelWithName.fromFirestore({...doc.data(), 'id': doc.id}))
+          .map(
+            (doc) => OrderDetailModelWithName.fromFirestore({
+              ...doc.data(),
+              'id': doc.id,
+            }),
+          )
           .toList();
     } catch (e) {
       return [];
@@ -154,7 +167,10 @@ class FirestoreService {
   }
 
   /// Lưu toàn bộ giỏ hàng lên Firestore
-  static Future<void> saveCart(String uid, List<CartItemModel> cartItems) async {
+  static Future<void> saveCart(
+    String uid,
+    List<CartItemModel> cartItems,
+  ) async {
     try {
       final cartRef = _db.collection('users').doc(uid).collection('cart');
 

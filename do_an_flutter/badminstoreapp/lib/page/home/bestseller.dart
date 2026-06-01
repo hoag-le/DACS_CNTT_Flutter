@@ -27,19 +27,22 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
     try {
       ReadData readData = ReadData();
       List<ProductModel> allProducts = await readData.loadData();
-      
+
       // Lọc sản phẩm từ id 1 đến id 8
       bestSellerProducts = allProducts
-          .where((product) => product.id != null && product.id! >= 1 && product.id! <= 8)
+          .where(
+            (product) =>
+                product.id != null && product.id! >= 1 && product.id! <= 8,
+          )
           .toList();
-      
+
       // Sắp xếp theo id để đảm bảo thứ tự
       bestSellerProducts.sort((a, b) => a.id!.compareTo(b.id!));
-      
+
       setState(() {
         isLoading = false;
       });
-      
+
       startAutoScroll();
     } catch (e) {
       print('Error loading best seller products: $e');
@@ -51,16 +54,16 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
 
   void startAutoScroll() {
     if (bestSellerProducts.length <= 2) return;
-    
+
     _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
       if (_pageController.hasClients) {
         // Tính toán số trang (mỗi trang 2 sản phẩm)
         int maxPages = (bestSellerProducts.length / 2).ceil();
-        
+
         setState(() {
           currentPage = (currentPage + 1) % maxPages;
         });
-        
+
         _pageController.animateToPage(
           currentPage,
           duration: Duration(milliseconds: 400),
@@ -79,11 +82,9 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
 
   Widget buildProductPair(List<ProductModel> products) {
     return Row(
-      children: products.map((product) => 
-        Expanded(
-          child: itemGridView(product, ref),
-        )
-      ).toList(),
+      children: products
+          .map((product) => Expanded(child: itemGridView(product, ref)))
+          .toList(),
     );
   }
 
@@ -92,18 +93,14 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
     if (isLoading) {
       return Container(
         height: 300,
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+        child: Center(child: CircularProgressIndicator()),
       );
     }
 
     if (bestSellerProducts.isEmpty) {
       return Container(
         height: 300,
-        child: Center(
-          child: Text('Không có sản phẩm bán chạy'),
-        ),
+        child: Center(child: Text('Không có sản phẩm bán chạy')),
       );
     }
 
@@ -132,7 +129,7 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
             ),
           ),
           SizedBox(height: 16),
-          
+
           // PageView hiển thị các cặp sản phẩm
           Container(
             height: 300,
@@ -149,9 +146,9 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
               },
             ),
           ),
-          
+
           SizedBox(height: 12),
-          
+
           // Chỉ báo trang (dots)
           Center(
             child: Row(
@@ -163,8 +160,8 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
                   height: 8,
                   margin: EdgeInsets.symmetric(horizontal: 4),
                   decoration: BoxDecoration(
-                    color: currentPage == index 
-                        ? Colors.orange 
+                    color: currentPage == index
+                        ? Colors.orange
                         : Colors.grey[400],
                     borderRadius: BorderRadius.circular(4),
                   ),

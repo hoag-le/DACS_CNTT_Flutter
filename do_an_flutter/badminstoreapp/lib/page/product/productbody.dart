@@ -55,15 +55,15 @@ Widget itemGridView(ProductModel productModel, WidgetRef ref) {
                   child: Image.asset(
                     uri_product_img + productModel.image!,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => 
-                      const Icon(Icons.image, size: 50, color: Colors.grey),
+                    errorBuilder: (context, error, stackTrace) =>
+                        const Icon(Icons.image, size: 50, color: Colors.grey),
                   ),
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // Tên sản phẩm
             Text(
               productModel.productName ?? '',
@@ -75,14 +75,17 @@ Widget itemGridView(ProductModel productModel, WidgetRef ref) {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Giá bán và nhãn Sale
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.orange,
                     borderRadius: BorderRadius.circular(12),
@@ -109,9 +112,9 @@ Widget itemGridView(ProductModel productModel, WidgetRef ref) {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 4),
-            
+
             // Giá gốc gạch ngang
             if (productModel.cost != null && productModel.cost! > 0)
               Text(

@@ -46,7 +46,11 @@ class SupportPage extends StatelessWidget {
               SizedBox(height: 20),
               Text(
                 '📮 Kênh liên hệ:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF8B4513)),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF8B4513),
+                ),
               ),
               SizedBox(height: 8),
               Text(
@@ -60,7 +64,11 @@ class SupportPage extends StatelessWidget {
               SizedBox(height: 20),
               Text(
                 '🔍 Các mục thường gặp:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF8B4513)),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF8B4513),
+                ),
               ),
               SizedBox(height: 8),
               Text(
@@ -74,7 +82,11 @@ class SupportPage extends StatelessWidget {
               SizedBox(height: 20),
               Text(
                 '💬 Đừng ngại liên hệ với chúng tôi — Mọi thắc mắc đều đáng được lắng nghe và giải quyết. Cảm ơn bạn đã tin tưởng sử dụng dịch vụ của Cầu Lông Shop!',
-                style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic, color: Color(0xFF8B4513)),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontStyle: FontStyle.italic,
+                  color: Color(0xFF8B4513),
+                ),
               ),
             ],
           ),

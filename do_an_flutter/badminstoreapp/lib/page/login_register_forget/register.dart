@@ -117,7 +117,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Đăng ký thành công! Chào mừng ${userModel.fullname ?? userModel.username}'),
+          content: Text(
+            'Đăng ký thành công! Chào mừng ${userModel.fullname ?? userModel.username}',
+          ),
           backgroundColor: Colors.green,
           duration: const Duration(seconds: 2),
         ),
@@ -148,10 +150,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFFFB382),
-              Color(0xFFFF8C42),
-            ],
+            colors: [Color(0xFFFFB382), Color(0xFFFF8C42)],
           ),
         ),
         child: SafeArea(
@@ -164,15 +163,26 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: IconButton(
-                    icon: const Icon(Icons.arrow_back, color: Color(0xFF8B4513)),
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Color(0xFF8B4513),
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
-                Image.asset('assets/images/logo.png',
-                    width: 80, height: 80, fit: BoxFit.contain),
+                Image.asset(
+                  'assets/images/logo.png',
+                  width: 80,
+                  height: 80,
+                  fit: BoxFit.contain,
+                ),
                 const SizedBox(height: 10),
-                Image.asset('assets/images/shopname.png',
-                    width: 200, height: 60, fit: BoxFit.contain),
+                Image.asset(
+                  'assets/images/shopname.png',
+                  width: 200,
+                  height: 60,
+                  fit: BoxFit.contain,
+                ),
                 const SizedBox(height: 10),
                 const Text(
                   'Đăng ký tài khoản',
@@ -197,8 +207,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.error_outline,
-                            color: Colors.red[700], size: 20),
+                        Icon(
+                          Icons.error_outline,
+                          color: Colors.red[700],
+                          size: 20,
+                        ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
@@ -271,8 +284,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   icon: Icons.lock_outline,
                   obscureText: !_isConfirmPasswordVisible,
                   isPassword: true,
-                  onSuffixTap: () => setState(() =>
-                      _isConfirmPasswordVisible = !_isConfirmPasswordVisible),
+                  onSuffixTap: () => setState(
+                    () =>
+                        _isConfirmPasswordVisible = !_isConfirmPasswordVisible,
+                  ),
                 ),
                 const SizedBox(height: 16),
 
@@ -327,7 +342,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.transparent,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     child: _isLoading
                         ? const SizedBox(
@@ -335,8 +351,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             height: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
                             ),
                           )
                         : const Text(
@@ -412,8 +429,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         style: const TextStyle(color: Color(0xFF8B4513), fontSize: 16),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(
-              color: const Color(0xFF8B4513).withOpacity(0.7)),
+          hintStyle: TextStyle(color: const Color(0xFF8B4513).withOpacity(0.7)),
           prefixIcon: Icon(icon, color: const Color(0xFF8B4513)),
           suffixIcon: isPassword
               ? IconButton(
@@ -428,8 +444,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,
           ),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
         ),
       ),
     );

@@ -6,7 +6,8 @@ import 'categoryproduct.dart'; // Import CategoryProductWidget
 class MainCategoryPage extends ConsumerStatefulWidget {
   final int initialCategoryId; // ID danh mục ban đầu để hiển thị
 
-  const MainCategoryPage({Key? key, required this.initialCategoryId}) : super(key: key);
+  const MainCategoryPage({Key? key, required this.initialCategoryId})
+    : super(key: key);
 
   @override
   _MainCategoryPageState createState() => _MainCategoryPageState();
@@ -52,8 +53,8 @@ class _MainCategoryPageState extends ConsumerState<MainCategoryPage> {
           children: [
             // Hiển thị CategoryList
             // Truyền một callback để MainCategoryPage có thể nhận biết khi danh mục được chọn
-            CategoryList(onCategorySelected: _onCategorySelected), 
-            
+            CategoryList(onCategorySelected: _onCategorySelected),
+
             // Hiển thị CategoryProductWidget dựa trên danh mục đã chọn
             CategoryProductWidget(categoryId: _selectedCategoryId),
           ],

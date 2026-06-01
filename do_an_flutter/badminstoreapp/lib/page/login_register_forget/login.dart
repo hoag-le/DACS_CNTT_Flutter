@@ -80,7 +80,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-              'Đăng nhập thành công! Chào mừng ${userModel.fullname ?? userModel.username}'),
+            'Đăng nhập thành công! Chào mừng ${userModel.fullname ?? userModel.username}',
+          ),
           backgroundColor: Colors.green,
           duration: const Duration(seconds: 2),
         ),
@@ -111,10 +112,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFFFB382),
-              Color(0xFFFF8C42),
-            ],
+            colors: [Color(0xFFFFB382), Color(0xFFFF8C42)],
           ),
         ),
         child: SafeArea(
@@ -130,11 +128,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           const SizedBox(height: 40),
-                          Image.asset('assets/images/logo.png',
-                              width: 100, height: 100, fit: BoxFit.contain),
+                          Image.asset(
+                            'assets/images/logo.png',
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.contain,
+                          ),
                           const SizedBox(height: 16),
-                          Image.asset('assets/images/shopname.png',
-                              width: 220, fit: BoxFit.contain),
+                          Image.asset(
+                            'assets/images/shopname.png',
+                            width: 220,
+                            fit: BoxFit.contain,
+                          ),
                           const SizedBox(height: 40),
                           const Text(
                             'Đăng nhập',
@@ -156,12 +161,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 color: Colors.red.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                    color: Colors.red.withOpacity(0.3)),
+                                  color: Colors.red.withOpacity(0.3),
+                                ),
                               ),
                               child: Row(
                                 children: [
-                                  Icon(Icons.error_outline,
-                                      color: Colors.red[700], size: 20),
+                                  Icon(
+                                    Icons.error_outline,
+                                    color: Colors.red[700],
+                                    size: 20,
+                                  ),
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
@@ -188,20 +197,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               enabled: !_isLoading,
                               keyboardType: TextInputType.emailAddress,
                               style: const TextStyle(
-                                  color: Color(0xFF8B4513), fontSize: 16),
+                                color: Color(0xFF8B4513),
+                                fontSize: 16,
+                              ),
                               decoration: InputDecoration(
                                 hintText: 'Email',
                                 hintStyle: TextStyle(
-                                    color:
-                                        Color(0xFF8B4513).withOpacity(0.7)),
-                                prefixIcon: const Icon(Icons.email_outlined,
-                                    color: Color(0xFF8B4513)),
+                                  color: Color(0xFF8B4513).withOpacity(0.7),
+                                ),
+                                prefixIcon: const Icon(
+                                  Icons.email_outlined,
+                                  color: Color(0xFF8B4513),
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide.none,
                                 ),
                                 contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 16),
+                                  horizontal: 16,
+                                  vertical: 16,
+                                ),
                               ),
                               onChanged: (_) {
                                 if (_errorMessage.isNotEmpty)
@@ -223,14 +238,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               enabled: !_isLoading,
                               obscureText: !_isPasswordVisible,
                               style: const TextStyle(
-                                  color: Color(0xFF8B4513), fontSize: 16),
+                                color: Color(0xFF8B4513),
+                                fontSize: 16,
+                              ),
                               decoration: InputDecoration(
                                 hintText: '••••••',
                                 hintStyle: TextStyle(
-                                    color:
-                                        Color(0xFF8B4513).withOpacity(0.7)),
-                                prefixIcon: const Icon(Icons.lock_outline,
-                                    color: Color(0xFF8B4513)),
+                                  color: Color(0xFF8B4513).withOpacity(0.7),
+                                ),
+                                prefixIcon: const Icon(
+                                  Icons.lock_outline,
+                                  color: Color(0xFF8B4513),
+                                ),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _isPasswordVisible
@@ -240,16 +259,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   ),
                                   onPressed: _isLoading
                                       ? null
-                                      : () => setState(() =>
-                                          _isPasswordVisible =
-                                              !_isPasswordVisible),
+                                      : () => setState(
+                                          () => _isPasswordVisible =
+                                              !_isPasswordVisible,
+                                        ),
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide.none,
                                 ),
                                 contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 16),
+                                  horizontal: 16,
+                                  vertical: 16,
+                                ),
                               ),
                               onChanged: (_) {
                                 if (_errorMessage.isNotEmpty)
@@ -266,11 +288,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               onTap: _isLoading
                                   ? null
                                   : () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) =>
-                                                const ForgetPasswordScreen()),
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            const ForgetPasswordScreen(),
                                       ),
+                                    ),
                               child: Text(
                                 'Quên mật khẩu?',
                                 style: TextStyle(
@@ -296,7 +319,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     ? [Colors.grey[400]!, Colors.grey[500]!]
                                     : [
                                         const Color(0xFFFF8C42),
-                                        const Color(0xFFFF6B1A)
+                                        const Color(0xFFFF6B1A),
                                       ],
                               ),
                               borderRadius: BorderRadius.circular(12),
@@ -314,7 +337,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 backgroundColor: Colors.transparent,
                                 shadowColor: Colors.transparent,
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
                               ),
                               child: _isLoading
                                   ? const SizedBox(
@@ -324,7 +348,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         strokeWidth: 2,
                                         valueColor:
                                             AlwaysStoppedAnimation<Color>(
-                                                Colors.white),
+                                              Colors.white,
+                                            ),
                                       ),
                                     )
                                   : const Text(
@@ -393,11 +418,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 onPressed: _isLoading
                                     ? null
                                     : () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (_) =>
-                                                  const RegisterScreen()),
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              const RegisterScreen(),
                                         ),
+                                      ),
                                 style: TextButton.styleFrom(
                                   padding: EdgeInsets.zero,
                                   minimumSize: Size.zero,

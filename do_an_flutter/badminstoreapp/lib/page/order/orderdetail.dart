@@ -67,30 +67,44 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
 
   String getPaymentStatus(int? isPayment) {
     switch (isPayment) {
-      case 0: return 'COD - Thanh toán khi nhận hàng';
-      case 1: return 'Đã thanh toán (Momo)';
-      case 2: return 'Đã thanh toán (VNPay)';
-      default: return 'Chưa xác định';
+      case 0:
+        return 'COD - Thanh toán khi nhận hàng';
+      case 1:
+        return 'Đã thanh toán (Momo)';
+      case 2:
+        return 'Đã thanh toán (VNPay)';
+      default:
+        return 'Chưa xác định';
     }
   }
 
   String getOrderStatus(int? status) {
     switch (status) {
-      case 0: return 'Đã hủy';
-      case 1: return 'Đang xử lý';
-      case 2: return 'Đang giao hàng';
-      case 3: return 'Hoàn tất';
-      default: return 'Không xác định';
+      case 0:
+        return 'Đã hủy';
+      case 1:
+        return 'Đang xử lý';
+      case 2:
+        return 'Đang giao hàng';
+      case 3:
+        return 'Hoàn tất';
+      default:
+        return 'Không xác định';
     }
   }
 
   Color getStatusColor(int? status) {
     switch (status) {
-      case 0: return Colors.red;
-      case 1: return Colors.orange;
-      case 2: return Colors.blue;
-      case 3: return Colors.green;
-      default: return Colors.grey;
+      case 0:
+        return Colors.red;
+      case 1:
+        return Colors.orange;
+      case 2:
+        return Colors.blue;
+      case 3:
+        return Colors.green;
+      default:
+        return Colors.grey;
     }
   }
 
@@ -111,34 +125,33 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: Text('Chi tiết đơn hàng #${widget.orderId.length > 8 ? widget.orderId.substring(0, 8) : widget.orderId}'),
+        title: Text(
+          'Chi tiết đơn hàng #${widget.orderId.length > 8 ? widget.orderId.substring(0, 8) : widget.orderId}',
+        ),
         backgroundColor: const Color(0xFFFDF1E8),
         foregroundColor: Colors.black87,
         elevation: 1,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: loadOrderData,
-          ),
+          IconButton(icon: const Icon(Icons.refresh), onPressed: loadOrderData),
         ],
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : errorMessage != null
-              ? _buildErrorWidget()
-              : orderDetails.isEmpty
-                  ? _buildNoDataWidget()
-                  : SingleChildScrollView(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildSummarySection(),
-                          const SizedBox(height: 16),
-                          _buildProductListSection(),
-                        ],
-                      ),
-                    ),
+          ? _buildErrorWidget()
+          : orderDetails.isEmpty
+          ? _buildNoDataWidget()
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSummarySection(),
+                  const SizedBox(height: 16),
+                  _buildProductListSection(),
+                ],
+              ),
+            ),
     );
   }
 
@@ -359,10 +372,17 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
                 ? Image.asset(
                     uri_product_img + orderDetail.image!,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) =>
-                        const Icon(Icons.image_not_supported, size: 30, color: Colors.grey),
+                    errorBuilder: (_, __, ___) => const Icon(
+                      Icons.image_not_supported,
+                      size: 30,
+                      color: Colors.grey,
+                    ),
                   )
-                : const Icon(Icons.shopping_bag_outlined, size: 30, color: Colors.grey),
+                : const Icon(
+                    Icons.shopping_bag_outlined,
+                    size: 30,
+                    color: Colors.grey,
+                  ),
           ),
         ),
 

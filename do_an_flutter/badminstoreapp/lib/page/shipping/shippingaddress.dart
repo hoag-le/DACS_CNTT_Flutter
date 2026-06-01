@@ -10,8 +10,9 @@ import 'payment.dart';
 class ShippingAddressScreen extends StatefulWidget {
   final double subtotal; // Thêm parameter để nhận subtotal
   final UserModel? user;
-  
-  const ShippingAddressScreen({Key? key, required this.subtotal, this.user}) : super(key: key);
+
+  const ShippingAddressScreen({Key? key, required this.subtotal, this.user})
+    : super(key: key);
 
   @override
   State<ShippingAddressScreen> createState() => _ShippingAddressScreenState();
@@ -21,26 +22,28 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  
+
   ProvinceModel? _selectedProvince;
   WardModel? _selectedWard;
-  
+
   // Danh sách tỉnh/thành phố và phường/xã
   List<ProvinceModel> _provinces = [];
   List<WardModel> _allWards = [];
-  
+
   // Data loaders
   final TinhThanhData _tinhThanhData = TinhThanhData();
   final PhuongXaData _phuongXaData = PhuongXaData();
-  
+
   // Loading states
   bool _isLoadingProvinces = true;
   bool _isLoadingWards = true;
-  
+
   // Lấy danh sách phường/xã theo id tỉnh thành
   List<WardModel> get _filteredWards {
     if (_selectedProvince == null) return [];
-    return _allWards.where((ward) => ward.idTinhThanh == _selectedProvince!.id).toList();
+    return _allWards
+        .where((ward) => ward.idTinhThanh == _selectedProvince!.id)
+        .toList();
   }
 
   @override
@@ -57,7 +60,7 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
         _provinces = provinces;
         _isLoadingProvinces = false;
       });
-      
+
       // Load wards
       final wards = await _phuongXaData.loadData();
       setState(() {
@@ -129,7 +132,7 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                   ],
                 ),
               ),
-              
+
               // Progress indicator
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -144,9 +147,9 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 30),
-              
+
               // Form content
               Expanded(
                 child: SingleChildScrollView(
@@ -164,9 +167,9 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                             color: Color(0xFF8B4513),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 20),
-                        
+
                         // Họ và tên người nhận
                         const Text(
                           'Họ và tên người nhận',
@@ -181,9 +184,9 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                           controller: _nameController,
                           hintText: 'Nhập họ và tên người nhận',
                         ),
-                        
+
                         const SizedBox(height: 20),
-                        
+
                         // Số điện thoại
                         const Text(
                           'Số điện thoại',
@@ -199,9 +202,9 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                           hintText: 'Ví dụ: 0979123xxx (10 ký tự số)',
                           keyboardType: TextInputType.phone,
                         ),
-                        
+
                         const SizedBox(height: 20),
-                        
+
                         // Tỉnh/Thành phố
                         const Text(
                           'Tỉnh/ thành phố',
@@ -218,17 +221,19 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                                 value: _selectedProvince,
                                 hint: 'Chọn tỉnh / thành phố',
                                 items: _provinces,
-                                displayText: (province) => province.tenTinhThanh ?? '',
+                                displayText: (province) =>
+                                    province.tenTinhThanh ?? '',
                                 onChanged: (value) {
                                   setState(() {
                                     _selectedProvince = value;
-                                    _selectedWard = null; // Reset ward khi đổi tỉnh
+                                    _selectedWard =
+                                        null; // Reset ward khi đổi tỉnh
                                   });
                                 },
                               ),
-                        
+
                         const SizedBox(height: 20),
-                        
+
                         // Phường/Xã
                         const Text(
                           'Phường/Xã',
@@ -256,9 +261,9 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                                         });
                                       },
                               ),
-                        
+
                         const SizedBox(height: 20),
-                        
+
                         // Số nhà/Tên đường
                         const Text(
                           'Số nhà/Tên đường',
@@ -273,19 +278,16 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                           controller: _addressController,
                           hintText: 'Nhập số nhà/tên đường',
                         ),
-                        
+
                         const SizedBox(height: 20),
-                        
+
                         // Xác nhận địa chỉ button
                         Container(
                           width: double.infinity,
                           height: 56,
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
-                              colors: [
-                                Color(0xFFFF8C42),
-                                Color(0xFFFF6B1A),
-                              ],
+                              colors: [Color(0xFFFF8C42), Color(0xFFFF6B1A)],
                             ),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
@@ -318,7 +320,7 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
                             ),
                           ),
                         ),
-                        
+
                         const SizedBox(height: 30),
                       ],
                     ),
@@ -337,30 +339,33 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
       _showErrorSnackBar('Vui lòng nhập họ và tên người nhận');
       return;
     }
-    
+
     if (_phoneController.text.isEmpty) {
       _showErrorSnackBar('Vui lòng nhập số điện thoại');
       return;
     }
-    
+
     if (_selectedProvince == null) {
       _showErrorSnackBar('Vui lòng chọn tỉnh/thành phố');
       return;
     }
-    
+
     if (_selectedWard == null) {
       _showErrorSnackBar('Vui lòng chọn phường/xã');
       return;
     }
-    
+
     if (_addressController.text.isEmpty) {
       _showErrorSnackBar('Vui lòng nhập số nhà/tên đường');
       return;
     }
-    
+
     // Validation passed - handle address confirmation
     _showSuccessSnackBar('Địa chỉ đã được xác nhận thành công!');
-    
+
+    String fullAddress =
+        '${_addressController.text}, ${_selectedWard!.tenPhuongXa}, ${_selectedProvince!.tenTinhThanh}';
+
     // Here you can navigate to the next screen or save the address
     Navigator.push(
       context,
@@ -368,6 +373,9 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
         builder: (context) => PaymentScreen(
           subtotal: widget.subtotal,
           user: widget.user,
+          receiverName: _nameController.text,
+          receiverPhone: _phoneController.text,
+          shippingAddress: fullAddress,
         ),
       ),
     );
@@ -448,15 +456,10 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
-        style: const TextStyle(
-          color: Color(0xFF8B4513),
-          fontSize: 16,
-        ),
+        style: const TextStyle(color: Color(0xFF8B4513), fontSize: 16),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(
-            color: Color(0xFF8B4513).withOpacity(0.7),
-          ),
+          hintStyle: TextStyle(color: Color(0xFF8B4513).withOpacity(0.7)),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,
@@ -518,14 +521,9 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
         value: value,
         hint: Text(
           hint,
-          style: TextStyle(
-            color: Color(0xFF8B4513).withOpacity(0.7),
-          ),
+          style: TextStyle(color: Color(0xFF8B4513).withOpacity(0.7)),
         ),
-        style: const TextStyle(
-          color: Color(0xFF8B4513),
-          fontSize: 16,
-        ),
+        style: const TextStyle(color: Color(0xFF8B4513), fontSize: 16),
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
@@ -542,9 +540,7 @@ class _ShippingAddressScreenState extends State<ShippingAddressScreen> {
             value: item,
             child: Text(
               displayText(item),
-              style: const TextStyle(
-                color: Color(0xFF8B4513),
-              ),
+              style: const TextStyle(color: Color(0xFF8B4513)),
             ),
           );
         }).toList(),

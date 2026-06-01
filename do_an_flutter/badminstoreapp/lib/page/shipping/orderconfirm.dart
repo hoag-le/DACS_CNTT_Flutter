@@ -25,8 +25,7 @@ class OrderConfirmScreen extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  ConsumerState<OrderConfirmScreen> createState() =>
-      _OrderConfirmScreenState();
+  ConsumerState<OrderConfirmScreen> createState() => _OrderConfirmScreenState();
 }
 
 class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
@@ -45,10 +44,14 @@ class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
           receiverName: widget.receiverName ?? widget.user?.fullname ?? '',
           receiverPhone: widget.receiverPhone ?? widget.user?.phonenumber ?? '',
           shippingAddress: widget.shippingAddress ?? '',
-          totalAmount: widget.totalAmount ?? ref.read(productsProvider.notifier).cartTotal,
+          totalAmount:
+              widget.totalAmount ??
+              ref.read(productsProvider.notifier).cartTotal,
           isPayment: widget.isPayment ?? 0,
           cartItems: cartItems,
         );
+        // Clear remote cart as well
+        await FirestoreService.clearCart(uid);
       } catch (e) {
         // Ghi log lỗi nhưng vẫn tiếp tục — tránh block UX
         debugPrint('Error saving order: $e');
@@ -91,10 +94,7 @@ class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFFFFB382),
-              Color(0xFFFF8C42),
-            ],
+            colors: [Color(0xFFFFB382), Color(0xFFFF8C42)],
           ),
         ),
         child: SafeArea(
@@ -166,7 +166,7 @@ class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
                                 ? [Colors.grey[400]!, Colors.grey[500]!]
                                 : [
                                     const Color(0xFFFF8C42),
-                                    const Color(0xFFFF6B1A)
+                                    const Color(0xFFFF6B1A),
                                   ],
                           ),
                           borderRadius: BorderRadius.circular(12),
@@ -184,7 +184,8 @@ class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                           child: _isConfirming
                               ? const SizedBox(
@@ -193,7 +194,8 @@ class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
+                                      Colors.white,
+                                    ),
                                   ),
                                 )
                               : const Text(

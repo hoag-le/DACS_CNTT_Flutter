@@ -92,15 +92,12 @@ class _MainOrderState extends ConsumerState<MainOrder>
   int getOrderCountByStatus(String status) {
     if (status == 'all') return userOrders.length;
     int statusValue = int.parse(status);
-    return userOrders
-        .where((order) => order.orderStatus == statusValue)
-        .length;
+    return userOrders.where((order) => order.orderStatus == statusValue).length;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.user == null &&
-        FirebaseAuth.instance.currentUser == null) {
+    if (widget.user == null && FirebaseAuth.instance.currentUser == null) {
       return _buildNotLoggedInState();
     }
 
@@ -123,9 +120,10 @@ class _MainOrderState extends ConsumerState<MainOrder>
               Text(
                 widget.user!.fullname!,
                 style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.brown,
-                    fontWeight: FontWeight.normal),
+                  fontSize: 12,
+                  color: Colors.brown,
+                  fontWeight: FontWeight.normal,
+                ),
               ),
           ],
         ),
@@ -146,15 +144,28 @@ class _MainOrderState extends ConsumerState<MainOrder>
           labelColor: Colors.orange,
           unselectedLabelColor: Colors.brown,
           indicatorColor: Colors.orange,
-          labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          labelStyle: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
           onTap: (index) {
             setState(() {
               switch (index) {
-                case 0: selectedFilter = 'all'; break;
-                case 1: selectedFilter = '1'; break;
-                case 2: selectedFilter = '2'; break;
-                case 3: selectedFilter = '3'; break;
-                case 4: selectedFilter = '0'; break;
+                case 0:
+                  selectedFilter = 'all';
+                  break;
+                case 1:
+                  selectedFilter = '1';
+                  break;
+                case 2:
+                  selectedFilter = '2';
+                  break;
+                case 3:
+                  selectedFilter = '3';
+                  break;
+                case 4:
+                  selectedFilter = '0';
+                  break;
               }
             });
           },
@@ -174,38 +185,34 @@ class _MainOrderState extends ConsumerState<MainOrder>
                 children: [
                   CircularProgressIndicator(),
                   SizedBox(height: 20),
-                  Text('Đang tải đơn hàng...',
-                      style: TextStyle(fontSize: 16, color: Colors.grey)),
+                  Text(
+                    'Đang tải đơn hàng...',
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
                 ],
               ),
             )
           : errorMessage != null
-              ? _buildErrorState()
-              : RefreshIndicator(
-                  onRefresh: loadData,
-                  child: filteredOrders.isEmpty
-                      ? _buildEmptyState()
-                      : ListView.builder(
-                          padding: const EdgeInsets.all(8),
-                          itemCount: filteredOrders.length,
-                          itemBuilder: (context, index) {
-                            final order = filteredOrders[index];
-                            return FutureBuilder<
-                                List<OrderDetailModelWithName>>(
-                              future: getOrderDetails(order.id ?? ''),
-                              builder: (context, snapshot) {
-                                final details = snapshot.data ?? [];
-                                return itemOrderView(
-                                  order,
-                                  details,
-                                  products,
-                                  ref,
-                                );
-                              },
-                            );
+          ? _buildErrorState()
+          : RefreshIndicator(
+              onRefresh: loadData,
+              child: filteredOrders.isEmpty
+                  ? _buildEmptyState()
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(8),
+                      itemCount: filteredOrders.length,
+                      itemBuilder: (context, index) {
+                        final order = filteredOrders[index];
+                        return FutureBuilder<List<OrderDetailModelWithName>>(
+                          future: getOrderDetails(order.id ?? ''),
+                          builder: (context, snapshot) {
+                            final details = snapshot.data ?? [];
+                            return itemOrderView(order, details, products, ref);
                           },
-                        ),
-                ),
+                        );
+                      },
+                    ),
+            ),
     );
   }
 
@@ -213,11 +220,14 @@ class _MainOrderState extends ConsumerState<MainOrder>
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text('Đơn hàng của bạn',
-            style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.brown)),
+        title: const Text(
+          'Đơn hàng của bạn',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.brown,
+          ),
+        ),
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFFFDF1E8),
         elevation: 2,
@@ -227,14 +237,26 @@ class _MainOrderState extends ConsumerState<MainOrder>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.account_circle_outlined, size: 80, color: Colors.grey[400]),
+            Icon(
+              Icons.account_circle_outlined,
+              size: 80,
+              color: Colors.grey[400],
+            ),
             const SizedBox(height: 16),
-            Text('Bạn cần đăng nhập',
-                style: TextStyle(fontSize: 20, color: Colors.grey[600], fontWeight: FontWeight.w600)),
+            Text(
+              'Bạn cần đăng nhập',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             const SizedBox(height: 8),
-            Text('Vui lòng đăng nhập để xem đơn hàng của bạn',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Colors.grey[500])),
+            Text(
+              'Vui lòng đăng nhập để xem đơn hàng của bạn',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+            ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () => Navigator.pushNamed(context, '/login'),
@@ -243,8 +265,13 @@ class _MainOrderState extends ConsumerState<MainOrder>
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue[600],
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
             ),
           ],
@@ -260,14 +287,22 @@ class _MainOrderState extends ConsumerState<MainOrder>
         children: [
           Icon(Icons.error_outline, size: 80, color: Colors.red[400]),
           const SizedBox(height: 16),
-          Text('Có lỗi xảy ra',
-              style: TextStyle(fontSize: 18, color: Colors.grey[600], fontWeight: FontWeight.w500)),
+          Text(
+            'Có lỗi xảy ra',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Text(errorMessage ?? '',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Colors.grey[500])),
+            child: Text(
+              errorMessage ?? '',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+            ),
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(
@@ -278,7 +313,9 @@ class _MainOrderState extends ConsumerState<MainOrder>
               backgroundColor: Colors.blue[600],
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
           ),
         ],
@@ -291,10 +328,22 @@ class _MainOrderState extends ConsumerState<MainOrder>
     IconData icon = Icons.shopping_bag_outlined;
 
     switch (selectedFilter) {
-      case '0': message = 'Không có đơn hàng bị hủy'; icon = Icons.cancel_outlined; break;
-      case '1': message = 'Không có đơn hàng đang xử lý'; icon = Icons.hourglass_empty_outlined; break;
-      case '2': message = 'Không có đơn hàng đang giao'; icon = Icons.local_shipping_outlined; break;
-      case '3': message = 'Không có đơn hàng đã hoàn tất'; icon = Icons.check_circle_outline; break;
+      case '0':
+        message = 'Không có đơn hàng bị hủy';
+        icon = Icons.cancel_outlined;
+        break;
+      case '1':
+        message = 'Không có đơn hàng đang xử lý';
+        icon = Icons.hourglass_empty_outlined;
+        break;
+      case '2':
+        message = 'Không có đơn hàng đang giao';
+        icon = Icons.local_shipping_outlined;
+        break;
+      case '3':
+        message = 'Không có đơn hàng đã hoàn tất';
+        icon = Icons.check_circle_outline;
+        break;
     }
 
     return Center(
@@ -303,11 +352,19 @@ class _MainOrderState extends ConsumerState<MainOrder>
         children: [
           Icon(icon, size: 80, color: Colors.grey[400]),
           const SizedBox(height: 16),
-          Text(message,
-              style: TextStyle(fontSize: 18, color: Colors.grey[600], fontWeight: FontWeight.w500)),
+          Text(
+            message,
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
           const SizedBox(height: 8),
-          Text('Kéo xuống để làm mới',
-              style: TextStyle(fontSize: 14, color: Colors.grey[500])),
+          Text(
+            'Kéo xuống để làm mới',
+            style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+          ),
           if (selectedFilter == 'all') ...[
             const SizedBox(height: 24),
             ElevatedButton.icon(
@@ -317,8 +374,13 @@ class _MainOrderState extends ConsumerState<MainOrder>
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue[600],
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
             ),
           ],

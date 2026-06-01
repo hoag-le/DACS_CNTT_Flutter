@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class CategoryModel {
   int? id;
   String? categoryName;

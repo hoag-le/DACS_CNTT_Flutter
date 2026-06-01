@@ -10,7 +10,7 @@ import '../start.dart';
 
 class MainPersonalPage extends ConsumerWidget {
   final UserModel? user;
-  
+
   const MainPersonalPage({super.key, required this.user});
 
   @override
@@ -87,7 +87,8 @@ class MainPersonalPage extends ConsumerWidget {
                               color: Color(0xFF8B4513),
                             ),
                           ),
-                        if (user?.phonenumber != null && user!.phonenumber!.isNotEmpty)
+                        if (user?.phonenumber != null &&
+                            user!.phonenumber!.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 2),
                             child: Text(
@@ -159,10 +160,7 @@ class MainPersonalPage extends ConsumerWidget {
                   ),
                   child: const Text(
                     'Đơn hàng của tôi',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                 ),
               ),
@@ -177,7 +175,7 @@ class MainPersonalPage extends ConsumerWidget {
               },
             ),
             const SizedBox(height: 16),
-            
+
             _buildMenuItem(
               icon: Icons.info_outline,
               title: 'Giới thiệu',
@@ -190,7 +188,7 @@ class MainPersonalPage extends ConsumerWidget {
               },
             ),
             const SizedBox(height: 16),
-            
+
             _buildMenuItem(
               icon: Icons.help_outline,
               title: 'Trung tâm trợ giúp',
@@ -203,7 +201,7 @@ class MainPersonalPage extends ConsumerWidget {
               },
             ),
             const SizedBox(height: 16),
-            
+
             _buildMenuItem(
               icon: Icons.settings_outlined,
               title: 'Cài đặt',
@@ -215,9 +213,9 @@ class MainPersonalPage extends ConsumerWidget {
                 );
               },
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Logout Button
             if (user != null)
               Container(
@@ -237,10 +235,7 @@ class MainPersonalPage extends ConsumerWidget {
                   ),
                   child: const Text(
                     'Đăng xuất',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                 ),
               ),
@@ -253,7 +248,7 @@ class MainPersonalPage extends ConsumerWidget {
   // Helper methods
   String _getDisplayName() {
     if (user == null) return 'Khách';
-    
+
     if (user!.fullname != null && user!.fullname!.isNotEmpty) {
       return user!.fullname!;
     } else if (user!.email != null && user!.email!.isNotEmpty) {
@@ -261,7 +256,7 @@ class MainPersonalPage extends ConsumerWidget {
     } else if (user!.username != null && user!.username!.isNotEmpty) {
       return user!.username!;
     }
-    
+
     return 'Người dùng';
   }
 
@@ -322,10 +317,7 @@ class MainPersonalPage extends ConsumerWidget {
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(
-                fontSize: 13,
-                color: Color(0xFF8B4513),
-              ),
+              style: const TextStyle(fontSize: 13, color: Color(0xFF8B4513)),
             ),
           ),
         ],
@@ -354,11 +346,7 @@ class MainPersonalPage extends ConsumerWidget {
                 color: const Color(0xFFD2691E).withOpacity(0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(
-                icon,
-                color: const Color(0xFF8B4513),
-                size: 20,
-              ),
+              child: Icon(icon, color: const Color(0xFF8B4513), size: 20),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -401,9 +389,6 @@ class MainPersonalPage extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /*
-              if (user!.id != null)
-                _buildInfoRow('ID:', user!.id.toString()),*/
               if (user!.username != null && user!.username!.isNotEmpty)
                 _buildInfoRow('Tên đăng nhập:', user!.username!),
               if (user!.fullname != null && user!.fullname!.isNotEmpty)
@@ -433,6 +418,7 @@ class MainPersonalPage extends ConsumerWidget {
       },
     );
   }
+
   void _showLogoutDialog(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
@@ -461,13 +447,13 @@ class MainPersonalPage extends ConsumerWidget {
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop();
-                
+
                 // Thực hiện đăng xuất thực tế qua Firebase Auth
                 await AuthService.signOut();
-                
+
                 // Xóa trạng thái người dùng trong Riverpod
                 ref.read(userProvider.notifier).state = null;
-                
+
                 // Quay về màn hình Start
                 if (!context.mounted) return;
                 Navigator.pushAndRemoveUntil(
