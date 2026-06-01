@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../home/mainhome.dart';
-import '../search/search.dart';
-import '../cart/productcart.dart';
 import '../../data/model/usermodel.dart';
 
 class HomeWidget extends StatelessWidget {
@@ -17,10 +16,7 @@ class HomeWidget extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.search, color: Colors.black),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SearchPage()),
-            );
+            context.push('/search');
           },
         ),
         title: Image.asset('assets/images/logo.png', height: 40),
@@ -29,12 +25,7 @@ class HomeWidget extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.shopping_cart, color: Colors.black),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EmptyCartPage(user: user),
-                ),
-              );
+              context.push('/cart');
             },
           ),
         ],

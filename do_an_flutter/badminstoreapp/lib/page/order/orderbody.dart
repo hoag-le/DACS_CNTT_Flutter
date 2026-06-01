@@ -5,7 +5,7 @@ import '../../data/model/ordermodel.dart';
 import '../../data/model/orderdetailmodel.dart';
 import '../../data/model/productmodel.dart';
 import '../../page/order/orderdetail.dart';
-
+import 'package:go_router/go_router.dart';
 Widget itemOrderView(
   OrderModel orderModel,
   List<OrderDetailModelWithName> orderDetails,
@@ -84,12 +84,7 @@ Widget itemOrderView(
 
   return GestureDetector(
     onTap: () {
-      Navigator.push(
-        ref.context,
-        MaterialPageRoute(
-          builder: (context) => OrderDetail(orderId: orderModel.id ?? ''),
-        ),
-      );
+      ref.context.push('/personal/order-detail', extra: orderModel.id ?? '');
     },
     child: Container(
       margin: const EdgeInsets.all(8),

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'register.dart';
-import 'forget.dart';
-import '../../page/mainpage.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/model/user_provider.dart';
 import '../../services/auth_service.dart';
+import '../../utils/validators.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -37,17 +36,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
-    if (email.isEmpty) {
+    final emailError = Validators.validateLoginEmail(email);
+    if (emailError != null) {
       setState(() {
-        _errorMessage = 'Email không được để trống';
+        _errorMessage = emailError;
         _isLoading = false;
       });
       return;
     }
 
-    if (password.isEmpty) {
+    final passwordError = Validators.validateLoginPassword(password);
+    if (passwordError != null) {
       setState(() {
-        _errorMessage = 'Mật khẩu không được để trống';
+        _errorMessage = passwordError;
         _isLoading = false;
       });
       return;
@@ -89,10 +90,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
       Future.delayed(const Duration(seconds: 1), () {
         if (!mounted) return;
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MainPage()),
-        );
+        context.go('/main');
       });
     } catch (e) {
       setState(() {
@@ -287,14 +285,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               onTap:
                                   _isLoading
                                       ? null
-                                      : () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder:
-                                              (_) =>
-                                                  const ForgetPasswordScreen(),
-                                        ),
-                                      ),
+                                      : () => context.push('/forget'),
                               child: Text(
                                 'Quên mật khẩu?',
                                 style: TextStyle(
@@ -420,13 +411,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 onPressed:
                                     _isLoading
                                         ? null
-                                        : () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (_) => const RegisterScreen(),
-                                          ),
-                                        ),
+                                        : () => context.push('/register'),
                                 style: TextButton.styleFrom(
                                   padding: EdgeInsets.zero,
                                   minimumSize: Size.zero,

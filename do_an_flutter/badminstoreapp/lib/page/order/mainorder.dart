@@ -7,6 +7,7 @@ import '../../data/model/productmodel.dart';
 import '../../data/model/usermodel.dart';
 import '../../services/firestore_service.dart';
 import '../order/orderbody.dart';
+import 'package:go_router/go_router.dart';
 
 class MainOrder extends ConsumerStatefulWidget {
   final UserModel? user;
@@ -267,7 +268,7 @@ class _MainOrderState extends ConsumerState<MainOrder>
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
-              onPressed: () => Navigator.pushNamed(context, '/login'),
+              onPressed: () => context.push('/login'),
               icon: const Icon(Icons.login),
               label: const Text('Đăng nhập'),
               style: ElevatedButton.styleFrom(
@@ -376,7 +377,7 @@ class _MainOrderState extends ConsumerState<MainOrder>
           if (selectedFilter == 'all') ...[
             const SizedBox(height: 24),
             ElevatedButton.icon(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => context.pop(),
               icon: const Icon(Icons.shopping_cart),
               label: const Text('Mua sắm ngay'),
               style: ElevatedButton.styleFrom(

@@ -18,6 +18,7 @@ import '../../data/model/product_viewmodel.dart';
 import '../product/productbody.dart';
 import '../../data/data/branddata.dart';
 import '../../data/model/brandmodel.dart';
+import 'package:go_router/go_router.dart';
 import 'dart:math';
 
 class MainDetail extends ConsumerStatefulWidget {
@@ -254,10 +255,7 @@ class _MainDetailState extends ConsumerState<MainDetail> {
           .read(productsProvider.notifier)
           .addToCart(product!, _quantity, selectedSize);
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ProductCart()),
-      );
+      context.push('/cart');
     }
   }
 
@@ -286,10 +284,7 @@ class _MainDetailState extends ConsumerState<MainDetail> {
           IconButton(
             icon: Icon(Icons.shopping_cart, color: Colors.brown),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const EmptyCartPage()),
-              );
+              context.push('/cart/empty');
             },
           ),
         ],

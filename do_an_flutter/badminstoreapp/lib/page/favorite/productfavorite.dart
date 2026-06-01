@@ -5,6 +5,8 @@ import '../../conf/const.dart';
 import '../../data/model/product_viewmodel.dart';
 import '../../data/model/productmodel.dart';
 import '../detail/maindetail.dart';
+import 'package:go_router/go_router.dart';
+import '../../widgets/app_state_widgets.dart';
 
 class ProductFavorite extends ConsumerWidget {
   const ProductFavorite({Key? key}) : super(key: key);
@@ -30,22 +32,9 @@ class ProductFavorite extends ConsumerWidget {
       ),
       body:
           favorites.isEmpty
-              ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.favorite_border,
-                      size: 80,
-                      color: Colors.grey[400],
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'Chưa có sản phẩm yêu thích nào',
-                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
+              ? const AppEmptyWidget(
+                message: 'Chưa có sản phẩm yêu thích nào',
+                icon: Icons.favorite_border,
               )
               : SafeArea(
                 child: ListView.builder(
@@ -66,12 +55,7 @@ class ProductFavorite extends ConsumerWidget {
   ) {
     return InkWell(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MainDetail(productId: productModel.id!),
-          ),
-        );
+        context.push('/detail/${productModel.id}');
       },
       child: Container(
         padding: const EdgeInsets.all(15),

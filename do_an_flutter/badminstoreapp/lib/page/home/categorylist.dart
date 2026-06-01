@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
 import '../../providers/home_providers.dart';
 import '../../data/model/categorymodel.dart';
+import 'package:go_router/go_router.dart';
 import '../../conf/const.dart';
-import '../../page/category/maincategory.dart';
+import '../../widgets/app_state_widgets.dart';
 
 class CategoryList extends ConsumerStatefulWidget {
   final Function(int)? onCategorySelected;
@@ -59,14 +60,7 @@ class _CategoryListState extends ConsumerState<CategoryList> {
         if (widget.onCategorySelected != null) {
           widget.onCategorySelected!(category.id!);
         } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) =>
-                      MainCategoryPage(initialCategoryId: category.id!),
-            ),
-          );
+          context.push('/category/${category.id}');
         }
       },
       child: Container(
@@ -132,9 +126,10 @@ class _CategoryListState extends ConsumerState<CategoryList> {
     return categoriesAsync.when(
       data: (categories) {
         if (categories.isEmpty) {
-          return Container(
+          return const AppEmptyWidget(
+            message: 'Không có danh mục nào',
+            icon: Icons.category_outlined,
             height: 120,
-            child: const Center(child: Text('Không có danh mục nào')),
           );
         }
 
@@ -162,14 +157,8 @@ class _CategoryListState extends ConsumerState<CategoryList> {
           ),
         );
       },
-      loading:
-          () => Container(
-            height: 120,
-            child: const Center(child: CircularProgressIndicator()),
-          ),
-      error:
-          (e, s) =>
-              Container(height: 120, child: Center(child: Text('Lỗi: $e'))),
+      loading: () => const AppLoadingWidget(height: 120),
+      error: (e, s) => const AppErrorWidget(height: 120),
     );
   }
 }

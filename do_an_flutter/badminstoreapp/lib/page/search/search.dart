@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math';
 import '../../providers/home_providers.dart';
 import '../../data/model/productmodel.dart';
+import 'package:go_router/go_router.dart';
 import '../product/productbody.dart';
-import 'searchresults.dart';
-
+import '../../widgets/app_state_widgets.dart';
 class SearchPage extends ConsumerStatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
 
@@ -31,12 +31,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
 
   void _onSearchSubmitted(String query) {
     if (query.trim().isNotEmpty) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SearchResultPage(searchQuery: query.trim()),
-        ),
-      );
+      context.push('/search-results?query=${query.trim()}');
     }
   }
 
@@ -98,7 +93,10 @@ class _SearchPageState extends ConsumerState<SearchPage> {
           }
 
           if (_suggestedProducts!.isEmpty) {
-            return const Center(child: Text('Không có sản phẩm gợi ý'));
+            return const AppEmptyWidget(
+              message: 'Không có sản phẩm gợi ý',
+              icon: Icons.search_off,
+            );
           }
 
           return SingleChildScrollView(
@@ -141,8 +139,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
             ),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, s) => Center(child: Text('Lỗi tải dữ liệu')),
+        loading: () => const AppLoadingWidget(),
+        error: (e, s) => const AppErrorWidget(),
       ),
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../mainpage.dart';
+import 'package:go_router/go_router.dart';
 import '../../data/model/usermodel.dart';
 
 class ThankYouScreen extends StatelessWidget {
@@ -89,10 +89,7 @@ class ThankYouScreen extends StatelessWidget {
                   ),
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => MainPage()),
-                        (Route<dynamic> route) => false,
-                      );
+                      context.go('/main');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.transparent,

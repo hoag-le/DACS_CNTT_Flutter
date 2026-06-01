@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'login.dart';
+import 'package:go_router/go_router.dart';
 import '../../services/auth_service.dart';
 import '../../data/model/user_provider.dart';
-import '../../page/mainpage.dart';
+import '../../utils/validators.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -52,41 +52,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final password = _passwordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
 
-    if (email.isEmpty || username.isEmpty || password.isEmpty) {
-      setState(() {
-        _errorMessage = 'Vui lòng điền đầy đủ thông tin bắt buộc';
-        _isLoading = false;
-      });
-      return;
-    }
+    final validationError = Validators.validateRegisterFields(
+      email: email,
+      username: username,
+      password: password,
+      confirmPassword: confirmPassword,
+      agreeToTruth: _agreeToTruth,
+      agreeToPolicy: _agreeToPolicy,
+    );
 
-    if (!email.contains('@')) {
+    if (validationError != null) {
       setState(() {
-        _errorMessage = 'Địa chỉ email không hợp lệ';
-        _isLoading = false;
-      });
-      return;
-    }
-
-    if (password.length < 6) {
-      setState(() {
-        _errorMessage = 'Mật khẩu phải có ít nhất 6 ký tự';
-        _isLoading = false;
-      });
-      return;
-    }
-
-    if (password != confirmPassword) {
-      setState(() {
-        _errorMessage = 'Mật khẩu xác nhận không khớp';
-        _isLoading = false;
-      });
-      return;
-    }
-
-    if (!_agreeToTruth || !_agreeToPolicy) {
-      setState(() {
-        _errorMessage = 'Vui lòng đồng ý với các điều khoản';
+        _errorMessage = validationError;
         _isLoading = false;
       });
       return;
@@ -125,10 +102,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
       Future.delayed(const Duration(seconds: 1), () {
         if (!mounted) return;
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => MainPage()),
-        );
+        context.go('/main');
       });
     } catch (e) {
       setState(() {
@@ -378,13 +352,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       style: TextStyle(color: Color(0xFF8B4513), fontSize: 14),
                     ),
                     TextButton(
-                      onPressed:
-                          () => Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const LoginScreen(),
-                            ),
-                          ),
+                      onPressed: () => context.go('/login'),
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
                         minimumSize: Size.zero,

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/home_providers.dart';
 import '../../data/model/productmodel.dart';
 import '../product/productbody.dart';
+import '../../widgets/app_state_widgets.dart';
 
 class NewProductWidget extends ConsumerWidget {
   @override
@@ -11,22 +12,17 @@ class NewProductWidget extends ConsumerWidget {
 
     return productsAsyncValue.when(
       data: (allProducts) {
-        List<ProductModel> newProducts =
-            allProducts
-                .where(
-                  (product) =>
-                      product.id != null &&
-                      product.id! >= 1 &&
-                      product.id! <= 12,
-                )
-                .toList();
+        List<ProductModel> newProducts = allProducts
+            .where((product) => product.id != null && product.id! >= 1 && product.id! <= 12)
+            .toList();
 
         newProducts.sort((a, b) => a.id!.compareTo(b.id!));
 
         if (newProducts.isEmpty) {
-          return Container(
+          return const AppEmptyWidget(
+            message: 'Không có sản phẩm mới',
+            icon: Icons.new_releases_outlined,
             height: 200,
-            child: Center(child: Text('Không có sản phẩm mới')),
           );
         }
 
@@ -63,16 +59,8 @@ class NewProductWidget extends ConsumerWidget {
           ),
         );
       },
-      loading:
-          () => Container(
-            height: 200,
-            child: Center(child: CircularProgressIndicator()),
-          ),
-      error:
-          (error, stack) => Container(
-            height: 200,
-            child: Center(child: Text('Lỗi tải dữ liệu')),
-          ),
+      loading: () => const AppLoadingWidget(height: 200),
+      error: (error, stack) => const AppErrorWidget(height: 200),
     );
   }
 }

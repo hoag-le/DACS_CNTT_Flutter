@@ -6,6 +6,7 @@ import '../personal/support.dart';
 import '../../data/model/usermodel.dart';
 import '../../data/model/user_provider.dart';
 import '../../services/auth_service.dart';
+import 'package:go_router/go_router.dart';
 import '../start.dart';
 
 class MainPersonalPage extends ConsumerWidget {
@@ -174,10 +175,7 @@ class MainPersonalPage extends ConsumerWidget {
               icon: Icons.info_outline,
               title: 'Giới thiệu',
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const AboutPage()),
-                );
+                context.push('/personal/about');
               },
             ),
             const SizedBox(height: 16),
@@ -186,10 +184,7 @@ class MainPersonalPage extends ConsumerWidget {
               icon: Icons.help_outline,
               title: 'Trung tâm trợ giúp',
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SupportPage()),
-                );
+                context.push('/personal/support');
               },
             ),
             const SizedBox(height: 16),
@@ -198,10 +193,7 @@ class MainPersonalPage extends ConsumerWidget {
               icon: Icons.settings_outlined,
               title: 'Cài đặt',
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SettingPage()),
-                );
+                context.push('/personal/setting');
               },
             ),
 
@@ -442,11 +434,7 @@ class MainPersonalPage extends ConsumerWidget {
                 ref.read(userProvider.notifier).state = null;
 
                 if (!context.mounted) return;
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const StartScreen()),
-                  (route) => false,
-                );
+                context.go('/');
               },
               child: const Text(
                 'Đăng xuất',

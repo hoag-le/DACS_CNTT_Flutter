@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'thank.dart';
 import '../../data/model/product_viewmodel.dart';
+import 'package:go_router/go_router.dart';
 import '../../data/model/usermodel.dart';
 import '../../providers/checkout_provider.dart';
 
@@ -62,10 +63,7 @@ class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
         ),
       );
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => ThankYouScreen(user: widget.user)),
-      );
+      context.go('/checkout/thank');
     } else {
       final errorState = ref.read(checkoutProvider);
       ScaffoldMessenger.of(context).showSnackBar(

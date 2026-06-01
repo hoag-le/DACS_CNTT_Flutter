@@ -5,15 +5,14 @@ import 'dart:math';
 import '../../providers/home_providers.dart';
 import '../../data/model/productmodel.dart';
 import '../product/productbody.dart';
+import '../../widgets/app_state_widgets.dart';
 
 class RecommendedProductWidget extends ConsumerStatefulWidget {
   @override
-  _RecommendedProductWidgetState createState() =>
-      _RecommendedProductWidgetState();
+  _RecommendedProductWidgetState createState() => _RecommendedProductWidgetState();
 }
 
-class _RecommendedProductWidgetState
-    extends ConsumerState<RecommendedProductWidget> {
+class _RecommendedProductWidgetState extends ConsumerState<RecommendedProductWidget> {
   PageController _pageController = PageController();
   Timer? _timer;
   int currentPage = 0;
@@ -49,10 +48,9 @@ class _RecommendedProductWidgetState
 
   Widget buildProductPair(List<ProductModel> products) {
     return Row(
-      children:
-          products
-              .map((product) => Expanded(child: itemGridView(product, ref)))
-              .toList(),
+      children: products
+          .map((product) => Expanded(child: itemGridView(product, ref)))
+          .toList(),
     );
   }
 
@@ -63,15 +61,9 @@ class _RecommendedProductWidgetState
     return productsAsyncValue.when(
       data: (allProducts) {
         if (_randomProducts == null) {
-          List<ProductModel> filteredProducts =
-              allProducts
-                  .where(
-                    (product) =>
-                        product.id != null &&
-                        product.id! >= 1 &&
-                        product.id! <= 80,
-                  )
-                  .toList();
+          List<ProductModel> filteredProducts = allProducts
+              .where((product) => product.id != null && product.id! >= 1 && product.id! <= 80)
+              .toList();
 
           Random random = Random();
           filteredProducts.shuffle(random);
@@ -79,9 +71,10 @@ class _RecommendedProductWidgetState
         }
 
         if (_randomProducts!.isEmpty) {
-          return Container(
+          return const AppEmptyWidget(
+            message: 'Không có sản phẩm được đề xuất',
+            icon: Icons.recommend_outlined,
             height: 300,
-            child: Center(child: Text('Không có sản phẩm được đề xuất')),
           );
         }
 
@@ -125,11 +118,7 @@ class _RecommendedProductWidgetState
                         color: Colors.orange.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Icon(
-                        Icons.refresh,
-                        color: Colors.orange,
-                        size: 20,
-                      ),
+                      child: Icon(Icons.refresh, color: Colors.orange, size: 20),
                     ),
                   ),
                 ],
@@ -164,10 +153,7 @@ class _RecommendedProductWidgetState
                       height: 8,
                       margin: EdgeInsets.symmetric(horizontal: 4),
                       decoration: BoxDecoration(
-                        color:
-                            currentPage == index
-                                ? Colors.orange
-                                : Colors.grey[400],
+                        color: currentPage == index ? Colors.orange : Colors.grey[400],
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -178,16 +164,8 @@ class _RecommendedProductWidgetState
           ),
         );
       },
-      loading:
-          () => Container(
-            height: 300,
-            child: Center(child: CircularProgressIndicator()),
-          ),
-      error:
-          (error, stack) => Container(
-            height: 300,
-            child: Center(child: Text('Lỗi tải dữ liệu')),
-          ),
+      loading: () => const AppLoadingWidget(height: 300),
+      error: (error, stack) => const AppErrorWidget(height: 300),
     );
   }
 }

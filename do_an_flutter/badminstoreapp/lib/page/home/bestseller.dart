@@ -4,6 +4,7 @@ import 'dart:async';
 import '../../providers/home_providers.dart';
 import '../../data/model/productmodel.dart';
 import '../product/productbody.dart';
+import '../../widgets/app_state_widgets.dart';
 
 class BestSellerWidget extends ConsumerStatefulWidget {
   @override
@@ -71,9 +72,10 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
         bestSellerProducts.sort((a, b) => a.id!.compareTo(b.id!));
 
         if (bestSellerProducts.isEmpty) {
-          return Container(
+          return const AppEmptyWidget(
+            message: 'Không có sản phẩm bán chạy',
+            icon: Icons.local_fire_department_outlined,
             height: 300,
-            child: Center(child: Text('Không có sản phẩm bán chạy')),
           );
         }
 
@@ -145,16 +147,8 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
           ),
         );
       },
-      loading:
-          () => Container(
-            height: 300,
-            child: Center(child: CircularProgressIndicator()),
-          ),
-      error:
-          (error, stack) => Container(
-            height: 300,
-            child: Center(child: Text('Lỗi tải dữ liệu')),
-          ),
+      loading: () => const AppLoadingWidget(height: 300),
+      error: (error, stack) => const AppErrorWidget(height: 300),
     );
   }
 }

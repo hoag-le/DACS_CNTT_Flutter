@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 import '../../conf/const.dart';
 import '../../data/model/productmodel.dart';
-import '../../page/detail/maindetail.dart';
 
 Widget itemGridView(ProductModel productModel, WidgetRef ref) {
   String formatCurrency(int? price) {
@@ -13,12 +13,7 @@ Widget itemGridView(ProductModel productModel, WidgetRef ref) {
 
   return GestureDetector(
     onTap: () {
-      Navigator.push(
-        ref.context,
-        MaterialPageRoute(
-          builder: (context) => MainDetail(productId: productModel.id!),
-        ),
-      );
+      ref.context.push('/detail/${productModel.id}');
     },
     child: Container(
       margin: const EdgeInsets.all(8),

@@ -5,8 +5,9 @@ import '../../conf/const.dart';
 import '../../data/model/product_viewmodel.dart';
 import '../../data/model/cartitemmodel.dart';
 import '../../page/mainpage.dart';
-import '../shipping/shippingaddress.dart';
+import 'package:go_router/go_router.dart';
 import '../../data/model/usermodel.dart';
+import '../../widgets/app_state_widgets.dart';
 
 class ProductCart extends ConsumerStatefulWidget {
   const ProductCart({Key? key, this.user}) : super(key: key);
@@ -52,42 +53,9 @@ class _ProductCartState extends ConsumerState<ProductCart> {
   }
 
   Widget _buildEmptyCart(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.shopping_cart_outlined,
-                    size: 60,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 30),
-                const Text(
-                  'Chưa thấy sản phẩm trong giỏ hàng của bạn',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 50),
-              ],
-            ),
-          ),
-        ),
-      ],
+    return const AppEmptyWidget(
+      message: 'Chưa thấy sản phẩm trong giỏ hàng của bạn',
+      icon: Icons.shopping_cart_outlined,
     );
   }
 
@@ -517,15 +485,12 @@ class _ProductCartState extends ConsumerState<ProductCart> {
                 final subtotal =
                     ref.watch(productsProvider.notifier).cartTotal.toDouble();
                 Navigator.of(dialogContext).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (_) => ShippingAddressScreen(
-                          subtotal: subtotal,
-                          user: widget.user,
-                        ),
-                  ),
+                context.push(
+                  '/shipping-address',
+                  extra: {
+                    'subtotal': subtotal,
+                    'user': widget.user,
+                  },
                 );
               },
               child: const Text('Tiếp tục'),

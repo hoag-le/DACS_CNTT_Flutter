@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../login_register_forget/login.dart';
-import '../personal/changepassword.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
@@ -44,12 +43,7 @@ class SettingPage extends StatelessWidget {
               icon: Icons.password,
               title: 'Thay đổi mật khẩu',
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ChangePasswordPage(),
-                  ),
-                );
+                context.push('/personal/change-password');
               },
             ),
 
@@ -79,12 +73,7 @@ class SettingPage extends StatelessWidget {
                           child: const Text('Đồng ý'),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LoginScreen(),
-                              ),
-                            );
+                            context.go('/login');
                           },
                         ),
                       ],

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/home_providers.dart';
 import '../../data/model/productmodel.dart';
 import '../product/productbody.dart';
+import '../../widgets/app_state_widgets.dart';
 
 class CategoryProductWidget extends ConsumerWidget {
   final int categoryId;
@@ -22,11 +23,10 @@ class CategoryProductWidget extends ConsumerWidget {
                 .toList();
 
         if (categoryProducts.isEmpty) {
-          return Container(
+          return const AppEmptyWidget(
+            message: 'Không có sản phẩm nào trong danh mục này',
+            icon: Icons.shopping_bag_outlined,
             height: 200,
-            child: const Center(
-              child: Text('Không có sản phẩm nào trong danh mục này'),
-            ),
           );
         }
 
@@ -63,14 +63,8 @@ class CategoryProductWidget extends ConsumerWidget {
           ),
         );
       },
-      loading:
-          () => Container(
-            height: 200,
-            child: const Center(child: CircularProgressIndicator()),
-          ),
-      error:
-          (e, s) =>
-              Container(height: 200, child: Center(child: Text('Lỗi: $e'))),
+      loading: () => const AppLoadingWidget(height: 200),
+      error: (e, s) => const AppErrorWidget(height: 200),
     );
   }
 }

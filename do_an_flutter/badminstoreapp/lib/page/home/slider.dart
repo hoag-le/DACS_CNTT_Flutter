@@ -4,6 +4,7 @@ import 'dart:async';
 import '../../providers/home_providers.dart';
 import '../../data/model/slidermodel.dart';
 import '../../conf/const.dart';
+import '../../widgets/app_state_widgets.dart';
 
 class SliderWidget extends ConsumerStatefulWidget {
   @override
@@ -100,9 +101,10 @@ class _SliderWidgetState extends ConsumerState<SliderWidget> {
     return sliderAsyncValue.when(
       data: (sliders) {
         if (sliders.isEmpty) {
-          return Container(
+          return const AppEmptyWidget(
+            message: 'Không có banner nào',
+            icon: Icons.image_outlined,
             height: 200,
-            child: Center(child: Text('Không có slider nào')),
           );
         }
 
@@ -133,16 +135,8 @@ class _SliderWidgetState extends ConsumerState<SliderWidget> {
           ),
         );
       },
-      loading:
-          () => Container(
-            height: 200,
-            child: Center(child: CircularProgressIndicator()),
-          ),
-      error:
-          (error, stack) => Container(
-            height: 200,
-            child: Center(child: Text('Lỗi tải dữ liệu')),
-          ),
+      loading: () => const AppLoadingWidget(height: 200),
+      error: (error, stack) => const AppErrorWidget(height: 200),
     );
   }
 }

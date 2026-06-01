@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'login_register_forget/login.dart';
 import '../page/intro.dart';
 
@@ -41,16 +42,7 @@ class _StartScreenState extends State<StartScreen>
     _startAnimation();
 
     Future.delayed(const Duration(seconds: 4), () {
-      Navigator.of(context).pushReplacement(
-        PageRouteBuilder(
-          pageBuilder:
-              (context, animation, secondaryAnimation) => IntroScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-          transitionDuration: const Duration(milliseconds: 800),
-        ),
-      );
+      if (mounted) context.go('/intro');
     });
   }
 

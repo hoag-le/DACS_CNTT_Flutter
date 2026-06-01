@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/home_providers.dart';
 import '../../data/model/productmodel.dart';
 import '../product/productbody.dart';
-
+import '../../widgets/app_state_widgets.dart';
 class SearchResultPage extends ConsumerStatefulWidget {
   final String searchQuery;
 
@@ -73,7 +73,10 @@ class _SearchResultPageState extends ConsumerState<SearchResultPage> {
       body: productsAsyncValue.when(
         data: (allProducts) {
           if (_currentQuery.isEmpty) {
-            return const Center(child: Text('Không có sản phẩm'));
+            return const AppEmptyWidget(
+              message: 'Vui lòng nhập từ khóa tìm kiếm',
+              icon: Icons.search,
+            );
           }
 
           List<ProductModel> searchResults =
@@ -88,11 +91,9 @@ class _SearchResultPageState extends ConsumerState<SearchResultPage> {
                   .toList();
 
           if (searchResults.isEmpty) {
-            return const Center(
-              child: Text(
-                'Không có sản phẩm',
-                style: TextStyle(fontSize: 16, color: Colors.black54),
-              ),
+            return const AppEmptyWidget(
+              message: 'Không tìm thấy sản phẩm phù hợp',
+              icon: Icons.search_off,
             );
           }
 
@@ -139,8 +140,8 @@ class _SearchResultPageState extends ConsumerState<SearchResultPage> {
             ),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, s) => Center(child: Text('Lỗi tải dữ liệu')),
+        loading: () => const AppLoadingWidget(),
+        error: (e, s) => const AppErrorWidget(),
       ),
     );
   }

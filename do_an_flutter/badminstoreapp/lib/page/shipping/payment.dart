@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../shipping/orderconfirm.dart';
+import 'package:go_router/go_router.dart';
 import '../../data/model/usermodel.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -308,19 +308,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               if (_selectedPaymentMethod == 'vnpay')
                                 paymentType = 2;
 
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (_) => OrderConfirmScreen(
-                                        user: widget.user,
-                                        receiverName: widget.receiverName,
-                                        receiverPhone: widget.receiverPhone,
-                                        shippingAddress: widget.shippingAddress,
-                                        totalAmount: total.toInt(),
-                                        isPayment: paymentType,
-                                      ),
-                                ),
+                              context.push(
+                                '/order-confirm',
+                                extra: {
+                                  'user': widget.user,
+                                  'receiverName': widget.receiverName,
+                                  'receiverPhone': widget.receiverPhone,
+                                  'shippingAddress': widget.shippingAddress,
+                                  'totalAmount': total.toInt(),
+                                  'isPayment': paymentType,
+                                },
                               );
                             },
                             style: ElevatedButton.styleFrom(
