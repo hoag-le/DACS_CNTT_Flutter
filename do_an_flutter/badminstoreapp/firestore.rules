@@ -1,0 +1,89 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─────────────────────────────────────────────
+    // Helper functions
+    // ─────────────────────────────────────────────
+
+    // Kiểm tra đã xác thực
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    // Kiểm tra đúng chủ sở hữu
+    function isOwner(uid) {
+      return isAuth() && request.auth.uid == uid;
+    }
+
+    // Kiểm tra là admin (role == 1 trong Firestore)
+    function isAdmin() {
+      return isAuth() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 1;
+    }
+
+    // ─────────────────────────────────────────────
+    // /products/{productId}
+    // - Mọi user đã đăng nhập: đọc được
+    // - Chỉ admin: tạo / sửa / xóa
+    // ─────────────────────────────────────────────
+    match /products/{productId} {
+      allow read: if isAuth();
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ─────────────────────────────────────────────
+    // /users/{uid}
+    // - Chỉ chủ sở hữu: đọc và sửa thông tin của mình
+    // - Tạo mới: chỉ khi uid == request.auth.uid (register)
+    // - Xóa: chỉ admin
+    // ─────────────────────────────────────────────
+    match /users/{uid} {
+      allow read, update: if isOwner(uid);
+      allow create: if isAuth() && request.auth.uid == uid;
+      allow delete: if isAdmin();
+
+      // /users/{uid}/cart/{itemId}
+      // - Chỉ chủ sở hữu: đọc / ghi / xóa giỏ hàng của mình
+      match /cart/{itemId} {
+        allow read, write: if isOwner(uid);
+      }
+    }
+
+    // ─────────────────────────────────────────────
+    // /orders/{orderId}
+    // - Tạo: user đã đăng nhập, userId trong doc phải == uid của họ
+    // - Đọc: chỉ chủ đơn hàng hoặc admin
+    // - Cập nhật status: chỉ admin
+    // - Xóa: chỉ admin
+    // ─────────────────────────────────────────────
+    match /orders/{orderId} {
+      allow create: if isAuth()
+        && request.resource.data.userId == request.auth.uid;
+
+      allow read: if isAuth()
+        && (resource.data.userId == request.auth.uid || isAdmin());
+
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+
+      // /orders/{orderId}/order_details/{detailId}
+      // - Đọc: chủ đơn hàng hoặc admin
+      // - Ghi: chỉ khi tạo đơn (batch write cùng với order cha)
+      //   → dùng isAdmin() hoặc ràng buộc theo orderId owner
+      match /order_details/{detailId} {
+        allow read: if isAuth()
+          && (get(/databases/$(database)/documents/orders/$(orderId)).data.userId == request.auth.uid
+              || isAdmin());
+
+        // Chỉ cho phép create (không update/delete từ client)
+        allow create: if isAuth()
+          && get(/databases/$(database)/documents/orders/$(orderId)).data.userId == request.auth.uid;
+
+        allow update, delete: if isAdmin();
+      }
+    }
+
+  }
+}
