@@ -43,3 +43,15 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# ─── Firebase sensitive files ───────────────────
+# API keys & config — không commit lên public repo
+# Chia sẻ qua kênh bảo mật (bitwarden, 1password, secret manager...)
+lib/firebase_options.dart
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+
+# Service account private keys — KHÔNG BAO GIỜ commit
+*.json.key
+service-account*.json
+*-firebase-adminsdk-*.json
