@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../data/model/usermodel.dart';
-
 class AuthService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
+  static bool _isGoogleInitialized = false;
 
   static Stream<User?> get authStateChanges => _auth.authStateChanges();
 
@@ -20,6 +21,59 @@ class AuthService {
       return await getUserProfile(uid);
     } on FirebaseAuthException catch (e) {
       throw _mapAuthError(e);
+    }
+  }
+
+  static Future<UserModel?> signInWithGoogle() async {
+    try {
+      if (!_isGoogleInitialized) {
+        try {
+          await GoogleSignIn.instance.initialize();
+        } catch (e) {
+          // Bỏ qua lỗi nếu đã được initialize trước đó (thường gặp khi hot restart)
+        }
+        _isGoogleInitialized = true;
+      }
+      final GoogleSignInAccount googleUser = await GoogleSignIn.instance.authenticate();
+
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential = await _auth.signInWithCredential(credential);
+      final uid = userCredential.user!.uid;
+      
+      // Kiểm tra xem user đã tồn tại trong Firestore chưa
+      final doc = await _db.collection('users').doc(uid).get();
+      if (doc.exists && doc.data() != null) {
+        final data = doc.data()!;
+        data['uid'] = uid;
+        return UserModel.fromJson(data);
+      }
+
+      // Nếu chưa có, tạo user mới
+      final authUser = userCredential.user!;
+      final userModel = UserModel(
+        uid: uid,
+        email: authUser.email,
+        username: authUser.displayName ?? authUser.email?.split('@').first,
+        fullname: authUser.displayName,
+        role: 0,
+        status: 1,
+        loginType: 'google',
+        googleId: googleUser.id,
+      );
+      await _db.collection('users').doc(uid).set(userModel.toJson());
+      return userModel;
+    } catch (e) {
+      if (e.toString().contains('canceled') || e.toString().contains('CANCELED')) {
+        return null;
+      }
+      if (e is FirebaseAuthException) {
+        throw _mapAuthError(e);
+      }
+      throw 'Lỗi đăng nhập Google: $e';
     }
   }
 

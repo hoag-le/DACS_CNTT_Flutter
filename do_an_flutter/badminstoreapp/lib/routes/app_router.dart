@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../data/model/ordermodel.dart';
 import '../data/model/usermodel.dart';
 
@@ -26,11 +27,51 @@ import '../page/personal/about.dart';
 import '../page/personal/support.dart';
 import '../page/order/mainorder.dart';
 import '../page/order/orderdetail.dart';
-import '../page/shipping/shippingaddress.dart';
-import '../page/shipping/payment.dart';
+
+const _publicRoutes = {
+  '/',
+  '/intro',
+  '/login',
+  '/register',
+  '/forget',
+};
+
+const _publicPrefixes = [
+  '/detail/',
+  '/category/',
+  '/search',
+  '/search-results',
+];
+
+bool _isPublicRoute(String location) {
+  if (_publicRoutes.contains(location)) return true;
+  for (final prefix in _publicPrefixes) {
+    if (location.startsWith(prefix)) return true;
+  }
+  if (location == '/search' || location == '/search-results') return true;
+  return false;
+}
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/',
+  redirect: (context, state) {
+    final loggedIn = FirebaseAuth.instance.currentUser != null;
+    final location = state.matchedLocation;
+
+    if (_isPublicRoute(location)) {
+      if (loggedIn &&
+          (location == '/login' ||
+              location == '/register' ||
+              location == '/forget')) {
+        return '/main';
+      }
+      return null;
+    }
+
+    if (!loggedIn) return '/login';
+
+    return null;
+  },
   routes: [
     GoRoute(
       path: '/',

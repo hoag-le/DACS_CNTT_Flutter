@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
-  const ForgetPasswordScreen({Key? key}) : super(key: key);
+  const ForgetPasswordScreen({super.key});
 
   @override
   State<ForgetPasswordScreen> createState() => _ForgetPasswordScreenState();
@@ -105,7 +105,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
 
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextField(
@@ -117,7 +117,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                     decoration: InputDecoration(
                       hintText: 'Nhập email',
                       hintStyle: TextStyle(
-                        color: Color(0xFF8B4513).withOpacity(0.7),
+                        color: Color(0xFF8B4513).withValues(alpha: 0.7),
                       ),
                       prefixIcon: const Icon(
                         Icons.email_outlined,
@@ -158,7 +158,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),

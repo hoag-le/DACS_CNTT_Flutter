@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../product/productbody.dart';
 import '../../widgets/app_state_widgets.dart';
 class SearchPage extends ConsumerStatefulWidget {
-  const SearchPage({Key? key}) : super(key: key);
+  const SearchPage({super.key});
 
   @override
   _SearchPageState createState() => _SearchPageState();

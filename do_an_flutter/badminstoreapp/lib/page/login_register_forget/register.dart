@@ -172,9 +172,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     padding: const EdgeInsets.all(12),
                     margin: const EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.1),
+                      color: Colors.red.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.red.withOpacity(0.3)),
+                      border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
                     ),
                     child: Row(
                       children: [
@@ -304,7 +304,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),
@@ -390,7 +390,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.3),
+        color: Colors.white.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
       ),
       child: TextField(
@@ -401,7 +401,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         style: const TextStyle(color: Color(0xFF8B4513), fontSize: 16),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(color: const Color(0xFF8B4513).withOpacity(0.7)),
+          hintStyle: TextStyle(color: const Color(0xFF8B4513).withValues(alpha: 0.7)),
           prefixIcon: Icon(icon, color: const Color(0xFF8B4513)),
           suffixIcon:
               isPassword

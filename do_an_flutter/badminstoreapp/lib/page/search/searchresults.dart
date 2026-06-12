@@ -7,8 +7,7 @@ import '../../widgets/app_state_widgets.dart';
 class SearchResultPage extends ConsumerStatefulWidget {
   final String searchQuery;
 
-  const SearchResultPage({Key? key, required this.searchQuery})
-    : super(key: key);
+  const SearchResultPage({super.key, required this.searchQuery});
 
   @override
   _SearchResultPageState createState() => _SearchResultPageState();

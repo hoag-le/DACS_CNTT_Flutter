@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'productmodel.dart';
 import 'cartitemmodel.dart';
 import 'products_state.dart';
@@ -104,12 +105,58 @@ class ProductsNotifier extends Notifier<ProductsState> {
 
   bool get isCartEmpty => state.cartItems.isEmpty;
 
+  bool _cartLoaded = false;
+
   void _syncCart(List<CartItemModel> cart) {
     final uid = _uid;
     if (uid != null) {
       FirestoreService.saveCart(uid, cart);
     }
   }
+
+  Future<void> loadCartFromFirestore({bool force = false}) async {
+    final uid = _uid;
+    if (uid == null) return;
+    if (_cartLoaded && !force) return;
+
+    try {
+      final rawItems = await FirestoreService.getCart(uid);
+      final cartItems =
+          rawItems.map((data) {
+            final product = ProductModel(
+              id: data['productId'],
+              code: data['productCode'] as String?,
+              productName: data['productName'] as String?,
+              categoryId: (data['categoryId'] as num?)?.toInt(),
+              brandId: (data['brandId'] as num?)?.toInt(),
+              cost: (data['cost'] as num?)?.toInt(),
+              priceSale: (data['priceSale'] as num?)?.toInt(),
+              image: data['image'] as String?,
+              status: 1,
+              visible: 1,
+            );
+            return CartItemModel(
+              product: product,
+              quantity: (data['quantity'] as num?)?.toInt() ?? 1,
+              size:
+                  (data['size'] as String?)?.isEmpty ?? true
+                      ? null
+                      : data['size'] as String?,
+            );
+          }).toList();
+
+      state = state.copyWith(cartItems: cartItems);
+      _cartLoaded = true;
+    } catch (e, st) {
+      debugPrint('[ProductsNotifier.loadCartFromFirestore] Error: $e');
+      debugPrintStack(
+        stackTrace: st,
+        label: 'ProductsNotifier.loadCartFromFirestore',
+      );
+    }
+  }
+
+  void resetCartLoadedFlag() => _cartLoaded = false;
 }
 
 final productsProvider = NotifierProvider<ProductsNotifier, ProductsState>(

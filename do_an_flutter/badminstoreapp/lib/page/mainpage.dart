@@ -18,8 +18,18 @@ class _MainPageState extends ConsumerState<MainPage> {
   int currentIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    Future.microtask(
+      () => ref.read(productsProvider.notifier).loadCartFromFirestore(),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider);
+    final userAsync = ref.watch(currentUserProfileProvider);
+    final user = userAsync.value;
+
     List<Widget> pages = [
       HomeWidget(user: user),
       ProductFavorite(),

@@ -11,13 +11,13 @@ class PaymentScreen extends StatefulWidget {
   final String shippingAddress;
 
   const PaymentScreen({
-    Key? key,
+    super.key,
     required this.subtotal,
     this.user,
     required this.receiverName,
     required this.receiverPhone,
     required this.shippingAddress,
-  }) : super(key: key);
+  });
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -112,7 +112,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.3),
+                            color: Colors.white.withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
@@ -188,7 +188,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.3),
+                            color: Colors.white.withValues(alpha: 0.3),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Column(
@@ -280,7 +280,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -303,10 +303,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               }
 
                               int paymentType = 0;
-                              if (_selectedPaymentMethod == 'momo')
+                              if (_selectedPaymentMethod == 'momo') {
                                 paymentType = 1;
-                              if (_selectedPaymentMethod == 'vnpay')
+                              }
+                              if (_selectedPaymentMethod == 'vnpay') {
                                 paymentType = 2;
+                              }
 
                               context.push(
                                 '/order-confirm',
@@ -389,14 +391,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return Container(
       width: 40,
       height: 2,
-      color: isActive ? Colors.green : Colors.grey.withOpacity(0.5),
+      color: isActive ? Colors.green : Colors.grey.withValues(alpha: 0.5),
     );
   }
 
   Widget _buildPaymentOption(String value, String iconPath, String title) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.3),
+        color: Colors.white.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
       ),
       child: RadioListTile<String>(

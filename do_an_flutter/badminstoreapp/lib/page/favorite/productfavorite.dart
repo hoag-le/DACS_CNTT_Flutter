@@ -4,12 +4,11 @@ import 'package:intl/intl.dart';
 import '../../conf/const.dart';
 import '../../data/model/product_viewmodel.dart';
 import '../../data/model/productmodel.dart';
-import '../detail/maindetail.dart';
 import 'package:go_router/go_router.dart';
 import '../../widgets/app_state_widgets.dart';
 
 class ProductFavorite extends ConsumerWidget {
-  const ProductFavorite({Key? key}) : super(key: key);
+  const ProductFavorite({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,7 +64,7 @@ class ProductFavorite extends ConsumerWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
+              color: Colors.grey.withValues(alpha: 0.1),
               spreadRadius: 1,
               blurRadius: 5,
               offset: Offset(0, 2),
@@ -78,7 +77,7 @@ class ProductFavorite extends ConsumerWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.asset(
-                '${uri_product_img}${productModel.image}',
+                '$uri_product_img${productModel.image}',
                 height: 80,
                 width: 80,
                 fit: BoxFit.cover,

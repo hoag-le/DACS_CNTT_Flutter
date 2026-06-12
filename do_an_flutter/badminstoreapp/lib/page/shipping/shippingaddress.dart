@@ -9,8 +9,7 @@ class ShippingAddressScreen extends ConsumerStatefulWidget {
   final double subtotal; 
   final UserModel? user;
 
-  const ShippingAddressScreen({Key? key, required this.subtotal, this.user})
-    : super(key: key);
+  const ShippingAddressScreen({super.key, required this.subtotal, this.user});
 
   @override
   ConsumerState<ShippingAddressScreen> createState() => _ShippingAddressScreenState();
@@ -178,7 +177,7 @@ class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
                           error: (e, s) => Container(
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                             decoration: BoxDecoration(
-                              color: Colors.red.withOpacity(0.1),
+                              color: Colors.red.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Text('Lỗi tải dữ liệu. Vui lòng thử lại.', style: TextStyle(color: Colors.red)),
@@ -220,7 +219,7 @@ class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
                               error: (e, s) => Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                                 decoration: BoxDecoration(
-                                  color: Colors.red.withOpacity(0.1),
+                                  color: Colors.red.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: const Text('Lỗi tải dữ liệu. Vui lòng thử lại.', style: TextStyle(color: Colors.red)),
@@ -255,7 +254,7 @@ class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(alpha: 0.1),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -397,7 +396,7 @@ class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
     return Container(
       width: 40,
       height: 2,
-      color: isActive ? Colors.green : Colors.grey.withOpacity(0.5),
+      color: isActive ? Colors.green : Colors.grey.withValues(alpha: 0.5),
     );
   }
 
@@ -408,7 +407,7 @@ class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.3),
+        color: Colors.white.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
       ),
       child: TextField(
@@ -417,7 +416,7 @@ class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
         style: const TextStyle(color: Color(0xFF8B4513), fontSize: 16),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(color: Color(0xFF8B4513).withOpacity(0.7)),
+          hintStyle: TextStyle(color: Color(0xFF8B4513).withValues(alpha: 0.7)),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,
@@ -434,7 +433,7 @@ class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
   Widget _buildLoadingDropdown(String text) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.3),
+        color: Colors.white.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Container(
@@ -453,7 +452,7 @@ class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
             Text(
               text,
               style: TextStyle(
-                color: Color(0xFF8B4513).withOpacity(0.7),
+                color: Color(0xFF8B4513).withValues(alpha: 0.7),
                 fontSize: 16,
               ),
             ),
@@ -472,14 +471,14 @@ class _ShippingAddressScreenState extends ConsumerState<ShippingAddressScreen> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.3),
+        color: Colors.white.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
       ),
       child: DropdownButtonFormField<T>(
-        value: value,
+        initialValue: value,
         hint: Text(
           hint,
-          style: TextStyle(color: Color(0xFF8B4513).withOpacity(0.7)),
+          style: TextStyle(color: Color(0xFF8B4513).withValues(alpha: 0.7)),
         ),
         style: const TextStyle(color: Color(0xFF8B4513), fontSize: 16),
         decoration: InputDecoration(

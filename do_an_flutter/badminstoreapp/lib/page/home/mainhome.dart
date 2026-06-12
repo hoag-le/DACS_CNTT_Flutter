@@ -6,6 +6,8 @@ import '../home/recommendedproduct.dart';
 import '../home/slider.dart';
 
 class MainHome extends StatelessWidget {
+  const MainHome({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

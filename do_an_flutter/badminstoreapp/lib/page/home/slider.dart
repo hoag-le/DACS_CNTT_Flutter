@@ -7,12 +7,14 @@ import '../../conf/const.dart';
 import '../../widgets/app_state_widgets.dart';
 
 class SliderWidget extends ConsumerStatefulWidget {
+  const SliderWidget({super.key});
+
   @override
   _SliderWidgetState createState() => _SliderWidgetState();
 }
 
 class _SliderWidgetState extends ConsumerState<SliderWidget> {
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   Timer? _timer;
   int currentPage = 0;
   bool _timerStarted = false;
@@ -50,7 +52,7 @@ class _SliderWidgetState extends ConsumerState<SliderWidget> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: Offset(0, 4),
           ),
@@ -114,7 +116,7 @@ class _SliderWidgetState extends ConsumerState<SliderWidget> {
           margin: EdgeInsets.symmetric(vertical: 16),
           child: Column(
             children: [
-              Container(
+              SizedBox(
                 height: 200,
                 child: PageView.builder(
                   controller: _pageController,

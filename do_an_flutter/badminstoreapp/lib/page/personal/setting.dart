@@ -108,7 +108,7 @@ class SettingPage extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.3),
+          color: Colors.white.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -116,7 +116,7 @@ class SettingPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: const Color(0xFFD2691E).withOpacity(0.2),
+                color: const Color(0xFFD2691E).withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(icon, color: const Color(0xFF8B4513), size: 20),

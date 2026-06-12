@@ -9,7 +9,7 @@ import '../../services/firestore_service.dart';
 class OrderDetail extends ConsumerStatefulWidget {
   final String orderId;
 
-  const OrderDetail({Key? key, required this.orderId}) : super(key: key);
+  const OrderDetail({super.key, required this.orderId});
 
   @override
   ConsumerState<OrderDetail> createState() => _OrderDetailState();
@@ -164,7 +164,7 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -312,7 +312,7 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, 2),

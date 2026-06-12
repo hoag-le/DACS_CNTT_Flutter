@@ -23,14 +23,14 @@ class OrderModel {
 
   OrderModel.fromJson(Map<String, dynamic> json) {
     id = json['id']?.toString();
-    userId = json['userId'] ?? json['user_id']?.toString();
-    orderDate = json['orderDate'] ?? json['order_date'];
-    receiverName = json['receiverName'] ?? json['receiver_name'];
-    receiverPhone = json['receiverPhone'] ?? json['receiver_phone'];
-    shippingAddress = json['shippingAddress'] ?? json['shipping_address'];
-    totalAmount = json['totalAmount'] ?? json['total_amount'];
-    isPayment = json['isPayment'] ?? json['is_payment'];
-    orderStatus = json['orderStatus'] ?? json['order_status'];
+    userId = json['userId']?.toString();
+    orderDate = json['orderDate'] as String?;
+    receiverName = json['receiverName'] as String?;
+    receiverPhone = json['receiverPhone'] as String?;
+    shippingAddress = json['shippingAddress'] as String?;
+    totalAmount = (json['totalAmount'] as num?)?.toInt();
+    isPayment = (json['isPayment'] as num?)?.toInt();
+    orderStatus = (json['orderStatus'] as num?)?.toInt();
   }
 
   Map<String, dynamic> toJson() {

@@ -13,7 +13,6 @@ import '../../data/model/clothinginfomodel.dart';
 import '../../data/data/bagaccessorydata.dart';
 import '../../data/model/bagaccessorymodel.dart';
 import '../../conf/const.dart';
-import '../cart/productcart.dart';
 import '../../data/model/product_viewmodel.dart';
 import '../product/productbody.dart';
 import '../../data/data/branddata.dart';
@@ -24,7 +23,7 @@ import 'dart:math';
 class MainDetail extends ConsumerStatefulWidget {
   final int productId;
 
-  const MainDetail({Key? key, required this.productId}) : super(key: key);
+  const MainDetail({super.key, required this.productId});
 
   @override
   ConsumerState<MainDetail> createState() => _MainDetailState();
@@ -231,7 +230,7 @@ class _MainDetailState extends ConsumerState<MainDetail> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Đã thêm ${_quantity} sản phẩm vào giỏ hàng'),
+          content: Text('Đã thêm $_quantity sản phẩm vào giỏ hàng'),
           backgroundColor: Colors.green,
           duration: Duration(seconds: 2),
         ),
@@ -327,7 +326,7 @@ class _MainDetailState extends ConsumerState<MainDetail> {
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
+              color: Colors.grey.withValues(alpha: 0.3),
               spreadRadius: 1,
               blurRadius: 5,
               offset: Offset(0, -3),
@@ -430,7 +429,7 @@ class _MainDetailState extends ConsumerState<MainDetail> {
 class HeaderProduct extends ConsumerWidget {
   final ProductModel product;
 
-  const HeaderProduct({Key? key, required this.product}) : super(key: key);
+  const HeaderProduct({super.key, required this.product});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -445,7 +444,7 @@ class HeaderProduct extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: Offset(0, 2),
@@ -455,11 +454,11 @@ class HeaderProduct extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
             width: double.infinity,
             height: 200,
             child: Image.asset(
-              '${uri_product_img}${product.image}',
+              '$uri_product_img${product.image}',
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
@@ -591,11 +590,11 @@ class SizeSelector extends StatelessWidget {
   final Function(String) onSizeSelected;
 
   const SizeSelector({
-    Key? key,
+    super.key,
     required this.sizes,
     required this.selectedSize,
     required this.onSizeSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -609,7 +608,7 @@ class SizeSelector extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: Offset(0, 2),
@@ -686,14 +685,14 @@ class ProductInfo extends StatelessWidget {
   final BagAccessoryModel? bagAccessoryInfo;
 
   const ProductInfo({
-    Key? key,
+    super.key,
     required this.product,
     required this.productType,
     this.racketInfo,
     this.shoeInfo,
     this.clothingInfo,
     this.bagAccessoryInfo,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -705,7 +704,7 @@ class ProductInfo extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: Offset(2, 2),
@@ -831,10 +830,10 @@ class RecommendedProducts extends ConsumerStatefulWidget {
   final List<ProductModel> allProducts;
 
   const RecommendedProducts({
-    Key? key,
+    super.key,
     required this.currentProductId,
     required this.allProducts,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<RecommendedProducts> createState() =>
@@ -877,7 +876,7 @@ class _RecommendedProductsState extends ConsumerState<RecommendedProducts> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: Offset(0, 2),

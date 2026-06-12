@@ -6,6 +6,8 @@ import '../product/productbody.dart';
 import '../../widgets/app_state_widgets.dart';
 
 class NewProductWidget extends ConsumerWidget {
+  const NewProductWidget({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productsAsyncValue = ref.watch(productsProviderData);

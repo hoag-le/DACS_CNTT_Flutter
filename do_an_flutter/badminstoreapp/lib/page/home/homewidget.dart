@@ -6,7 +6,7 @@ import '../../data/model/usermodel.dart';
 class HomeWidget extends StatelessWidget {
   final UserModel? user;
 
-  const HomeWidget({Key? key, required this.user}) : super(key: key);
+  const HomeWidget({super.key, required this.user});
   @override
   Widget build(BuildContext context) {
     return Scaffold(

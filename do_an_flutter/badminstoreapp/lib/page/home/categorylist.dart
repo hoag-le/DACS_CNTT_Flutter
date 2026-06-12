@@ -10,14 +10,14 @@ import '../../widgets/app_state_widgets.dart';
 class CategoryList extends ConsumerStatefulWidget {
   final Function(int)? onCategorySelected;
 
-  const CategoryList({Key? key, this.onCategorySelected}) : super(key: key);
+  const CategoryList({super.key, this.onCategorySelected});
 
   @override
   _CategoryListState createState() => _CategoryListState();
 }
 
 class _CategoryListState extends ConsumerState<CategoryList> {
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   Timer? _timer;
   bool _timerStarted = false;
 

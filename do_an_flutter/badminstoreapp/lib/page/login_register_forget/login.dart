@@ -6,7 +6,7 @@ import '../../services/auth_service.dart';
 import '../../utils/validators.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -100,6 +100,56 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  Future<void> _loginWithGoogle() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = '';
+    });
+
+    try {
+      final userModel = await AuthService.signInWithGoogle();
+      
+      if (userModel == null) {
+        // User canceled the login flow
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      if (userModel.status == 0) {
+        await AuthService.signOut();
+        setState(() {
+          _errorMessage = 'Tài khoản đã bị khóa';
+          _isLoading = false;
+        });
+        return;
+      }
+
+      ref.read(userProvider.notifier).state = userModel;
+      setState(() => _isLoading = false);
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Đăng nhập Google thành công! Chào mừng ${userModel.fullname ?? userModel.username}',
+          ),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+
+      Future.delayed(const Duration(seconds: 1), () {
+        if (!mounted) return;
+        context.go('/main');
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,10 +205,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               padding: const EdgeInsets.all(12),
                               margin: const EdgeInsets.only(bottom: 16),
                               decoration: BoxDecoration(
-                                color: Colors.red.withOpacity(0.1),
+                                color: Colors.red.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: Colors.red.withOpacity(0.3),
+                                  color: Colors.red.withValues(alpha: 0.3),
                                 ),
                               ),
                               child: Row(
@@ -185,7 +235,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.3),
+                              color: Colors.white.withValues(alpha: 0.3),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: TextField(
@@ -199,7 +249,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               decoration: InputDecoration(
                                 hintText: 'Email',
                                 hintStyle: TextStyle(
-                                  color: Color(0xFF8B4513).withOpacity(0.7),
+                                  color: Color(0xFF8B4513).withValues(alpha: 0.7),
                                 ),
                                 prefixIcon: const Icon(
                                   Icons.email_outlined,
@@ -215,8 +265,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ),
                               ),
                               onChanged: (_) {
-                                if (_errorMessage.isNotEmpty)
+                                if (_errorMessage.isNotEmpty) {
                                   setState(() => _errorMessage = '');
+                                }
                               },
                             ),
                           ),
@@ -225,7 +276,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.3),
+                              color: Colors.white.withValues(alpha: 0.3),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: TextField(
@@ -239,7 +290,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               decoration: InputDecoration(
                                 hintText: '••••••',
                                 hintStyle: TextStyle(
-                                  color: Color(0xFF8B4513).withOpacity(0.7),
+                                  color: Color(0xFF8B4513).withValues(alpha: 0.7),
                                 ),
                                 prefixIcon: const Icon(
                                   Icons.lock_outline,
@@ -271,8 +322,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ),
                               ),
                               onChanged: (_) {
-                                if (_errorMessage.isNotEmpty)
+                                if (_errorMessage.isNotEmpty) {
                                   setState(() => _errorMessage = '');
+                                }
                               },
                             ),
                           ),
@@ -292,7 +344,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   fontSize: 14,
                                   color:
                                       _isLoading
-                                          ? Color(0xFF8B4513).withOpacity(0.5)
+                                          ? Color(0xFF8B4513).withValues(alpha: 0.5)
                                           : const Color(0xFF8B4513),
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -318,7 +370,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
+                                  color: Colors.black.withValues(alpha: 0.1),
                                   blurRadius: 8,
                                   offset: const Offset(0, 4),
                                 ),
@@ -378,16 +430,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               borderRadius: BorderRadius.circular(28),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
+                                  color: Colors.black.withValues(alpha: 0.1),
                                   blurRadius: 8,
                                   offset: const Offset(0, 4),
                                 ),
                               ],
                             ),
                             child: IconButton(
-                              onPressed: _isLoading ? null : () {},
+                              onPressed: _isLoading ? null : _loginWithGoogle,
                               icon: Image.asset(
                                 'assets/images/google_icon.png',
+
                                 width: 24,
                                 height: 24,
                               ),
@@ -424,7 +477,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     fontSize: 14,
                                     color:
                                         _isLoading
-                                            ? Color(0xFF8B4513).withOpacity(0.5)
+                                            ? Color(0xFF8B4513).withValues(alpha: 0.5)
                                             : const Color(0xFF8B4513),
                                     fontWeight: FontWeight.bold,
                                     decoration: TextDecoration.underline,

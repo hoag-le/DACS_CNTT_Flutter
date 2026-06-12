@@ -12,3 +12,15 @@ final userProvider = StateProvider<UserModel?>((ref) => null);
 final authStateProvider = Provider<AsyncValue<User?>>((ref) {
   return ref.watch(firebaseUserProvider);
 });
+
+final currentUserProfileProvider = FutureProvider<UserModel?>((ref) async {
+  final userAsync = ref.watch(firebaseUserProvider);
+  return userAsync.when(
+    data: (firebaseUser) async {
+      if (firebaseUser == null) return null;
+      return AuthService.getUserProfile(firebaseUser.uid);
+    },
+    loading: () => null,
+    error: (_, __) => null,
+  );
+});

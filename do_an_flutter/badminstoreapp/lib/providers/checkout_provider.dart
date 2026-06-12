@@ -22,7 +22,7 @@ class CheckoutController extends StateNotifier<AsyncValue<void>> {
 
     if (uid != null && cartItems.isNotEmpty) {
       try {
-        await FirestoreService.addOrder(
+        final orderId = await FirestoreService.addOrder(
           uid: uid,
           receiverName: receiverName,
           receiverPhone: receiverPhone,
@@ -31,6 +31,11 @@ class CheckoutController extends StateNotifier<AsyncValue<void>> {
           isPayment: isPayment,
           cartItems: cartItems,
         );
+
+        if (orderId == null) {
+          throw Exception('Không thể tạo đơn hàng');
+        }
+        
         await FirestoreService.clearCart(uid);
         state = const AsyncData(null);
         return true;

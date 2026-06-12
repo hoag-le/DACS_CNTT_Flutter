@@ -5,6 +5,7 @@ import '../../data/model/ordermodel.dart';
 import '../../data/model/orderdetailmodel.dart';
 import '../../data/model/productmodel.dart';
 import '../../data/model/usermodel.dart';
+import '../../data/model/user_provider.dart';
 import '../../services/firestore_service.dart';
 import '../order/orderbody.dart';
 import 'package:go_router/go_router.dart';
@@ -97,7 +98,10 @@ class _MainOrderState extends ConsumerState<MainOrder>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.user == null && FirebaseAuth.instance.currentUser == null) {
+    final resolvedUser =
+        widget.user ?? ref.watch(currentUserProfileProvider).value;
+
+    if (resolvedUser == null && FirebaseAuth.instance.currentUser == null) {
       return _buildNotLoggedInState();
     }
 
@@ -116,9 +120,9 @@ class _MainOrderState extends ConsumerState<MainOrder>
                 color: Colors.brown,
               ),
             ),
-            if (widget.user?.fullname != null)
+            if (resolvedUser?.fullname != null)
               Text(
-                widget.user!.fullname!,
+                resolvedUser!.fullname!,
                 style: const TextStyle(
                   fontSize: 12,
                   color: Colors.brown,

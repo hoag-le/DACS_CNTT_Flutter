@@ -6,7 +6,6 @@ class UserModel {
   String? fullname;
   String? phonenumber;
   String? birthday;
-  String? password;
   int? role;
   int? status;
   String? googleId;
@@ -20,7 +19,6 @@ class UserModel {
     this.fullname,
     this.phonenumber,
     this.birthday,
-    this.password,
     this.role,
     this.status,
     this.googleId,
@@ -28,18 +26,17 @@ class UserModel {
   });
 
   UserModel.fromJson(Map<String, dynamic> json) {
-    uid = json['uid'];
-    id = json['id'];
-    username = json['username'];
-    email = json['email'];
-    fullname = json['fullname'];
-    phonenumber = json['phonenumber'];
-    birthday = json['birthday'];
-    password = json['password'];
-    role = json['role'];
-    status = json['status'];
-    googleId = json['google_id'];
-    loginType = json['login_type'] ?? json['loginType'];
+    uid = json['uid'] as String?;
+    id = (json['id'] as num?)?.toInt();
+    username = json['username'] as String?;
+    email = json['email'] as String?;
+    fullname = json['fullname'] as String?;
+    phonenumber = json['phonenumber'] as String?;
+    birthday = json['birthday'] as String?;
+    role = (json['role'] as num?)?.toInt();
+    status = (json['status'] as num?)?.toInt();
+    googleId = json['googleId'] as String? ?? json['google_id'] as String?;
+    loginType = json['loginType'] as String? ?? json['login_type'] as String?;
   }
 
   Map<String, dynamic> toJson() {
@@ -52,8 +49,8 @@ class UserModel {
       'birthday': birthday,
       'role': role ?? 0,
       'status': status ?? 1,
-      'google_id': googleId,
-      'login_type': loginType ?? 'local',
+      'googleId': googleId,
+      'loginType': loginType ?? 'local',
     };
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 class IntroScreen extends StatefulWidget {
+  const IntroScreen({super.key});
+
   @override
   _IntroScreenState createState() => _IntroScreenState();
 }

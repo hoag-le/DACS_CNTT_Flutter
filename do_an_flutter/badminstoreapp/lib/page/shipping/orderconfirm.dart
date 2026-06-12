@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'thank.dart';
 import '../../data/model/product_viewmodel.dart';
 import 'package:go_router/go_router.dart';
 import '../../data/model/usermodel.dart';
@@ -15,14 +14,14 @@ class OrderConfirmScreen extends ConsumerStatefulWidget {
   final int? isPayment;
 
   const OrderConfirmScreen({
-    Key? key,
+    super.key,
     this.user,
     this.receiverName,
     this.receiverPhone,
     this.shippingAddress,
     this.totalAmount,
     this.isPayment,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<OrderConfirmScreen> createState() => _OrderConfirmScreenState();
@@ -166,7 +165,7 @@ class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
+                              color: Colors.black.withValues(alpha: 0.1),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
@@ -253,7 +252,7 @@ class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
     return Container(
       width: 40,
       height: 2,
-      color: isActive ? Colors.green : Colors.grey.withOpacity(0.5),
+      color: isActive ? Colors.green : Colors.grey.withValues(alpha: 0.5),
     );
   }
 }

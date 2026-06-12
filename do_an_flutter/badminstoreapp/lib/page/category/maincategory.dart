@@ -6,8 +6,7 @@ import 'categoryproduct.dart';
 class MainCategoryPage extends ConsumerStatefulWidget {
   final int initialCategoryId;
 
-  const MainCategoryPage({Key? key, required this.initialCategoryId})
-    : super(key: key);
+  const MainCategoryPage({super.key, required this.initialCategoryId});
 
   @override
   _MainCategoryPageState createState() => _MainCategoryPageState();

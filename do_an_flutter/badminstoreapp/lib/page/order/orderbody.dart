@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import '../../data/model/ordermodel.dart';
 import '../../data/model/orderdetailmodel.dart';
 import '../../data/model/productmodel.dart';
-import '../../page/order/orderdetail.dart';
 import 'package:go_router/go_router.dart';
 Widget itemOrderView(
   OrderModel orderModel,
@@ -14,7 +13,7 @@ Widget itemOrderView(
 ) {
   String formatCurrency(int? price) {
     if (price == null) return '0 đ';
-    return NumberFormat('#,###').format(price) + ' đ';
+    return '${NumberFormat('#,###').format(price)} đ';
   }
 
   String formatDate(String? dateString) {
@@ -93,7 +92,7 @@ Widget itemOrderView(
         borderRadius: const BorderRadius.all(Radius.circular(12.0)),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withValues(alpha: 0.2),
             spreadRadius: 2,
             blurRadius: 5,
             offset: const Offset(0, 3),

@@ -5,10 +5,10 @@ class AppLoadingWidget extends StatelessWidget {
   final double? height;
 
   const AppLoadingWidget({
-    Key? key,
+    super.key,
     this.message = 'Đang tải dữ liệu...',
     this.height,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +52,11 @@ class AppErrorWidget extends StatelessWidget {
   final double? height;
 
   const AppErrorWidget({
-    Key? key,
+    super.key,
     this.message = 'Có lỗi xảy ra, vui lòng thử lại',
     this.onRetry,
     this.height,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +71,7 @@ class AppErrorWidget extends StatelessWidget {
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: Colors.red.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
@@ -127,11 +127,11 @@ class AppEmptyWidget extends StatelessWidget {
   final double? height;
 
   const AppEmptyWidget({
-    Key? key,
+    super.key,
     required this.message,
     this.icon = Icons.inbox_outlined,
     this.height,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +146,7 @@ class AppEmptyWidget extends StatelessWidget {
               width: 72,
               height: 72,
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.1),
+                color: Colors.grey.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(

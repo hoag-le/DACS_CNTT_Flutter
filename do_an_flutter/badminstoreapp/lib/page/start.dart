@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'login_register_forget/login.dart';
 import '../page/intro.dart';
 
@@ -41,8 +42,14 @@ class _StartScreenState extends State<StartScreen>
 
     _startAnimation();
 
-    Future.delayed(const Duration(seconds: 4), () {
-      if (mounted) context.go('/intro');
+    Future.delayed(const Duration(seconds: 3), () {
+      if (!mounted) return;
+      final firebaseUser = FirebaseAuth.instance.currentUser;
+      if (firebaseUser != null) {
+        context.go('/main');
+      } else {
+        context.go('/intro');
+      }
     });
   }
 

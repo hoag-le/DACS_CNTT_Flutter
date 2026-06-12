@@ -44,6 +44,10 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Local properties
+local.properties
+android/local.properties
+
 # ─── Firebase sensitive files ───────────────────
 # API keys & config — không commit lên public repo
 # Chia sẻ qua kênh bảo mật (bitwarden, 1password, secret manager...)

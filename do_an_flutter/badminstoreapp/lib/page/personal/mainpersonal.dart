@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../personal/setting.dart';
-import '../personal/about.dart';
-import '../personal/support.dart';
 import '../../data/model/usermodel.dart';
 import '../../data/model/user_provider.dart';
 import '../../services/auth_service.dart';
 import 'package:go_router/go_router.dart';
-import '../start.dart';
 
 class MainPersonalPage extends ConsumerWidget {
   final UserModel? user;
@@ -113,10 +109,10 @@ class MainPersonalPage extends ConsumerWidget {
                 padding: const EdgeInsets.all(16),
                 margin: const EdgeInsets.only(bottom: 20),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.white.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: const Color(0xFFD2691E).withOpacity(0.3),
+                    color: const Color(0xFFD2691E).withValues(alpha: 0.3),
                   ),
                 ),
                 child: Column(
@@ -200,19 +196,19 @@ class MainPersonalPage extends ConsumerWidget {
             const SizedBox(height: 32),
 
             if (user != null)
-              Container(
+              SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
                     _showLogoutDialog(context, ref);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red.withOpacity(0.1),
+                    backgroundColor: Colors.red.withValues(alpha: 0.1),
                     foregroundColor: Colors.red,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
-                      side: BorderSide(color: Colors.red.withOpacity(0.3)),
+                      side: BorderSide(color: Colors.red.withValues(alpha: 0.3)),
                     ),
                   ),
                   child: const Text(
@@ -316,7 +312,7 @@ class MainPersonalPage extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.3),
+          color: Colors.white.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -324,7 +320,7 @@ class MainPersonalPage extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: const Color(0xFFD2691E).withOpacity(0.2),
+                color: const Color(0xFFD2691E).withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(icon, color: const Color(0xFF8B4513), size: 20),

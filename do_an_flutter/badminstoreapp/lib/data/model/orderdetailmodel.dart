@@ -17,11 +17,11 @@ class OrderDetailModel {
 
   OrderDetailModel.fromJson(Map<String, dynamic> json) {
     id = json['id']?.toString();
-    orderId = json['order_id']?.toString() ?? json['orderId']?.toString();
-    productId = json['product_id']?.toString() ?? json['productId']?.toString();
-    quantity = json['quantity'];
-    price = json['price'] ?? json['unit_price'] ?? json['unitPrice'];
-    totalPrice = json['total_price'] ?? json['totalPrice'];
+    orderId = json['orderId']?.toString();
+    productId = json['productId']?.toString();
+    quantity = (json['quantity'] as num?)?.toInt();
+    price = (json['unitPrice'] as num?)?.toInt();
+    totalPrice = (json['totalPrice'] as num?)?.toInt();
   }
 
   Map<String, dynamic> toJson() {
@@ -55,29 +55,14 @@ class OrderDetailModelWithName extends OrderDetailModel {
   factory OrderDetailModelWithName.fromFirestore(Map<String, dynamic> json) {
     return OrderDetailModelWithName(
       id: json['id']?.toString(),
-      orderId: json['orderId']?.toString() ?? json['order_id']?.toString(),
-      productId:
-          json['productId']?.toString() ?? json['product_id']?.toString(),
-      size: json['size'],
-      quantity: json['quantity'],
-      price: json['unitPrice'] ?? json['unit_price'],
-      totalPrice: json['totalPrice'] ?? json['total_price'],
-      productName: json['productName'] ?? json['product_name'],
-      image: json['image'],
-    );
-  }
-
-  factory OrderDetailModelWithName.fromJson(Map<String, dynamic> json) {
-    return OrderDetailModelWithName(
-      id: json['id']?.toString(),
-      orderId: json['order_id']?.toString(),
-      productId: json['product_id']?.toString(),
-      size: json['size'],
-      quantity: json['quantity'],
-      price: json['unit_price'] ?? json['price'],
-      totalPrice: json['total_price'],
-      productName: json['product_name'],
-      image: json['image'],
+      orderId: json['orderId']?.toString(),
+      productId: json['productId']?.toString(),
+      size: json['size'] as String?,
+      quantity: (json['quantity'] as num?)?.toInt(),
+      price: (json['unitPrice'] as num?)?.toInt(),
+      totalPrice: (json['totalPrice'] as num?)?.toInt(),
+      productName: json['productName'] as String?,
+      image: json['image'] as String?,
     );
   }
 

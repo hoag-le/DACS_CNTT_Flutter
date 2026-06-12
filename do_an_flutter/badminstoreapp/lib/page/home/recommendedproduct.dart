@@ -8,12 +8,14 @@ import '../product/productbody.dart';
 import '../../widgets/app_state_widgets.dart';
 
 class RecommendedProductWidget extends ConsumerStatefulWidget {
+  const RecommendedProductWidget({super.key});
+
   @override
   _RecommendedProductWidgetState createState() => _RecommendedProductWidgetState();
 }
 
 class _RecommendedProductWidgetState extends ConsumerState<RecommendedProductWidget> {
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   Timer? _timer;
   int currentPage = 0;
   bool _timerStarted = false;
@@ -115,7 +117,7 @@ class _RecommendedProductWidgetState extends ConsumerState<RecommendedProductWid
                     child: Container(
                       padding: EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.orange.withOpacity(0.1),
+                        color: Colors.orange.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(Icons.refresh, color: Colors.orange, size: 20),
@@ -125,7 +127,7 @@ class _RecommendedProductWidgetState extends ConsumerState<RecommendedProductWid
               ),
               SizedBox(height: 16),
 
-              Container(
+              SizedBox(
                 height: 300,
                 child: PageView.builder(
                   controller: _pageController,

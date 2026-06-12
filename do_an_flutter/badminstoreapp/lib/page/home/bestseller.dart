@@ -7,12 +7,14 @@ import '../product/productbody.dart';
 import '../../widgets/app_state_widgets.dart';
 
 class BestSellerWidget extends ConsumerStatefulWidget {
+  const BestSellerWidget({super.key});
+
   @override
   _BestSellerWidgetState createState() => _BestSellerWidgetState();
 }
 
 class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
   Timer? _timer;
   int currentPage = 0;
   bool _timerStarted = false;
@@ -105,7 +107,7 @@ class _BestSellerWidgetState extends ConsumerState<BestSellerWidget> {
               ),
               SizedBox(height: 16),
 
-              Container(
+              SizedBox(
                 height: 300,
                 child: PageView.builder(
                   controller: _pageController,

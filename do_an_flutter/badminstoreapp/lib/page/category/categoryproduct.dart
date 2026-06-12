@@ -8,8 +8,7 @@ import '../../widgets/app_state_widgets.dart';
 class CategoryProductWidget extends ConsumerWidget {
   final int categoryId;
 
-  const CategoryProductWidget({Key? key, required this.categoryId})
-    : super(key: key);
+  const CategoryProductWidget({super.key, required this.categoryId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
