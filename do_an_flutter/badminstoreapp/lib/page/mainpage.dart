@@ -6,6 +6,7 @@ import '../page/order/mainorder.dart';
 import '../page/personal/mainpersonal.dart';
 import '../data/model/usermodel.dart';
 import '../data/model/user_provider.dart';
+import '../data/model/product_viewmodel.dart';
 
 class MainPage extends ConsumerStatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -92,53 +93,5 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MainPersonalPage(user: user);
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          'Trang chủ',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  }
-}
-
-class FavoritePage extends StatelessWidget {
-  const FavoritePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          'Yêu thích',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  }
-}
-
-class OrderPage extends StatelessWidget {
-  const OrderPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text(
-          'Đơn hàng',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
   }
 }

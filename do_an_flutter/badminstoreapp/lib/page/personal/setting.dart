@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../services/auth_service.dart';
+import '../../data/model/user_provider.dart';
 
-class SettingPage extends StatelessWidget {
+class SettingPage extends ConsumerWidget {
   const SettingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5E6D3),
       appBar: AppBar(
@@ -35,7 +38,9 @@ class SettingPage extends StatelessWidget {
             _buildMenuItem(
               icon: Icons.person_outline,
               title: 'Sửa thông tin cá nhân',
-              onTap: () {},
+              onTap: () {
+                context.push('/personal/edit-info');
+              },
             ),
             const SizedBox(height: 16),
 
@@ -60,19 +65,22 @@ class SettingPage extends StatelessWidget {
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (BuildContext context) {
+                  builder: (BuildContext ctx) {
                     return AlertDialog(
                       title: const Text('Xác nhận'),
                       content: const Text('Bạn có muốn đăng xuất?'),
                       actions: [
                         TextButton(
                           child: const Text('Hủy'),
-                          onPressed: () => Navigator.of(context).pop(),
+                          onPressed: () => Navigator.of(ctx).pop(),
                         ),
                         TextButton(
                           child: const Text('Đồng ý'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
+                          onPressed: () async {
+                            Navigator.of(ctx).pop();
+                            await AuthService.signOut();
+                            ref.read(userProvider.notifier).state = null;
+                            if (!context.mounted) return;
                             context.go('/login');
                           },
                         ),

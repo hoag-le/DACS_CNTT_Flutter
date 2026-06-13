@@ -64,9 +64,8 @@ class _OrderConfirmScreenState extends ConsumerState<OrderConfirmScreen> {
 
       context.go('/checkout/thank');
     } else {
-      final errorState = ref.read(checkoutProvider);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text(
             'Lỗi khi đặt hàng. Vui lòng thử lại.',
             style: const TextStyle(color: Colors.white),

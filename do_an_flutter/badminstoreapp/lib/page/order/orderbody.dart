@@ -3,12 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../data/model/ordermodel.dart';
 import '../../data/model/orderdetailmodel.dart';
-import '../../data/model/productmodel.dart';
 import 'package:go_router/go_router.dart';
 Widget itemOrderView(
   OrderModel orderModel,
   List<OrderDetailModelWithName> orderDetails,
-  List<ProductModel> products,
   WidgetRef ref,
 ) {
   String formatCurrency(int? price) {
@@ -71,9 +69,6 @@ Widget itemOrderView(
     }
   }
 
-  List<OrderDetailModelWithName> getOrderDetailItems() {
-    return orderDetails;
-  }
 
   int getTotalProductCount() {
     return orderDetails.fold(0, (sum, detail) => sum + (detail.quantity ?? 0));

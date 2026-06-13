@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import '../../conf/const.dart';
 import '../../data/model/ordermodel.dart';
 import '../../data/model/orderdetailmodel.dart';
 import '../../services/firestore_service.dart';
@@ -34,10 +33,14 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
     });
 
     try {
-      final details = await FirestoreService.getOrderDetails(widget.orderId);
+      final results = await Future.wait([
+        FirestoreService.getOrderById(widget.orderId),
+        FirestoreService.getOrderDetails(widget.orderId),
+      ]);
 
       setState(() {
-        orderDetails = details;
+        orderModel = results[0] as OrderModel?;
+        orderDetails = results[1] as List<OrderDetailModelWithName>;
         isLoading = false;
       });
     } catch (e) {
@@ -66,7 +69,7 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
   String getPaymentStatus(int? isPayment) {
     switch (isPayment) {
       case 0:
-        return 'COD - Thanh toán khi nhận hàng';
+        return 'COD – Thanh toán khi nhận hàng';
       case 1:
         return 'Đã thanh toán (Momo)';
       case 2:
@@ -110,12 +113,69 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
     return orderDetails.fold(0, (sum, item) => sum + (item.totalPrice ?? 0));
   }
 
-  void _cancelOrder() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Chức năng hủy đơn hàng đang được phát triển.'),
+  Future<void> _cancelOrder() async {
+    // Chỉ cho phép hủy khi đang xử lý (status = 1)
+    if (orderModel?.orderStatus != 1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Chỉ có thể hủy đơn hàng đang ở trạng thái "Đang xử lý".'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Xác nhận hủy đơn'),
+        content: const Text('Bạn có chắc chắn muốn hủy đơn hàng này không?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Không'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Hủy đơn', style: TextStyle(color: Colors.red)),
+          ),
+        ],
       ),
     );
+
+    if (confirmed != true) return;
+
+    final success = await FirestoreService.cancelOrder(widget.orderId);
+    if (!mounted) return;
+
+    if (success) {
+      setState(() {
+        orderModel = OrderModel(
+          id: orderModel!.id,
+          userId: orderModel!.userId,
+          orderDate: orderModel!.orderDate,
+          receiverName: orderModel!.receiverName,
+          receiverPhone: orderModel!.receiverPhone,
+          shippingAddress: orderModel!.shippingAddress,
+          totalAmount: orderModel!.totalAmount,
+          isPayment: orderModel!.isPayment,
+          orderStatus: 0,
+        );
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Đã hủy đơn hàng thành công.'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Hủy đơn thất bại. Vui lòng thử lại.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -133,24 +193,99 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
           IconButton(icon: const Icon(Icons.refresh), onPressed: loadOrderData),
         ],
       ),
-      body:
-          isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : errorMessage != null
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : errorMessage != null
               ? _buildErrorWidget()
               : orderDetails.isEmpty
-              ? _buildNoDataWidget()
-              : SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSummarySection(),
-                    const SizedBox(height: 16),
-                    _buildProductListSection(),
-                  ],
+                  ? _buildNoDataWidget()
+                  : SingleChildScrollView(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (orderModel != null) _buildOrderInfoSection(),
+                          const SizedBox(height: 16),
+                          _buildSummarySection(),
+                          const SizedBox(height: 16),
+                          _buildProductListSection(),
+                          const SizedBox(height: 16),
+                          if (orderModel?.orderStatus == 1)
+                            _buildCancelButton(),
+                        ],
+                      ),
+                    ),
+    );
+  }
+
+  Widget _buildOrderInfoSection() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withValues(alpha: 0.1),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Thông tin đơn hàng',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
                 ),
               ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: getStatusColor(orderModel!.orderStatus)
+                      .withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: getStatusColor(orderModel!.orderStatus),
+                  ),
+                ),
+                child: Text(
+                  getOrderStatus(orderModel!.orderStatus),
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: getStatusColor(orderModel!.orderStatus),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _buildInfoRow('Ngày đặt', formatDate(orderModel!.orderDate)),
+          const SizedBox(height: 6),
+          _buildInfoRow(
+              'Người nhận', orderModel!.receiverName ?? 'Chưa cập nhật'),
+          const SizedBox(height: 6),
+          _buildInfoRow(
+              'Điện thoại', orderModel!.receiverPhone ?? 'Chưa cập nhật'),
+          const SizedBox(height: 6),
+          _buildInfoRow(
+              'Địa chỉ', orderModel!.shippingAddress ?? 'Chưa cập nhật'),
+          const SizedBox(height: 6),
+          _buildInfoRow(
+              'Thanh toán', getPaymentStatus(orderModel!.isPayment)),
+        ],
+      ),
     );
   }
 
@@ -175,16 +310,14 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Tóm tắt đơn hàng',
+            'Tóm tắt thanh toán',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: Colors.black87,
             ),
           ),
-          const SizedBox(height: 16),
-          _buildInfoRow('Mã đơn hàng', '#${widget.orderId}'),
-          const SizedBox(height: 8),
+          const SizedBox(height: 12),
           _buildPriceRow('Tổng sản phẩm', formatCurrency(subtotal)),
           const SizedBox(height: 8),
           _buildPriceRow('Phí vận chuyển', formatCurrency(20000)),
@@ -201,7 +334,8 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
                 ),
               ),
               Text(
-                formatCurrency(subtotal + 20000),
+                formatCurrency(
+                    orderModel?.totalAmount ?? (subtotal + 20000)),
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -211,6 +345,26 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCancelButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: _cancelOrder,
+        icon: const Icon(Icons.cancel_outlined, color: Colors.red),
+        label: const Text(
+          'Hủy đơn hàng',
+          style: TextStyle(color: Colors.red, fontSize: 15),
+        ),
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: Colors.red),
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
       ),
     );
   }
@@ -265,18 +419,18 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: 130,
+          width: 100,
           child: Text(
             label,
-            style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+            style: TextStyle(fontSize: 13, color: Colors.grey[600]),
           ),
         ),
-        const Text(': ', style: TextStyle(fontSize: 14)),
+        const Text(': ', style: TextStyle(fontSize: 13)),
         Expanded(
           child: Text(
             value,
             style: const TextStyle(
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: FontWeight.w500,
               color: Colors.black87,
             ),
@@ -328,7 +482,7 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
               const Text(
                 'Sản phẩm đã đặt',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
@@ -345,8 +499,8 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: orderDetails.length,
             separatorBuilder: (context, index) => const Divider(height: 20),
-            itemBuilder:
-                (context, index) => _buildProductItem(orderDetails[index]),
+            itemBuilder: (context, index) =>
+                _buildProductItem(orderDetails[index]),
           ),
         ],
       ),
@@ -354,35 +508,46 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
   }
 
   Widget _buildProductItem(OrderDetailModelWithName orderDetail) {
+    final imageUrl = orderDetail.image ?? '';
+    final isNetworkImage = imageUrl.startsWith('http');
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: 60,
-          height: 60,
+          width: 64,
+          height: 64,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             color: Colors.grey[100],
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child:
-                (orderDetail.image != null && orderDetail.image!.isNotEmpty)
-                    ? Image.asset(
-                      uri_product_img + orderDetail.image!,
-                      fit: BoxFit.cover,
-                      errorBuilder:
-                          (_, __, ___) => const Icon(
-                            Icons.image_not_supported,
-                            size: 30,
-                            color: Colors.grey,
-                          ),
-                    )
-                    : const Icon(
-                      Icons.shopping_bag_outlined,
-                      size: 30,
-                      color: Colors.grey,
-                    ),
+            child: imageUrl.isNotEmpty
+                ? (isNetworkImage
+                    ? Image.network(
+                        imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.image_not_supported,
+                          size: 30,
+                          color: Colors.grey,
+                        ),
+                      )
+                    : Image.asset(
+                        'assets/images/products/$imageUrl',
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => const Icon(
+                          Icons.image_not_supported,
+                          size: 30,
+                          color: Colors.grey,
+                        ),
+                      ))
+                : const Icon(
+                    Icons.shopping_bag_outlined,
+                    size: 30,
+                    color: Colors.grey,
+                  ),
           ),
         ),
 
@@ -395,7 +560,7 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
               Text(
                 orderDetail.productName ?? 'Sản phẩm không xác định',
                 style: const TextStyle(
-                  fontSize: 15,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Colors.black87,
                 ),
@@ -408,7 +573,7 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
               if (orderDetail.size != null && orderDetail.size!.isNotEmpty)
                 Text(
                   'Size: ${orderDetail.size}',
-                  style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
 
               const SizedBox(height: 8),
@@ -426,7 +591,8 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
                   ),
                   Text(
                     'x${orderDetail.quantity ?? 0}',
-                    style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                    style:
+                        TextStyle(fontSize: 14, color: Colors.grey[700]),
                   ),
                 ],
               ),
@@ -438,7 +604,7 @@ class _OrderDetailState extends ConsumerState<OrderDetail> {
                 child: Text(
                   'Tổng: ${formatCurrency(orderDetail.totalPrice)}',
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),

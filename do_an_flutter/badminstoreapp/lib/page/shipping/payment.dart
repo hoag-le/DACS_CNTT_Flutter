@@ -401,82 +401,50 @@ class _PaymentScreenState extends State<PaymentScreen> {
         color: Colors.white.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: RadioListTile<String>(
-        value: value,
-        groupValue: _selectedPaymentMethod,
-        onChanged: (String? newValue) {
+      child: ListTile(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        leading: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.asset(
+              iconPath,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(
+                  Icons.payment,
+                  color: Color(0xFF8B4513),
+                  size: 24,
+                );
+              },
+            ),
+          ),
+        ),
+        title: Text(
+          title,
+          style: const TextStyle(fontSize: 15, color: Color(0xFF8B4513)),
+        ),
+        trailing: Radio<String>(
+          value: value,
+          groupValue: _selectedPaymentMethod,
+          activeColor: Colors.red,
+          onChanged: (String? newValue) {
+            setState(() {
+              _selectedPaymentMethod = newValue!;
+            });
+          },
+        ),
+        onTap: () {
           setState(() {
-            _selectedPaymentMethod = newValue!;
+            _selectedPaymentMethod = value;
           });
         },
-        title: Row(
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  iconPath,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(
-                      Icons.payment,
-                      color: Color(0xFF8B4513),
-                      size: 24,
-                    );
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                title,
-                style: const TextStyle(fontSize: 16, color: Color(0xFF8B4513)),
-              ),
-            ),
-          ],
-        ),
-        activeColor: Colors.red,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      ),
-    );
-  }
-
-  void _processPayment() {
-    String paymentMethodText = '';
-    switch (_selectedPaymentMethod) {
-      case 'momo':
-        paymentMethodText = 'Ví Momo';
-        break;
-      case 'vnpay':
-        paymentMethodText = 'VNPAY';
-        break;
-      case 'cash':
-        paymentMethodText = 'Thanh toán bằng tiền mặt khi nhận hàng';
-        break;
-    }
-
-    _showSuccessSnackBar('Đã chọn phương thức thanh toán: $paymentMethodText');
-
-    print('Selected payment method: $_selectedPaymentMethod');
-    print('Processing payment...');
-    print('Subtotal: ${widget.subtotal}');
-    print('Shipping fee: $shippingFee');
-    print('Total: $total');
-  }
-
-  void _showSuccessSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 2),
       ),
     );
   }

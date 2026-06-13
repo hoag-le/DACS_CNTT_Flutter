@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../data/model/ordermodel.dart';
 import '../data/model/usermodel.dart';
 
 // Import all screens
@@ -25,6 +24,7 @@ import '../page/personal/setting.dart';
 import '../page/personal/changepassword.dart';
 import '../page/personal/about.dart';
 import '../page/personal/support.dart';
+import '../page/personal/userinfo.dart';
 import '../page/order/mainorder.dart';
 import '../page/order/orderdetail.dart';
 
@@ -140,8 +140,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/checkout/shipping',
       builder: (context, state) {
-        final user = state.extra as UserModel?;
-        return ShippingAddressScreen(subtotal: 0.0, user: user);
+        final extra = state.extra as Map<String, dynamic>?;
+        final subtotal = (extra?['subtotal'] as num?)?.toDouble() ?? 0.0;
+        final user = extra?['user'] as UserModel?;
+        return ShippingAddressScreen(subtotal: subtotal, user: user);
       },
     ),
     GoRoute(
@@ -166,7 +168,8 @@ final GoRouter appRouter = GoRouter(
           receiverName: extra?['receiverName'] ?? '',
           receiverPhone: extra?['receiverPhone'] ?? '',
           shippingAddress: extra?['shippingAddress'] ?? '',
-          isPayment: extra?['paymentMethod'] == 'COD' ? 0 : 1,
+          totalAmount: extra?['totalAmount'] as int?,
+          isPayment: extra?['paymentMethod'] == 'COD' ? 0 : (extra?['isPayment'] as int? ?? 0),
         );
       },
     ),
@@ -247,5 +250,13 @@ final GoRouter appRouter = GoRouter(
         return OrderDetail(orderId: orderId);
       },
     ),
+    GoRoute(
+      path: '/personal/edit-info',
+      builder: (context, state) {
+        final user = state.extra as UserModel?;
+        return UserInfoPage(user: user);
+      },
+    ),
   ],
 );
+

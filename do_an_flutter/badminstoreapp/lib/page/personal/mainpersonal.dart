@@ -4,6 +4,7 @@ import '../../data/model/usermodel.dart';
 import '../../data/model/user_provider.dart';
 import '../../services/auth_service.dart';
 import 'package:go_router/go_router.dart';
+import 'userinfo.dart';
 
 class MainPersonalPage extends ConsumerWidget {
   final UserModel? user;
@@ -142,7 +143,9 @@ class MainPersonalPage extends ConsumerWidget {
                 width: double.infinity,
                 margin: const EdgeInsets.symmetric(vertical: 20),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.push('/personal/orders', extra: user);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFD2691E),
                     foregroundColor: Colors.white,
@@ -162,7 +165,11 @@ class MainPersonalPage extends ConsumerWidget {
               icon: Icons.person_outline,
               title: 'Thông tin cá nhân',
               onTap: () {
-                _showUserInfoDialog(context);
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => UserInfoPage(user: user),
+                  ),
+                );
               },
             ),
             const SizedBox(height: 16),
@@ -344,55 +351,6 @@ class MainPersonalPage extends ConsumerWidget {
           ],
         ),
       ),
-    );
-  }
-
-  void _showUserInfoDialog(BuildContext context) {
-    if (user == null) return;
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFFF5E6D3),
-          title: const Text(
-            'Thông tin chi tiết',
-            style: TextStyle(
-              color: Color(0xFF8B4513),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (user!.username != null && user!.username!.isNotEmpty)
-                _buildInfoRow('Tên đăng nhập:', user!.username!),
-              if (user!.fullname != null && user!.fullname!.isNotEmpty)
-                _buildInfoRow('Họ tên:', user!.fullname!),
-              if (user!.email != null && user!.email!.isNotEmpty)
-                _buildInfoRow('Email:', user!.email!),
-              if (user!.phonenumber != null && user!.phonenumber!.isNotEmpty)
-                _buildInfoRow('Số điện thoại:', user!.phonenumber!),
-              if (user!.birthday != null && user!.birthday!.isNotEmpty)
-                _buildInfoRow('Ngày sinh:', _formatDate(user!.birthday!)),
-              _buildInfoRow('Loại tài khoản:', _getAccountType()),
-              _buildInfoRow('Trạng thái:', _getAccountStatus()),
-              if (user!.googleId != null && user!.googleId!.isNotEmpty)
-                _buildInfoRow('Google ID:', user!.googleId!),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text(
-                'Đóng',
-                style: TextStyle(color: Color(0xFF8B4513)),
-              ),
-            ),
-          ],
-        );
-      },
     );
   }
 

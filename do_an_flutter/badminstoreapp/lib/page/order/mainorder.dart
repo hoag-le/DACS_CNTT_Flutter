@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../data/model/ordermodel.dart';
 import '../../data/model/orderdetailmodel.dart';
-import '../../data/model/productmodel.dart';
 import '../../data/model/usermodel.dart';
 import '../../data/model/user_provider.dart';
 import '../../services/firestore_service.dart';
@@ -23,7 +22,6 @@ class _MainOrderState extends ConsumerState<MainOrder>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<OrderModel> userOrders = [];
-  List<ProductModel> products = [];
   bool isLoading = true;
   String selectedFilter = 'all';
   String? errorMessage;
@@ -218,7 +216,6 @@ class _MainOrderState extends ConsumerState<MainOrder>
                                 return itemOrderView(
                                   order,
                                   details,
-                                  products,
                                   ref,
                                 );
                               },

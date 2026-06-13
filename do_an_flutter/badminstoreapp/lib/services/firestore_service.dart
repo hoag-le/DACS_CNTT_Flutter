@@ -196,4 +196,24 @@ class FirestoreService {
       await batch.commit();
     } catch (e) {}
   }
+
+  static Future<OrderModel?> getOrderById(String orderId) async {
+    try {
+      final doc = await _db.collection('orders').doc(orderId).get();
+      if (!doc.exists || doc.data() == null) return null;
+      return OrderModel.fromJson({...doc.data()!, 'id': doc.id});
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static Future<bool> cancelOrder(String orderId) async {
+    try {
+      await _db.collection('orders').doc(orderId).update({'orderStatus': 0});
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }
+
